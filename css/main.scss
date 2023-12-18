@@ -1,0 +1,11 @@
+@import "../node_modules/bootstrap/scss/_functions";
+@import "../node_modules/bootstrap/scss/_variables";
+
+$custome-theme-colors: (
+   "darkgrey":#1f2427,
+   "lightgrey":#B3B3B3
+);
+
+$theme-colors:map-merge($custome-theme-colors, $theme-colors);
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
