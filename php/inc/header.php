@@ -12,8 +12,8 @@
                   <p class="my-0 d-none d-md-block text-secondary">Moj račun</p>
                </button>
                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">Prijava</a></li>
-                  <li><a class="dropdown-item" href="#">Registracija</a></li>
+                  <li><a class="dropdown-item" href="prijava.php">Prijava</a></li>
+                  <li><a class="dropdown-item" href="registracija.php">Registracija</a></li>
                </ul>
             </div>
          </div>
