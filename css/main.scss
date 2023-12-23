@@ -2,10 +2,11 @@
 @import "../node_modules/bootstrap/scss/_variables";
 
 $custome-theme-colors: (
-   "darkgrey":#1f2427,
-   "lightgrey":#B3B3B3
+  "darkgrey": #1f2427,
+  "lightgrey": #b3b3b3,
+  "lightwhite": #f7f7f7,
 );
 
-$theme-colors:map-merge($custome-theme-colors, $theme-colors);
+$theme-colors: map-merge($custome-theme-colors, $theme-colors);
 
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
