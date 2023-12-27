@@ -18,9 +18,9 @@
    <?php require_once("php/inc/header.php") ?>
   
 
-   <div class="container-md">
+   <div class="container-md" style="min-height:70vh">
       <div class="row my-5">
-         <div class="col-md-6 col-12 mb-3">
+         <div class="col-md-6 col-12">
             <div class="card">
                <div class="card-body bg-lightwhite shadow-sm">
                   <h5 class="card-title fs-2 fw-bold">Novi korisnik</h5>
@@ -30,7 +30,7 @@
                </div>
             </div>
          </div>
-         <div class="col-md-6 col-12">
+         <div class="col-md-6 col-12 my-md-0 my-3">
             <div class="card">
                <div class="card-body bg-lightwhite shadow-sm">
                   <h5 class="card-title fs-2 fw-bold">Postojeći korisnik</h5>
@@ -46,7 +46,7 @@
                         <input type="password" class="form-control" id="exampleInputPassword1">
                      </div>
                      <div class="mb-3">
-                        <a href="#" class="fw-bolder text-secondary">Zaboravili ste lozinku?</a>
+                        <a href="#" class="fw-bolder text-secondary text-decoration-none">Zaboravili ste lozinku?</a>
                      </div>
                      <button type="submit" class="btn btn-dark">Submit</button>
                   </form>  

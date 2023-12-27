@@ -50,7 +50,7 @@
                   </p>
                   <ul class="dropdown-menu my-dropdown-menu row">
                      <div class="col d-lg-flex">
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="vibration-damper.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/tennis/vibration__dampers.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Prigušivaći vibracije</p>
                         </a></li>
