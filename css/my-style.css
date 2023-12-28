@@ -82,3 +82,7 @@
     justify-self: center;
   }
 }
+
+.height__container {
+  min-height: 75vh;
+}

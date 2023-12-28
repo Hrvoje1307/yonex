@@ -18,7 +18,7 @@
    <?php require_once("php/inc/header.php") ?>
   
 
-   <div class="container-md" style="min-height:70vh">
+   <div class="container-md height__container">
       <div class="row my-5">
          <div class="col-md-6 col-12">
             <div class="card">

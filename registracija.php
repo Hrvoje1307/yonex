@@ -18,7 +18,7 @@
    <?php require_once("php/inc/header.php") ?>
   
 
-   <div class="container-md py-5" style="min-height:70vh">
+   <div class="container-md py-5 height__container">
       <h2 class="text-dark fw-bolder fs-1">Registracija</h2>
       <a href="#" class="text-dark text-decoration-none">Imate račun? Prijavite se</a>
       <form action="POST" class="my-2">
