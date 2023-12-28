@@ -16,14 +16,14 @@
 </head>
 <body>
    <?php require_once("php/inc/header.php") ?>
-   <div class="container-md">
+   <div class="container-lg">
       <div class="row my-3">
-        <div class="col-md-3 d-none d-md-block">
+        <div class="col-lg-3 d-none d-lg-block">
           <p class="fs-3 fw-semibold">Filter</p>
           <div class="accordion" id="accordionPanelsStayOpenExample">
             <div class="accordion-item">
               <h2 class="accordion-header">
-                <button class="accordion-button bg-secondary text-light" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
                   Cijena
                 </button>
               </h2>
@@ -38,10 +38,204 @@
                 </div>
               </div>
             </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                  Dostupnost
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                  <ul class="list-group">
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="available">
+                      <label for="available">Dostupno</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="unavailable">
+                      <label for="unavailable">Nedostupno</label>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="col-md-9 col-12">
+        <div class="col-lg-9 col-12">
           <p class="fs-3 fw-semibold">Prigušivaći vibracije</p>
+          <div class="row">
+            <div class="col-lg-12 col-8 d-flex gap-3">
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-lightgrey border border-0">Poredaj po:</button>
+                <select name="sort" class="border border-top border-right border-bottom rounded-end">
+                  <option value="classic">Standardno</option>
+                  <option value="aToZ">Ime (A do Z)</option>
+                  <option value="zToA">Ime (A do A)</option>
+                  <option value="priceDown">Cijena (+/-)</option>
+                  <option value="priceUp">Cijena (-/+)</option>
+                </select>
+              </div>
+              <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-lightgrey border border-0">Pokazati:</button>
+                <select name="view" class="border border-top border-right border-bottom rounded-end">
+                  <option value="15">15</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="75">75</option>
+                  <option value="100">100</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-4 d-lg-none d-block d-flex align-items-center justify-content-end">
+              <p class="d-inline-flex gap-1 mb-0">
+                <button class="btn btn-lightgrey" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  Filteri
+                </button>
+              </p>
+            </div>
+            <div class="collapse mt-2" id="collapseExample">
+              <div class="card card-body">
+                <div class="row">
+                  <div class="col-6">
+                    <p class="mb-0 text-dark fw-solidbold">Cijena</p>
+                  </div>
+                  <div class="col-6 d-flex gap-1 align-items-center">
+                    <input type="number" style="width:40%">
+                    <p class="fw-semibold mb-0">€ -</p>
+                    <input type="number" style="width:40%">
+                    <p class="fw-semibold mb-0">€</p>
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-6">
+                    <p class="mb-0 text-dark fw-solidbold">Dostupnost</p>
+                  </div>
+                  <div class="col-6">
+                    <ul class="list-group flex-row gap-2">
+                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                        <input type="checkbox" id="available">
+                        <label for="available">Dostupno</label>
+                      </li>
+                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                        <input type="checkbox" id="unavailable">
+                        <label for="unavailable">Nedostupno</label>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3 ps-3 gap-2 justify-content-sm-start justify-content-center">
+            <div class="card shop__card">
+              <img src="images/product-images/tennis/yell--balls.png" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title fw-bold">Teniske loptice za trening 60 komada</h5>
+                  <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi possimus, </p>
+                  <p class="fs-3 m-0"><span>110,00</span>€</p>
+                  <p class="fs-5 m-0 mb-3"><span>110,00</span>€</p>
+                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-cart-fill"></i>
+                        <p class="lead m-0">Dodaj u košaricu</p>
+                    </a>
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-heart"></i>
+                    </a>
+                  </div>
+              </div>
+            </div>
+            <div class="card shop__card">
+              <img src="images/product-images/tennis/yell--balls.png" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title fw-bold">Teniske loptice za trening 60 komada</h5>
+                  <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi possimus, </p>
+                  <p class="fs-3 m-0"><span>110,00</span>€</p>
+                  <p class="fs-5 m-0 mb-3"><span>110,00</span>€</p>
+                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-cart-fill"></i>
+                        <p class="lead m-0">Dodaj u košaricu</p>
+                    </a>
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-heart"></i>
+                    </a>
+                  </div>
+              </div>
+            </div>
+            <div class="card shop__card">
+              <img src="images/product-images/tennis/yell--balls.png" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title fw-bold">Teniske loptice za trening 60 komada</h5>
+                  <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi possimus, </p>
+                  <p class="fs-3 m-0"><span>110,00</span>€</p>
+                  <p class="fs-5 m-0 mb-3"><span>110,00</span>€</p>
+                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-cart-fill"></i>
+                        <p class="lead m-0">Dodaj u košaricu</p>
+                    </a>
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-heart"></i>
+                    </a>
+                  </div>
+              </div>
+            </div>
+            <div class="card shop__card">
+              <img src="images/product-images/tennis/yell--balls.png" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title fw-bold">Teniske loptice za trening 60 komada</h5>
+                  <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi possimus, </p>
+                  <p class="fs-3 m-0"><span>110,00</span>€</p>
+                  <p class="fs-5 m-0 mb-3"><span>110,00</span>€</p>
+                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-cart-fill"></i>
+                        <p class="lead m-0">Dodaj u košaricu</p>
+                    </a>
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-heart"></i>
+                    </a>
+                  </div>
+              </div>
+            </div>
+            <div class="card shop__card">
+              <img src="images/product-images/tennis/yell--balls.png" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title fw-bold">Teniske loptice za trening 60 komada</h5>
+                  <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi possimus, </p>
+                  <p class="fs-3 m-0"><span>110,00</span>€</p>
+                  <p class="fs-5 m-0 mb-3"><span>110,00</span>€</p>
+                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-cart-fill"></i>
+                        <p class="lead m-0">Dodaj u košaricu</p>
+                    </a>
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-heart"></i>
+                    </a>
+                  </div>
+              </div>
+            </div>
+            <div class="card shop__card">
+              <img src="images/product-images/tennis/yell--balls.png" class="card-img-top" alt="...">
+              <div class="card-body">
+                  <h5 class="card-title fw-bold">Teniske loptice za trening 60 komada</h5>
+                  <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi possimus, </p>
+                  <p class="fs-3 m-0"><span>110,00</span>€</p>
+                  <p class="fs-5 m-0 mb-3"><span>110,00</span>€</p>
+                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-cart-fill"></i>
+                        <p class="lead m-0">Dodaj u košaricu</p>
+                    </a>
+                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                        <i class="bi bi-heart"></i>
+                    </a>
+                  </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
    </div>

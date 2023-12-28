@@ -68,8 +68,17 @@
   }
 }
 
+.shop__card {
+  width: 18rem;
+}
+
 @media (max-width: 576px) {
   .form__label {
     width: 25%;
+  }
+
+  .shop__card {
+    width: 27rem;
+    justify-self: center;
   }
 }

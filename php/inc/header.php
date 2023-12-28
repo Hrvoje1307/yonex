@@ -30,7 +30,7 @@
 </div>
 <nav class="navbar navbar-expand-lg">
    <div class="container-lg">
-      <a class="navbar-brand" href="#">
+      <a class="navbar-brand" href="./index.php">
          <img src="./images/brand/logo.png" alt="Main logo">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
