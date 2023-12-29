@@ -58,11 +58,11 @@
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/tennis/racket.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Reketi</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="tennis-shoes.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/tennis/shoes.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Obuća</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="tennis-cords.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/tennis/string.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Žice</p>
                         </a></li>

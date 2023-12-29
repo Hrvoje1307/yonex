@@ -31,7 +31,7 @@
                 <div class="accordion-body">
                   <div class="d-flex gap-1 align-items-center">
                     <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0">€ -</p>
+                    <p class="fw-semibold mb-0 text-nowrap">€ -</p>
                     <input type="number" style="width:40%">
                     <p class="fw-semibold mb-0">€</p>
                   </div>
@@ -94,7 +94,7 @@
               </p>
             </div>
             <div class="collapse mt-2" id="collapseExample">
-              <div class="card card-body">
+              <div class="card card-body d-md-none d-block">
                 <div class="row">
                   <div class="col-6">
                     <p class="mb-0 text-dark fw-solidbold">Cijena</p>

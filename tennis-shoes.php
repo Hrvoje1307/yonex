@@ -31,7 +31,7 @@
                 <div class="accordion-body">
                   <div class="d-flex gap-1 align-items-center">
                     <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0 text-nowrap">€ -</p>
+                    <p class="fw-semibold mb-0">€ -</p>
                     <input type="number" style="width:40%">
                     <p class="fw-semibold mb-0">€</p>
                   </div>
@@ -41,80 +41,55 @@
             <div class="accordion-item">
               <h2 class="accordion-header">
                 <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                  Težina reketa
+                  Broj
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
                 <div class="accordion-body">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="240g">
-                      <label for="240g">240g</label>
+                      <input type="checkbox" id="38">
+                      <label for="38">38</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="250g">
-                      <label for="250g">250g</label>
+                      <input type="checkbox" id="39">
+                      <label for="39">39</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="260g">
-                      <label for="260g">260g</label>
+                      <input type="checkbox" id="39.5">
+                      <label for="39.5">39.5</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="270g">
-                      <label for="270g">270g</label>
+                      <input type="checkbox" id="40">
+                      <label for="40">40</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="280g">
-                      <label for="280g">280g</label>
+                      <input type="checkbox" id="41">
+                      <label for="41">41</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="290g">
-                      <label for="290g">290g</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="300g">
-                      <label for="300g">300g</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="310g">
-                      <label for="310g">310g</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="320g">
-                      <label for="320g">320g</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="330g">
-                      <label for="330g">330g</label>
+                      <input type="checkbox" id="42,5">
+                      <label for="42,5">42,5</label>
                     </li>
                   </ul>
                 </div>
               </div>
-            </div>
-            <div class="accordion-item">
+              <div class="accordion-item">
               <h2 class="accordion-header">
                 <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                  Tip reketa
+                  Spol
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show">
                 <div class="accordion-body">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="ezone">
-                      <label for="ezone">Ezone</label>
+                      <input type="checkbox" id="men">
+                      <label for="men">Muški</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="percept">
-                      <label for="percept">Percept</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="vcore">
-                      <label for="vcore">Vcore</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="vcorePro">
-                      <label for="vcorePro">Vcore Pro</label>
+                      <input type="checkbox" id="women">
+                      <label for="women">Ženski</label>
                     </li>
                   </ul>
                 </div>
@@ -123,43 +98,10 @@
             <div class="accordion-item">
               <h2 class="accordion-header">
                 <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                  Veličina ručke
-                </button>
-              </h2>
-              <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse show">
-                <div class="accordion-body">
-                  <ul class="list-group">
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="g0">
-                      <label for="g0">G0</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="g1">
-                      <label for="g1">G1</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="g2">
-                      <label for="g2">G2</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="g3">
-                      <label for="g3">G3</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="g4">
-                      <label for="g4">G4</label>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
                   Dostupnost
                 </button>
               </h2>
-              <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse show">
+              <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse show">
                 <div class="accordion-body">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
@@ -174,10 +116,11 @@
                 </div>
               </div>
             </div>
+            </div>
           </div>
         </div>
         <div class="col-lg-9 col-12">
-          <p class="fs-3 fw-semibold">Reketi</p>
+          <p class="fs-3 fw-semibold">Prigušivaći vibracije</p>
           <div class="row">
             <div class="col-lg-12 col-8 d-flex gap-3">
               <div class="btn-group" role="group" aria-label="Basic example">
@@ -209,125 +152,68 @@
               </p>
             </div>
             <div class="collapse mt-2" id="collapseExample">
-              <div class="card card-body d-block d-lg-none">
+              <div class="card card-body">
                 <div class="row">
                   <div class="col-6">
                     <p class="mb-0 text-dark fw-solidbold">Cijena</p>
                   </div>
                   <div class="col-6 d-flex gap-1 align-items-center">
                     <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0">€ -</p>
+                    <p class="fw-semibold mb-0 text-nowrap">€ -</p>
                     <input type="number" style="width:40%">
                     <p class="fw-semibold mb-0">€</p>
                   </div>
                 </div>
-                <hr class="line__footer bg-dark">
                 <div class="row mt-3">
                   <div class="col-6">
-                    <p class="mb-0 text-dark fw-solidbold">Težina reketa</p>
+                    <p class="mb-0 text-dark fw-solidbold">Broj</p>
                   </div>
                   <div class="col-6">
                     <ul class="list-group flex-row flex-wrap gap-2">
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="240g">
-                        <label for="240g">240g</label>
+                        <input type="checkbox" id="38">
+                        <label for="38">38</label>
                       </li>
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="250g">
-                        <label for="250g">250g</label>
+                        <input type="checkbox" id="39">
+                        <label for="39">39</label>
                       </li>
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="260g">
-                        <label for="260g">260g</label>
+                        <input type="checkbox" id="39.5">
+                        <label for="39.5">39.5</label>
                       </li>
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="270g">
-                        <label for="270g">270g</label>
+                        <input type="checkbox" id="40">
+                        <label for="40">40</label>
                       </li>
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="280g">
-                        <label for="280g">280g</label>
+                        <input type="checkbox" id="41">
+                        <label for="41">41</label>
                       </li>
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="290g">
-                        <label for="290g">290g</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="300g">
-                        <label for="300g">300g</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="310g">
-                        <label for="310g">310g</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="320g">
-                        <label for="320g">320g</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="330g">
-                        <label for="330g">330g</label>
+                        <input type="checkbox" id="42,5">
+                        <label for="42,5">42,5</label>
                       </li>
                     </ul>
                   </div>
                 </div>
-                <hr class="line__footer bg-dark">
                 <div class="row mt-3">
                   <div class="col-6">
-                    <p class="mb-0 text-dark fw-solidbold">Tip reketa</p>
+                    <p class="mb-0 text-dark fw-solidbold">Spol</p>
                   </div>
                   <div class="col-6">
                     <ul class="list-group flex-row flex-wrap gap-2">
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="ezone">
-                        <label for="ezone">Ezone</label>
+                        <input type="checkbox" id="men">
+                        <label for="men">Muški</label>
                       </li>
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="percept">
-                        <label for="percept">Percept</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="vcore">
-                        <label for="vcore">Vcore</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="vcorePro">
-                        <label for="vcorePro">Vcore Pro</label>
+                        <input type="checkbox" id="women">
+                        <label for="women">Ženski</label>
                       </li>
                     </ul>
                   </div>
                 </div>
-                <hr class="line__footer bg-dark">
-                <div class="row mt-3">
-                  <div class="col-6">
-                    <p class="mb-0 text-dark fw-solidbold">Veličina ručke</p>
-                  </div>
-                  <div class="col-6">
-                    <ul class="list-group flex-row flex-wrap gap-2">
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="g0">
-                        <label for="g0">G0</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="g1">
-                        <label for="g1">G1</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="g2">
-                        <label for="g2">G2</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="g3">
-                        <label for="g3">G3</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="g4">
-                        <label for="g4">G4</label>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <hr class="line__footer bg-dark">
                 <div class="row mt-3">
                   <div class="col-6">
                     <p class="mb-0 text-dark fw-solidbold">Dostupnost</p>
