@@ -89,15 +89,15 @@
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/badminton/recket.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Reketi</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="badminton-shoes.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/badminton/shoes.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Obuća</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="badminton-cords.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/badminton/cords.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Žice</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="badminton-balls.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/badminton/balls.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Loptice</p>
                         </a></li>
@@ -115,11 +115,11 @@
                      Torbe
                   </p>
                   <ul class="dropdown-menu my-dropdown-menu">
-                     <li><a class="dropdown-item" href="#">
+                     <li><a class="dropdown-item" href="rucksacks.php">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/bags/rucksack.jpeg" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Ruksaci</p>
                      </a></li>
-                     <li><a class="dropdown-item" href="#">
+                     <li><a class="dropdown-item" href="bags.php">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/bags/bags.jpeg" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Torbe</p>
                      </a></li>
@@ -131,33 +131,33 @@
                   </p>
                   <ul class="dropdown-menu my-dropdown-menu row">
                      <div class="col d-lg-flex">
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="jackets.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/jackets.jpeg" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Jakne</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="shorts.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/shorts.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Kratke hlače</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="t-shirts.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/t-shirts.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Majce kratkih rukava</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="socks.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/socks.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Čarape</p>
                         </a></li>
                      </div>
                      <div class="col d-lg-flex">
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="dress.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/dress.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Odijeća</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="rest-clothing.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/rest.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Ostalo</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="pants.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/pants.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Trenirke</p>
                         </a></li>
@@ -173,19 +173,23 @@
                      Dodatci
                   </p>
                   <ul class="dropdown-menu my-dropdown-menu">
-                     <li><a class="dropdown-item" href="#">
+                     <li><a class="dropdown-item" href="towels.php">
+                        <img class="nav__product-img d-none d-lg-block" src="./images/product-images/accessories/towels.webp" alt="Product image">
+                        <p class="my-0 text-lg-center text-wrap">Ručnici</p>
+                     </a></li>
+                     <li><a class="dropdown-item" href="gums.php">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/accessories/gum.webp" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Gume</p>
                      </a></li>
-                     <li><a class="dropdown-item" href="#">
+                     <li><a class="dropdown-item" href="rest.php">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/accessories/rest.webp" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Ostatak</p>
                      </a></li>
-                     <li><a class="dropdown-item" href="#">
+                     <li><a class="dropdown-item" href="tints.php">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/accessories/stencils.webp" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Šablone i tinte</p>
                      </a></li>
-                     <li><a class="dropdown-item" href="#">
+                     <li><a class="dropdown-item" href="sweats.php">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/accessories/sweatpants.webp" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Znojnici</p>
                      </a></li>

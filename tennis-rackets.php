@@ -28,7 +28,7 @@
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
-                <div class="accordion-body">
+                <div class="accordion-body body__filters">
                   <div class="d-flex gap-1 align-items-center">
                     <input type="number" style="width:40%">
                     <p class="fw-semibold mb-0 text-nowrap">€ -</p>
@@ -45,7 +45,7 @@
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
-                <div class="accordion-body">
+                <div class="accordion-body body__filters">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
                       <input type="checkbox" id="240g">
@@ -98,7 +98,7 @@
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show">
-                <div class="accordion-body">
+                <div class="accordion-body body__filters">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
                       <input type="checkbox" id="ezone">
@@ -127,7 +127,7 @@
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse show">
-                <div class="accordion-body">
+                <div class="accordion-body body__filters">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
                       <input type="checkbox" id="g0">
@@ -160,7 +160,7 @@
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse show">
-                <div class="accordion-body">
+                <div class="accordion-body body__filters">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
                       <input type="checkbox" id="available">

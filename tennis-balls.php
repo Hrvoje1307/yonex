@@ -28,7 +28,7 @@
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
-                <div class="accordion-body">
+                <div class="accordion-body body__filters">
                   <div class="d-flex gap-1 align-items-center">
                     <input type="number" style="width:40%">
                     <p class="fw-semibold mb-0 text-nowrap">€ -</p>
@@ -45,7 +45,7 @@
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
-                <div class="accordion-body">
+                <div class="accordion-body body__filters">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
                       <input type="checkbox" id="tournament">
@@ -66,7 +66,7 @@
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse show">
-                <div class="accordion-body">
+                <div class="accordion-body body__filters">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
                       <input type="checkbox" id="available">
@@ -83,7 +83,7 @@
           </div>
         </div>
         <div class="col-lg-9 col-12">
-          <p class="fs-3 fw-semibold">Reketi</p>
+          <p class="fs-3 fw-semibold">Teniske loptice</p>
           <div class="row">
             <div class="col-lg-12 col-8 d-flex gap-3">
               <div class="btn-group" role="group" aria-label="Basic example">

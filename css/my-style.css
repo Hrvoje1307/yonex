@@ -1,6 +1,7 @@
 :root {
   --blue: #228be6;
   --white: #f7f7f7;
+  --darkGrey: #b3b3b3;
 }
 
 @media screen and (min-width: 992px) {
@@ -85,4 +86,20 @@
 
 .height__container {
   min-height: 75vh;
+}
+
+.body__filters {
+  max-height: 15vh;
+  overflow-y: scroll;
+}
+
+.body__filters::-webkit-scrollbar {
+  /* display: none; */
+  background-color: transparent;
+  width: 10px;
+}
+
+.body__filters::-webkit-scrollbar-thumb {
+  background-color: var(--darkGrey);
+  border-radius: 9px;
 }

@@ -41,27 +41,27 @@
             <div class="accordion-item">
               <h2 class="accordion-header">
                 <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                  Debljina žice
+                  Veličina
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
                 <div class="accordion-body body__filters">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="1,15mm">
-                      <label for="1,15mm">1,15mm</label>
+                      <input type="checkbox" id="3">
+                      <label for="3">3 reketa</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="1,20mm">
-                      <label for="1,20mm">1,20mm</label>
+                      <input type="checkbox" id="6">
+                      <label for="6">6 reketa</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="1,25mm">
-                      <label for="1,25mm">1,25mm</label>
+                      <input type="checkbox" id="8-12">
+                      <label for="8-12">8-12 reketa</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="1,30mm">
-                      <label for="1,30mm">1,30mm</label>
+                      <input type="checkbox" id="rest">
+                      <label for="rest">Ostale</label>
                     </li>
                   </ul>
                 </div>
@@ -69,20 +69,24 @@
             </div>
             <div class="accordion-item">
               <h2 class="accordion-header">
-                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                  Dužina
+                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                  Vrsta
                 </button>
               </h2>
-              <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show">
+              <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
                 <div class="accordion-body body__filters">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="rols">
-                      <label for="rols">Role [200m-500m]</label>
+                      <input type="checkbox" id="active">
+                      <label for="active">Aktivna</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="12m">
-                      <label for="12m">12m</label>
+                      <input type="checkbox" id="pro">
+                      <label for="pro">Pro serija</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="team">
+                      <label for="team">Timska serija</label>
                     </li>
                   </ul>
                 </div>
@@ -112,7 +116,7 @@
           </div>
         </div>
         <div class="col-lg-9 col-12">
-          <p class="fs-3 fw-semibold">Teniske žice</p>
+          <p class="fs-3 fw-semibold">Torbe</p>
           <div class="row">
             <div class="col-lg-12 col-8 d-flex gap-3">
               <div class="btn-group" role="group" aria-label="Basic example">
@@ -159,25 +163,25 @@
                 <hr class="line__footer bg-dark">
                 <div class="row mt-3">
                   <div class="col-6">
-                    <p class="mb-0 text-dark fw-solidbold">Debljina žice</p>
+                    <p class="mb-0 text-dark fw-solidbold">Veličina</p>
                   </div>
                   <div class="col-6">
                     <ul class="list-group flex-row flex-wrap gap-2">
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="1,15mm">
-                        <label for="1,15mm">1,15mm</label>
+                        <input type="checkbox" id="3">
+                        <label for="3">3 reketa</label>
                       </li>
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="1,20mm">
-                        <label for="1,20mm">1,20mm</label>
+                        <input type="checkbox" id="6">
+                        <label for="6">6 reketa</label>
                       </li>
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="1,25mm">
-                        <label for="1,25mm">1,25mm</label>
+                        <input type="checkbox" id="8-12">
+                        <label for="8-12">8-12 reketa</label>
                       </li>
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="1,30mm">
-                        <label for="1,30mm">1,30mm</label>
+                        <input type="checkbox" id="rest">
+                        <label for="rest">Ostale</label>
                       </li>
                     </ul>
                   </div>
@@ -185,17 +189,21 @@
                 <hr class="line__footer bg-dark">
                 <div class="row mt-3">
                   <div class="col-6">
-                    <p class="mb-0 text-dark fw-solidbold">Dužina</p>
+                    <p class="mb-0 text-dark fw-solidbold">Vrsta</p>
                   </div>
                   <div class="col-6">
                     <ul class="list-group flex-row flex-wrap gap-2">
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="rols">
-                        <label for="rols">Role [200m-500m]</label>
+                        <input type="checkbox" id="active">
+                        <label for="active">Aktivna</label>
                       </li>
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="12m">
-                        <label for="12m">12m</label>
+                        <input type="checkbox" id="pro">
+                        <label for="pro">Pro serija</label>
+                      </li>
+                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                        <input type="checkbox" id="team">
+                        <label for="team">Timska serija</label>
                       </li>
                     </ul>
                   </div>
