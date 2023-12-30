@@ -177,7 +177,7 @@
           </div>
         </div>
         <div class="col-lg-9 col-12">
-          <p class="fs-3 fw-semibold">Reketi</p>
+          <p class="fs-3 fw-semibold">Teniski reketi</p>
           <div class="row">
             <div class="col-lg-12 col-8 d-flex gap-3">
               <div class="btn-group" role="group" aria-label="Basic example">

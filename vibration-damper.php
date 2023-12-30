@@ -94,7 +94,7 @@
               </p>
             </div>
             <div class="collapse mt-2" id="collapseExample">
-              <div class="card card-body d-md-none d-block">
+              <div class="card card-body d-lg-none d-block">
                 <div class="row">
                   <div class="col-6">
                     <p class="mb-0 text-dark fw-solidbold">Cijena</p>
@@ -106,12 +106,13 @@
                     <p class="fw-semibold mb-0">€</p>
                   </div>
                 </div>
+                <hr class="line__footer bg-dark">
                 <div class="row mt-3">
                   <div class="col-6">
                     <p class="mb-0 text-dark fw-solidbold">Dostupnost</p>
                   </div>
                   <div class="col-6">
-                    <ul class="list-group flex-row gap-2">
+                    <ul class="list-group flex-wrap flex-row gap-2">
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
                         <input type="checkbox" id="available">
                         <label for="available">Dostupno</label>

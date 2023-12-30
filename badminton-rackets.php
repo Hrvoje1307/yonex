@@ -31,7 +31,7 @@
                 <div class="accordion-body">
                   <div class="d-flex gap-1 align-items-center">
                     <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0">€ -</p>
+                    <p class="fw-semibold mb-0 text-nowrap">€ -</p>
                     <input type="number" style="width:40%">
                     <p class="fw-semibold mb-0">€</p>
                   </div>
@@ -41,55 +41,31 @@
             <div class="accordion-item">
               <h2 class="accordion-header">
                 <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                  Broj
+                  Težina
                 </button>
               </h2>
               <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
                 <div class="accordion-body">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="38">
-                      <label for="38">38</label>
+                      <input type="checkbox" id="68g">
+                      <label for="68g">2F = 68g</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="39">
-                      <label for="39">39</label>
+                      <input type="checkbox" id="90-94,9 g">
+                      <label for="90-94,9 g">2U = 90-94,9 g</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="39.5">
-                      <label for="39.5">39.5</label>
+                      <input type="checkbox" id="85-89,9 g">
+                      <label for="85-89,9 g">3U = 85-89,9 g</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="40">
-                      <label for="40">40</label>
+                      <input type="checkbox" id="80 - 84,9 g">
+                      <label for="80 - 84,9 g">4U = 80 - 84,9 g</label>
                     </li>
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="41">
-                      <label for="41">41</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="42,5">
-                      <label for="42,5">42,5</label>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                  Spol
-                </button>
-              </h2>
-              <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show">
-                <div class="accordion-body">
-                  <ul class="list-group">
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="men">
-                      <label for="men">Muški</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="women">
-                      <label for="women">Ženski</label>
+                      <input type="checkbox" id="75-79,9 g">
+                      <label for="75-79,9 g">5U = 75-79,9 g</label>
                     </li>
                   </ul>
                 </div>
@@ -97,11 +73,85 @@
             </div>
             <div class="accordion-item">
               <h2 class="accordion-header">
-                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                  Žarn i vrsta
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                  <ul class="list-group">
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="arcsaber">
+                      <label for="arcsaber">Arcsaber</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="astrox">
+                      <label for="astrox">Astrox</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="b-seria">
+                      <label for="b-seria">B-seria</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="duora">
+                      <label for="duora">Duora</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="muscle-power">
+                      <label for="muscle-power">Muscle power</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="nanoflare">
+                      <label for="nanoflare">Nanoflare</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="nanozraci">
+                      <label for="nanozraci">Nanozraci</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="dječji">
+                      <label for="dječji">Dječji</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="voltric">
+                      <label for="voltric">Voltric</label>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                  Veličina ručke
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                  <ul class="list-group">
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="G4">
+                      <label for="G4">G4</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="G5">
+                      <label for="G5">G5</label>
+                    </li>
+                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                      <input type="checkbox" id="G7">
+                      <label for="G7">G7</label>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
                   Dostupnost
                 </button>
               </h2>
-              <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse show">
+              <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse show">
                 <div class="accordion-body">
                   <ul class="list-group">
                     <li class="d-flex gap-2 align-items-center list-group-item border border-0">
@@ -116,11 +166,10 @@
                 </div>
               </div>
             </div>
-            </div>
           </div>
         </div>
         <div class="col-lg-9 col-12">
-          <p class="fs-3 fw-semibold">Teniska obuća</p>
+          <p class="fs-3 fw-semibold">Badminton reketi</p>
           <div class="row">
             <div class="col-lg-12 col-8 d-flex gap-3">
               <div class="btn-group" role="group" aria-label="Basic example">
@@ -152,14 +201,14 @@
               </p>
             </div>
             <div class="collapse mt-2" id="collapseExample">
-              <div class="card card-body d-lg-none d-block">
+              <div class="card card-body d-block d-lg-none">
                 <div class="row">
                   <div class="col-6">
                     <p class="mb-0 text-dark fw-solidbold">Cijena</p>
                   </div>
                   <div class="col-6 d-flex gap-1 align-items-center">
                     <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0 text-nowrap">€ -</p>
+                    <p class="fw-semibold mb-0">€ -</p>
                     <input type="number" style="width:40%">
                     <p class="fw-semibold mb-0">€</p>
                   </div>
@@ -167,51 +216,97 @@
                 <hr class="line__footer bg-dark">
                 <div class="row mt-3">
                   <div class="col-6">
-                    <p class="mb-0 text-dark fw-solidbold">Broj</p>
+                    <p class="mb-0 text-dark fw-solidbold">Težina</p>
                   </div>
                   <div class="col-6">
                     <ul class="list-group flex-row flex-wrap gap-2">
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="38">
-                        <label for="38">38</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="39">
-                        <label for="39">39</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="39.5">
-                        <label for="39.5">39.5</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="40">
-                        <label for="40">40</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="41">
-                        <label for="41">41</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="42,5">
-                        <label for="42,5">42,5</label>
-                      </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="68g">
+                           <label for="68g">2F = 68g</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="90-94,9 g">
+                           <label for="90-94,9 g">2U = 90-94,9 g</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="85-89,9 g">
+                           <label for="85-89,9 g">3U = 85-89,9 g</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="80 - 84,9 g">
+                           <label for="80 - 84,9 g">4U = 80 - 84,9 g</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="75-79,9 g">
+                           <label for="75-79,9 g">5U = 75-79,9 g</label>
+                        </li>
                     </ul>
                   </div>
                 </div>
                 <hr class="line__footer bg-dark">
                 <div class="row mt-3">
                   <div class="col-6">
-                    <p class="mb-0 text-dark fw-solidbold">Spol</p>
+                    <p class="mb-0 text-dark fw-solidbold">Žarn i vrsta</p>
+                  </div>
+                  <div class="col-6">
+                    <ul class="list-group flex-row flex-wrap gap-2">
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="arcsaber">
+                           <label for="arcsaber">Arcsaber</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="astrox">
+                           <label for="astrox">Astrox</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="b-seria">
+                           <label for="b-seria">B-seria</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="duora">
+                           <label for="duora">Duora</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="muscle-power">
+                           <label for="muscle-power">Muscle power</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="nanoflare">
+                           <label for="nanoflare">Nanoflare</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="nanozraci">
+                           <label for="nanozraci">Nanozraci</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="dječji">
+                           <label for="dječji">Dječji</label>
+                        </li>
+                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                           <input type="checkbox" id="voltric">
+                           <label for="voltric">Voltric</label>
+                        </li>
+                    </ul>
+                  </div>
+                </div>
+                <hr class="line__footer bg-dark">
+                <div class="row mt-3">
+                  <div class="col-6">
+                    <p class="mb-0 text-dark fw-solidbold">Težina ručke</p>
                   </div>
                   <div class="col-6">
                     <ul class="list-group flex-row flex-wrap gap-2">
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="men">
-                        <label for="men">Muški</label>
+                        <input type="checkbox" id="G4">
+                        <label for="G4">G4</label>
                       </li>
                       <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="women">
-                        <label for="women">Ženski</label>
+                        <input type="checkbox" id="G5">
+                        <label for="G5">G5</label>
+                      </li>
+                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
+                        <input type="checkbox" id="G7">
+                        <label for="G7">G7</label>
                       </li>
                     </ul>
                   </div>

@@ -68,7 +68,7 @@
                         </a></li>
                      </div>
                      <div class="col d-lg-flex">
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="tennis-balls.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/tennis/balls.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Loptice</p>
                         </a></li>
@@ -85,7 +85,7 @@
                   </p>
                   <ul class="dropdown-menu my-dropdown-menu row">
                      <div class="col d-lg-flex">
-                        <li><a class="dropdown-item" href="#">
+                        <li><a class="dropdown-item" href="badminton-rackets.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/badminton/recket.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Reketi</p>
                         </a></li>
