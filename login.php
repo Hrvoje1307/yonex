@@ -26,7 +26,7 @@
                   <h5 class="card-title fs-2 fw-bold">Novi korisnik</h5>
                   <h6 class="fw-bolder text-secondary">Registracija novog korisnika</h6>
                   <p class="card-text">Registracijom u našu internet trgovinu moći ćete kupovati, pratiti status i povijest svojih narudžbi, primati e-novosti po želji te ostvariti sve ostale pogodnosti i promocije za naše korisnike. Kliknite na gumb "Nastavi"</p>
-                  <a href="#" class="btn btn-dark">Nastaviti</a>
+                  <a href="registration.php" class="btn btn-dark">Nastaviti</a>
                </div>
             </div>
          </div>

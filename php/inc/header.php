@@ -12,16 +12,16 @@
                   <p class="my-0 d-none d-md-block text-secondary">Moj račun</p>
                </button>
                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="prijava.php">Prijava</a></li>
-                  <li><a class="dropdown-item" href="registracija.php">Registracija</a></li>
+                  <li><a class="dropdown-item" href="login.php">Prijava</a></li>
+                  <li><a class="dropdown-item" href="registration.php">Registracija</a></li>
                </ul>
             </div>
          </div>
-         <a href="#" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
+         <a href="wishlist.php" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
             <i class="bi bi-heart-fill text-secondary"></i>
-            <p class="my-0 d-none d-md-block">Lista želja (<span>0</span>)</p>
+            <p class="my-0 d-none d-md-block">Lista želja (<span class="header__wishlish-quantity">0</span>)</p>
          </a>
-         <a href="#" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
+         <a href="cart.php" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
             <i class="bi bi-cart-fill text-secondary"></i>
             <p class="my-0 d-none d-md-block">Košarica</p>
          </a>

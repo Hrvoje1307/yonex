@@ -20,7 +20,7 @@
 
    <div class="container-md py-5 height__container">
       <h2 class="text-dark fw-bolder fs-1">Registracija</h2>
-      <a href="#" class="text-dark text-decoration-none">Imate račun? Prijavite se</a>
+      <a href="login.php" class="text-dark text-decoration-none">Imate račun? Prijavite se</a>
       <form action="POST" class="my-2">
          <p class="text-dark fw-semibold fs-5 m-0">Osobni podaci</p>
          <hr class="line__footer bg-dark m-0">

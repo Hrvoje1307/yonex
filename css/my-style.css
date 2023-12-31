@@ -112,3 +112,7 @@
   height: 100%;
   width: 60%;
 }
+
+.quantity-change {
+  border-radius: 50% !important;
+}

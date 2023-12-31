@@ -67,11 +67,11 @@
                   <p class="fs-5 m-0 mb-3"><span>110,00</span>€</p>
                   <p class="fs-6 fw-semibold text-danger m-0 mb-3">Nedostupno</p>
                   <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center disabled">
                         <i class="bi bi-cart-fill"></i>
                         <p class="lead m-0">Dodaj u košaricu</p>
                      </a>
-                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center disabled">
                         <i class="bi bi-heart"></i>
                      </a>
                   </div>
@@ -86,11 +86,11 @@
                   <p class="fs-5 m-0 mb-3"><span>110,00</span>€</p>
                   <p class="fs-6 fw-semibold text-danger m-0 mb-3">Nedostupno</p>
                   <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center disabled">
                         <i class="bi bi-cart-fill"></i>
                         <p class="lead m-0">Dodaj u košaricu</p>
                      </a>
-                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center disabled">
                         <i class="bi bi-heart"></i>
                      </a>
                   </div>
@@ -109,11 +109,11 @@
                   <p class="fs-5 m-0 mb-3"><span>110,00</span>€</p>
                   <p class="fs-6 fw-semibold text-danger m-0 mb-3">Nedostupno</p>
                   <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center disabled">
                         <i class="bi bi-cart-fill"></i>
                         <p class="lead m-0">Dodaj u košaricu</p>
                      </a>
-                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center disabled">
                         <i class="bi bi-heart"></i>
                      </a>
                   </div>
@@ -128,11 +128,11 @@
                   <p class="fs-5 m-0 mb-3"><span>110,00</span>€</p>
                   <p class="fs-6 fw-semibold text-danger m-0 mb-3">Nedostupno</p>
                   <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center disabled">
                         <i class="bi bi-cart-fill"></i>
                         <p class="lead m-0">Dodaj u košaricu</p>
                      </a>
-                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
+                     <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center disabled">
                         <i class="bi bi-heart"></i>
                      </a>
                   </div>
