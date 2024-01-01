@@ -17,9 +17,9 @@
 <body>
    <?php require_once("php/inc/header.php") ?>
     <div class="container my-5 height__container">
-      <h1 class="fs-2 fw-bold">Moja lista želja (<span class="items__quantity-wishlist">2</span> <span class="quantity__word-wishlist">proizvoda</span>)</h1>
+      <h1 class="fs-2 fw-bold">Moja lista želja (<span class="items__quantity-wishlist">2</span> <span class="quantity__word">proizvoda</span>)</h1>
       <div class="line__footer bg-secondary my-3"></div>
-      <div class="card mb-3 card__wishlist">
+      <div class="card mb-3 card__products">
         <div class="row g-0">
           <div class="col-md-4 d-flex justify-content-center">
             <img src="./images/product-images/tennis/yell--balls.png" class="img-fluid rounded-start" alt="This is image of product in whishlist">
@@ -49,7 +49,7 @@
           </div>
         </div>
       </div>
-      <div class="card mb-3 card__wishlist">
+      <div class="card mb-3 card__products">
         <div class="row g-0">
           <div class="col-md-4 d-flex justify-content-center">
             <img src="./images/product-images/tennis/yell--balls.png" class="img-fluid rounded-start" alt="This is image of product in whishlist">

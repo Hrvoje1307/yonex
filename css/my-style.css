@@ -53,6 +53,11 @@
   height: 0.1rem;
 }
 
+.line__cart {
+  width: 75%;
+  height: 0.1rem;
+}
+
 .form__label {
   width: 11%;
 }
@@ -111,8 +116,4 @@
 .youtube__video {
   height: 100%;
   width: 60%;
-}
-
-.quantity-change {
-  border-radius: 50% !important;
 }
