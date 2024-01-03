@@ -202,10 +202,10 @@
                   <i class="bi bi-search"></i>
                </span>
             </div>
-            <button class="btn btn-dark d-flex gap-1">
+            <a href="cart.php" class="btn btn-dark d-flex gap-1">
                <i class="bi bi-cart-fill"></i>
                <span class="product-number">0</span> proizvoda <span>-</span> <span class="price">0</span> €
-            </button>
+            </a>
          </div>
       </div>
    </div>

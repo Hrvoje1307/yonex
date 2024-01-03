@@ -117,3 +117,7 @@
   height: 100%;
   width: 60%;
 }
+
+.quantity__product {
+  width: 2rem;
+}

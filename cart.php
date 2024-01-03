@@ -30,9 +30,9 @@
           <p class="fs-6 fw-semibold text-success m-0">Dostupno</p>
         </div>
         <div class="col-12 col-lg-3 d-flex align-items-center justify-content-center gap-5">
-          <button class="btn btn-lightgrey fs-5 fw-bold">+</button>
-          <p class="mb-0">1</p>
-          <button class="btn btn-lightgrey fs-5 px-3 fw-bold">-</button>
+          <button class="change__quantity-btn btn btn-lightgrey fs-5 fw-bold">+</button>
+          <input class="mb-0 text-center border border-0 quantity__product" value="5">
+          <button class="change__quantity-btn btn btn-lightgrey fs-5 px-3 fw-bold">-</button>
         </div>
         <div class="col-12 col-lg-2 mt-5 d-flex flex-column align-items-lg-end align-items-start">
           <p class=" fs-3 fw-semibold m-0"><span class="real__price">110.00</span>€</p>
@@ -47,7 +47,7 @@
             <p class="fw-bold fs-4 mb-0">Ukupno</p>
             <p class="text-secondary m-0"><span class="cart__quantitiy">1 </span><span class="quantity__word">proizvoda</span></p>
           </div>
-          <p class="total fs-1 fw-bold mb-0">220€</p>
+          <p class="total fs-1 fw-bold mb-0"><span class="total__price"></span>€</p>
         </div>
         <button class="btn btn-lg btn-dark mt-3">Provijera</button>
       </div>
