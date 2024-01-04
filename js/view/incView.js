@@ -15,8 +15,14 @@ class Inc {
   #totalPrice = document.querySelector(".total__price");
   #changeQuantityBtn = document.querySelectorAll(".change__quantity-btn");
 
+  //---------- Checkout ---------
+  #priceProducts = document.querySelector(".price__products");
+  #priceShipping = document.querySelector(".price__shipping");
+  #totalPriceCheckout = document.querySelector(".toal__price__checkout");
+
   footerContent() {
     const year = new Date().getFullYear();
+    if (!this.#footerConntainer) return;
     this.#footerConntainer.innerHTML = `<p class="text-lightgrey m-0">&copy; ${year} ${COMPANY} | Created by ${AUTHORS}</p>`;
   }
 
@@ -30,6 +36,8 @@ class Inc {
   }
 
   totalPrice() {
+    if (!this.#totalPrice) return;
+    if (!this.#productPrice) return;
     const self = this;
     let totalPrice = 0;
     this.#productPrice.forEach((e, i) => {
@@ -40,6 +48,7 @@ class Inc {
 
   changeQuantity() {
     const self = this;
+    if (!this.#changeQuantityBtn) return;
     this.#changeQuantityBtn.forEach((btn) => {
       btn.addEventListener("click", (e) => {
         let closestQuantity = e.target
@@ -54,6 +63,12 @@ class Inc {
         self.totalPrice();
       });
     });
+  }
+
+  checkoutPriceSummary() {
+    this.#totalPriceCheckout.innerHTML = (
+      +this.#priceProducts.innerHTML + +this.#priceShipping.innerHTML
+    ).toString();
   }
 }
 
