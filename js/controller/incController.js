@@ -5,6 +5,7 @@ const inc = function () {
   incView.showQuantityWishlist();
   incView.totalPrice();
   incView.changeQuantity();
+  incView.checkoutPriceSummary();
 };
 
 inc();

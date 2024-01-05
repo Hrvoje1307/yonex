@@ -1,7 +1,8 @@
 :root {
   --blue: #228be6;
-  --white: #f7f7f7;
+  --white: #fff;
   --darkGrey: #b3b3b3;
+  --black: #000;
 }
 
 @media screen and (min-width: 992px) {
@@ -120,4 +121,20 @@
 
 .quantity__product {
   width: 2rem;
+}
+
+.circle {
+  border-radius: 50%;
+  padding: 0.5rem 1rem;
+}
+
+.circle__fill {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.circle__nofill {
+  background-color: var(--white);
+  color: var(--black);
+  border: 1px solid var(--black);
 }
