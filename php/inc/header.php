@@ -1,3 +1,11 @@
+<?php 
+
+require_once("app/config/config.php");
+require_once("app/classes/User.php");
+$user = new User();
+
+?>
+
 <div class="container-lg">
    <div class="row my-3">
       <div class="col-12 d-flex gap-2 justify-content-end">
@@ -11,9 +19,14 @@
                   <i class="bi bi-person-fill text-secondary"></i>
                   <p class="my-0 d-none d-md-block text-secondary">Moj račun</p>
                </button>
+               
                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="login.php">Prijava</a></li>
-                  <li><a class="dropdown-item" href="registration.php">Registracija</a></li>
+                  <?php if ($user->is_logged()) : ?>
+                     <li><a class="dropdown-item" href="logout.php">Odjava</a></li> 
+                  <?php else : ?>
+                        <li><a class="dropdown-item" href="login.php">Prijava</a></li>
+                        <li><a class="dropdown-item" href="registration.php">Registracija</a></li>
+                  <?php endif; ?>
                </ul>
             </div>
          </div>

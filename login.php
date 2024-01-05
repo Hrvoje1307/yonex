@@ -1,3 +1,35 @@
+<?php
+require_once("app/config/config.php");
+require_once("app/classes/User.php");
+$user = new User();
+
+if($user->is_logged()) {
+   header("Location: index.php");
+   exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+   $email = $_POST['email'];
+   $password = $_POST['password'];
+   
+
+   $isLogged = $user->login($email, $password);
+
+   if($isLogged) {
+      $_SESSION['message']['type'] = 'success';
+      $_SESSION['message']['text'] = 'Uspjesno ste se prijavili!'; 
+      header("Location: index.php");
+      exit();
+   } else {
+      $_SESSION['message']['type'] = 'danger';
+      $_SESSION['message']['text'] = 'Neuspjesna prijava.'; // ovaj $_SESSION['message'] isprintas di oces gresku
+   }
+   
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,15 +67,15 @@
                <div class="card-body bg-lightwhite shadow-sm">
                   <h5 class="card-title fs-2 fw-bold">Postojeći korisnik</h5>
                   <h6 class="fw-bolder text-secondary">Već imam račun:</h6>
-                  <form>
+                  <form method="POST">
                      <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                        <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                         <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
                      </div>
                      <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1">
+                        <input name="password" type="password" class="form-control" id="exampleInputPassword1">
                      </div>
                      <div class="mb-3">
                         <a href="#" class="fw-bolder text-secondary text-decoration-none">Zaboravili ste lozinku?</a>

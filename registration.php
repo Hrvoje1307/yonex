@@ -1,3 +1,65 @@
+<?php 
+
+require_once ("app/config/config.php");
+require_once ("app/classes/User.php");
+
+$user = new User();
+
+if($user->is_logged()) {
+   header("Location: index.php");
+   exit();
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+   $name = $_POST['name'];
+   $surname = $_POST['surname'];
+   $email = $_POST['email'];
+   $number = $_POST['number'];
+   $password = $_POST['password'];
+   $r_password = $_POST['r_password'];
+   
+   $isNumberExists = $user->numberExists($number);
+   $isEmailExists = $user->emailExists($email);
+   
+   if (isset($name) || isset($surname) || isset($email) || isset($number) || isset($password) || isset($r_password)) {
+      if (isset($_POST['checker'])) {
+            if ($isNumberExists) {
+               $_SESSION['message']['type'] = 'danger';
+               $_SESSION['message']['text'] = 'Ovaj broj vec postoji.';
+            } else if ($isEmailExists) {
+               $_SESSION['message']['type'] = 'danger';
+               $_SESSION['message']['text'] = 'Ovaj e-mail vec postoji.';
+            } else {
+               if ($password === $r_password) {
+                  $created = $user->create($name, $surname, $email, $number, $password);
+                  if ($created) {
+                     $_SESSION['message']['type'] = 'success';
+                     $_SESSION['message']['text'] = 'Uspjesno ste se registrirali!'; 
+                     header("Location: login.php");
+                     exit();
+                  }
+               } else {
+                  $_SESSION['message']['type'] = 'danger';
+                  $_SESSION['message']['text'] = 'Lozinke su razlicite.';
+               }
+            }
+      } else {
+         $_SESSION['message']['type'] = 'danger';
+         $_SESSION['message']['text']  = 'Morate prihvatiti uvjete koristenja.';
+      }
+   } else {
+      $_SESSION['message']['type'] = 'danger';
+      $_SESSION['message']['text'] = 'Sva polja OBAVEZNO moraju biti popunjena.';
+   }
+   
+}
+
+echo $_SESSION['message'];
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,34 +83,35 @@
    <div class="container-md py-5 height__container">
       <h2 class="text-dark fw-bolder fs-1">Registracija</h2>
       <a href="login.php" class="text-dark text-decoration-none">Imate račun? Prijavite se</a>
-      <form action="POST" class="my-2">
+      <form method="POST" class="my-2">
          <p class="text-dark fw-semibold fs-5 m-0">Osobni podaci</p>
          <hr class="line__footer bg-dark m-0">
+
          <div class="my-3 ms-sm-5 ms-0  d-flex align-items-center justify-content-between gap-3">
             <label for="name" class="form-label form__label m-0 fw-semibold"><span class="text-danger">*</span>Ime</label>
-            <input type="text" class="form-control" id="name" placeholder="Vaše ime">
+            <input name="name" type="text" class="form-control" id="name" placeholder="Vaše ime">
          </div>
          <div class="my-3 ms-sm-5 ms-0 d-flex align-items-center justify-content-between gap-3">
             <label for="surname" class="form-label form__label m-0 fw-semibold"><span class="text-danger">*</span>Prezime</label>
-            <input type="text" class="form-control" id="surname" placeholder="Vaše prezime">
+            <input name="surname" type="text" class="form-control" id="surname" placeholder="Vaše prezime">
          </div>
          <div class="my-3 ms-sm-5 ms-0 d-flex align-items-center gap-3">
             <label for="email" class="form-label form__label m-0 fw-semibold"><span class="text-danger">*</span>Email adresa</label>
-            <input type="email" class="form-control" id="email" placeholder="Vaš email">
+            <input name="email" type="email" class="form-control" id="email" placeholder="Vaš email">
          </div>
          <div class="my-3 mb-4 ms-sm-5 ms-0 d-flex align-items-center gap-3">
             <label for="phone" class="form-label form__label m-0 fw-semibold"><span class="text-danger">*</span>Mobitel</label>
-            <input type="text" class="form-control" id="phone" placeholder="Vaš broj mobitela">
+            <input name="number" type="text" class="form-control" id="phone" placeholder="Vaš broj mobitela">
          </div>
          <p class="text-dark fw-semibold fs-5 m-0">Lozinka</p>
          <hr class="line__footer bg-dark m-0">
          <div class="my-3 ms-sm-5 ms-0 d-flex align-items-center justify-content-between gap-3">
             <label for="password" class="form-label form__label m-0 fw-semibold"><span class="text-danger">*</span>Lozinka</label>
-            <input type="password" class="form-control" id="password" placeholder="**********">
+            <input name="password" type="password" class="form-control" id="password" placeholder="**********">
          </div>
          <div class="my-3 ms-sm-5 ms-0 d-flex align-items-center justify-content-between gap-3">
             <label for="password_repeat" class="form-label form__label m-0 fw-semibold"><span class="text-danger">*</span>Potvrdi lozinku</label>
-            <input type="password" class="form-control" id="password_repeat" placeholder="*********">
+            <input name="r_password" type="password" class="form-control" id="password_repeat" placeholder="*********">
          </div>
          <div class="d-flex justify-content-end align-items-center gap-3 mt-5">
             <p class="text-secondary m-0 d-flex align-items-center gap-1">
@@ -56,7 +119,7 @@
                <button type="button" class="border-0 bg-transparent p-0 text-dark fw-bold" data-bs-toggle="modal" data-bs-target="#exampleModal">
                   Zapošljavanje
                </button>
-               <input type="checkbox">
+               <input type="checkbox" name="checker">
             </p>
             <input type="submit" value="Nastavi" class="btn btn-dark">
          </div>
