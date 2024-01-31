@@ -140,6 +140,9 @@
                 </div>
               </div>
             </div>
+            <div class="mt-3 justify-content-end d-flex">
+              <button class="btn btn-secondary">Pretraži</button>
+            </div>
             </div>
           </div>
         </div>
@@ -281,6 +284,10 @@
                       </li>
                     </ul>
                   </div>
+                </div>
+                <hr class="line__footer bg-dark">
+                <div class="row">
+                  <button class="col-12 btn btn-secondary">Pretraži</button>
                 </div>
               </div>
             </div>
