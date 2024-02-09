@@ -1,3 +1,10 @@
+<?php
+  require_once ("app/config/config.php");
+  require_once ("app/classes/User.php");
+
+  $user = new User();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -135,45 +142,7 @@
             </div>
           </div>
           <div class="row mt-3 ps-3 gap-2 justify-content-sm-start justify-content-center">
-            <div class="card shop__card">
-              <img src="images/product-images/tennis/yell--balls.png" class="card-img-top" alt="...">
-              <div class="card-body">
-                  <h5 class="card-title fw-bold">Teniske loptice za trening 60 komada</h5>
-                  <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi possimus, </p>
-                  <p class="fs-3 m-0"><span>110,00</span>€</p>
-                  <p class="fs-5 m-0 mb-1"><span>110,00</span>€</p>
-                  <p class="fs-6 fw-semibold text-success m-0 mb-3">Dostupno</p>
-                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
-                        <i class="bi bi-cart-fill"></i>
-                        <p class="lead m-0">Dodaj u košaricu</p>
-                    </a>
-                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
-                        <i class="bi bi-heart"></i>
-                    </a>
-                  </div>
-              </div>
-            </div>
-            <div class="card shop__card">
-              <img src="images/product-images/tennis/yell--balls.png" class="card-img-top" alt="...">
-              <div class="card-body">
-                  <h5 class="card-title fw-bold">Teniske loptice za trening 60 komada</h5>
-                  <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi possimus, </p>
-                  <p class="fs-3 m-0"><span>110,00</span>€</p>
-                  <p class="fs-5 m-0 mb-1"><span>110,00</span>€</p>
-                  <p class="fs-6 fw-semibold text-danger m-0 mb-3">Nedostupno</p>
-                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
-                        <i class="bi bi-cart-fill"></i>
-                        <p class="lead m-0">Dodaj u košaricu</p>
-                    </a>
-                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
-                        <i class="bi bi-heart"></i>
-                    </a>
-                  </div>
-              </div>
-            </div>
-            </div>
+            <?php $user->printProductCards("classicfilters", "vibrationDamper")?>
           </div>
         </div>
       </div>

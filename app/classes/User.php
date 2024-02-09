@@ -90,4 +90,119 @@ class User {
 
         return false;
     }
+
+
+    //STORE PRINT PRODUCTS
+    public function vibrationDumpers() {
+        $sql = "SELECT * FROM classicfilters";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+    
+        $results = $stmt->get_result();
+        $products = array();
+    
+        if ($results->num_rows > 0) {
+            while ($row = $results->fetch_assoc()) {
+                $products[] = $row;
+            }
+        }
+
+    
+        foreach($products as $product) {
+            if($product["quantity"]>0) {
+                echo "
+                <div class='card shop__card'>
+                    <img src='".$product['img_url']."' class='card-img-top' alt='".$product['description']."'>
+                    <div class='card-body'>
+                        <h5 class='card-title fw-bold'>".$product['name']."</h5>
+                        <p class='card-text'>".$product['description']." </p>
+                        <p class='fs-5 m-0'><span>".$product['price']."</span>€</p>
+                        <p class='fs-6 m-0 mb-3'><span>".$product['priceNOTAX']."</span>€</p>
+                        <p class='fs-6 fw-semibold text-success m-0 mb-3'>Dostupno</p>
+                        <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
+                        <a href='#' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
+                            <i class='bi bi-cart-fill'></i>
+                            <p class='lead m-0'>Dodaj u košaricu</p>
+                        </a>
+                        <a href='#' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
+                            <i class='bi bi-heart'></i>
+                        </a>
+                        </div>
+                    </div>
+                </div>";
+            }
+        }
+    }
+
+    public function printProductCards($table, $category) {
+        $sql = "SELECT * FROM $table";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+    
+        $results = $stmt->get_result();
+        $products = array();
+    
+        if ($results->num_rows > 0) {
+            while ($row = $results->fetch_assoc()) {
+                $products[] = $row;
+            }
+        }
+
+        $this->cardPrint($products, $category);
+    }
+
+    private function cardPrint($array, $category) {
+        foreach($array as $product) {
+            if($product["category"] == $category) {
+                echo "
+                <div class='card shop__card'>
+                    <img src='".$product['img_url']."' class='card-img-top' alt='".$product['description']."'>
+                    <div class='card-body'>
+                        <h5 class='card-title fw-bold'>".$product['name']."</h5>
+                        <p class='card-text'>".$this->truncString($product['description'])." </p>
+                        <p class='fs-3 m-0'><span>".$product['price']."</span>€</p>
+                        <p class='fs-5 m-0 mb-3'><span>".$product['priceNOTAX']."</span>€</p>
+                        ";
+            if($product["quantity"]>0) {
+                    echo"
+                        <p class='fs-6 fw-semibold text-success m-0 mb-3'>Dostupno</p>
+                        <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
+                        <a href='#' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
+                            <i class='bi bi-cart-fill'></i>
+                            <p class='lead m-0'>Dodaj u košaricu</p>
+                        </a>
+                        <a href='#' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
+                            <i class='bi bi-heart'></i>
+                        </a>
+                        </div>";
+                   
+            }
+            else if($product["quantity"]<= 0) {
+                echo"
+                        <p class='fs-6 fw-semibold text-danger m-0 mb-3'>Nedostupno</p>
+                        <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
+                        <a href='#' class='btn btn-light d-flex gap-1 justify-content-center align-items-center disabled'>
+                            <i class='bi bi-cart-fill'></i>
+                            <p class='lead m-0'>Dodaj u košaricu</p>
+                        </a>
+                        <a href='#' class='btn btn-light d-flex gap-1 justify-content-center align-items-center disabled'>
+                            <i class='bi bi-heart'></i>
+                        </a>
+                        </div>
+                ";
+            }
+            echo " </div>
+            </div>";
+            }
+        }
+    }
+
+    private function truncString($string, $length = 100, $append="...") {
+        if(strlen($string) > $length) {
+            $string =substr($string,0,$length).$append;
+        }
+        return $string;
+    }
+
+
 }
