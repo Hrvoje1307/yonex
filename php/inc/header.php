@@ -4,6 +4,8 @@ require_once("app/config/config.php");
 require_once("app/classes/User.php");
 $user = new User();
 
+$user -> searchResults();
+
 ?>
 
 <!DOCTYPE html>
@@ -72,7 +74,7 @@ $user = new User();
                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
          </div>
-         <div class="offcanvas-body">
+         <div class="offcanvas-body justify-content-between">
             <ul class="navbar-nav mx-xxl-5 mg-lg-1">
                <li class="nav-item dropdown my-dropdown">
                   <p class="nav-link my-0 text-uppercase fw-bold my-nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -226,13 +228,15 @@ $user = new User();
                   </ul>
                </li>
             </ul>
-            <div class="input-group mx-xxl-5 mx-lg-1 my-3 my-lg-0 mb-lg-0 border border-1 rounded flex-nowrap">
-               <input type="text" class="form-control border border-0" placeholder="Search..." aria-label="Search" aria-describedby="addon-wrapping">
-               <span class="input-group-text border border-0 bg-light" id="addon-wrapping">
-                  <i class="bi bi-search"></i>
-               </span>
-            </div>
-            <a href="cart.php" class="btn btn-dark d-flex gap-1">
+            <form method="POST" class="mx-xxl-5 mx-lg-1 my-3 my-lg-0 mb-lg-0">
+               <div class="input-group  border border-1 rounded flex-nowrap">
+                  <input type="text" name="search-input" class="form-control border border-0" placeholder="Search..." aria-label="Search" aria-describedby="addon-wrapping">
+                  <button name="submit-search" class="input-group-text border border-0 bg-light" id="addon-wrapping">
+                     <i class="bi bi-search"></i>
+                  </button>
+               </div>
+            </form>
+            <a href="cart.php" class="btn btn-dark d-flex gap-1 text-light">
                <i class="bi bi-cart-fill"></i>
                <span class="product-number">0</span> proizvoda <span>-</span> <span class="price">0</span> €
             </a>

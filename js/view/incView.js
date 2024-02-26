@@ -15,11 +15,6 @@ class Inc {
   #totalPrice = document.querySelector(".total__price");
   #changeQuantityBtn = document.querySelectorAll(".change__quantity-btn");
 
-  //---------- Checkout ---------
-  #priceProducts = document.querySelector(".price__products");
-  #priceShipping = document.querySelector(".price__shipping");
-  #totalPriceCheckout = document.querySelector(".toal__price__checkout");
-
   footerContent() {
     const year = new Date().getFullYear();
     if (!this.#footerConntainer) return;
@@ -65,11 +60,6 @@ class Inc {
     });
   }
 
-  checkoutPriceSummary() {
-    this.#totalPriceCheckout.innerHTML = (
-      +this.#priceProducts.innerHTML + +this.#priceShipping.innerHTML
-    ).toString();
-  }
 }
 
 export default new Inc();
