@@ -16,13 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    $isLogged = $user->login($email, $password);
 
    if($isLogged) {
-      $_SESSION['message']['type'] = 'success';
-      $_SESSION['message']['text'] = 'Uspjesno ste se prijavili!'; 
       header("Location: index.php");
       exit();
    } else {
       $_SESSION['message']['type'] = 'danger';
-      $_SESSION['message']['text'] = 'Neuspjesna prijava.'; // ovaj $_SESSION['message'] isprintas di oces gresku
+      $_SESSION['message']['text'] = 'Krivi email ili lozinka'; // ovaj $_SESSION['message'] isprintas di oces gresku
    }
    
 }
@@ -32,7 +30,18 @@ require_once("php/inc/header.php") ?>
   
 
    <div class="container-md height__container">
-      <div class="row my-5">
+      <?php
+         if(isset($_SESSION["message"]["type"])) {
+            echo "
+               <div class='mt-3 mb-0 alert alert-".$_SESSION["message"]["type"]."' role='alert'>
+                  ".$_SESSION['message']['text']."
+               </div>
+            ";
+            unset($_SESSION["message"]["type"]);
+            unset($_SESSION["message"]["message"]);
+         }
+      ?>
+      <div class="row my-5 mt-3">
          <div class="col-md-6 col-12">
             <div class="card">
                <div class="card-body bg-lightwhite shadow-sm">
@@ -59,9 +68,9 @@ require_once("php/inc/header.php") ?>
                         <input name="password" type="password" class="form-control" id="exampleInputPassword1">
                      </div>
                      <div class="mb-3">
-                        <a href="#" class="fw-bolder text-secondary text-decoration-none">Zaboravili ste lozinku?</a>
+                        <a href="forgotten-password.php" class="fw-bolder text-secondary text-decoration-none">Zaboravili ste lozinku?</a>
                      </div>
-                     <button type="submit" class="btn btn-dark">Submit</button>
+                     <button type="submit" class="btn btn-dark">Nataviti</button>
                   </form>  
                </div>
             </div>

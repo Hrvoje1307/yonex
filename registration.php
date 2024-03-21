@@ -12,6 +12,8 @@ if($user->is_logged()) {
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+   unset($_SESSION['message']['type']);
+   unset($_SESSION['message']['text']);
    $name = $_POST['name'];
    $surname = $_POST['surname'];
    $email = $_POST['email'];
@@ -32,12 +34,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                $_SESSION['message']['text'] = 'Ovaj e-mail vec postoji.';
             } else {
                if ($password === $r_password) {
-                  $created = $user->create($name, $surname, $email, $number, $password);
-                  if ($created) {
-                     $_SESSION['message']['type'] = 'success';
-                     $_SESSION['message']['text'] = 'Uspjesno ste se registrirali!'; 
-                     header("Location: login.php");
-                     exit();
+                  if($user->passwordCheck($password)) {
+                     $created = $user->create($name, $surname, $email, $number, $password);
+                     if ($created) {
+                        $_SESSION['message']['type'] = 'success';
+                        $_SESSION['message']['text'] = 'Uspiješno ste se registrirali.';
+                        header("Location: login.php");
+                        exit();
+                     }
+                  } else {
+                     $_SESSION['message']['type'] = 'danger';
+                     $_SESSION['message']['text'] = 'Lozinka mora sadržavati veliko slovo, malo slovo, broj, specijalni znak i mora biti duza od 9 znakova';
                   }
                } else {
                   $_SESSION['message']['type'] = 'danger';
@@ -61,6 +68,17 @@ require_once("php/inc/header.php") ?>
    <div class="container-md py-5 height__container">
       <h2 class="text-dark fw-bolder fs-1">Registracija</h2>
       <a href="login.php" class="text-dark text-decoration-none">Imate račun? Prijavite se</a>
+      <?php
+         if(isset($_SESSION["message"]["type"]) && $_SESSION["message"]["type"] == "danger") {
+            echo "
+               <div class='mt-3 alert alert-".$_SESSION["message"]["type"]."' role='alert'>
+                  ".$_SESSION['message']['text']."
+               </div>
+            ";
+            unset($_SESSION["message"]["type"]);
+            unset($_SESSION["message"]["message"]);
+         }
+      ?>
       <form method="POST" class="my-2">
          <p class="text-dark fw-semibold fs-5 m-0">Osobni podaci</p>
          <hr class="line__footer bg-dark m-0">

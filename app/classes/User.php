@@ -1,5 +1,9 @@
 <?php 
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 class User {
     protected $conn;
 
@@ -22,7 +26,8 @@ class User {
         $result = $stmt->execute();
     
         if ($result) {
-            $_SESSION['user_id'] = $stmt->insert_id;
+            unset($_SESSION["name"]);
+            $_SESSION['name'] = $name;
             return true;
         } else {
             return false;
@@ -31,7 +36,7 @@ class User {
 
     // prijava
     public function login($email, $password) {
-        $sql = "SELECT user_id, password FROM users WHERE email = ?";
+        $sql = "SELECT user_id, password,name FROM users WHERE email = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -43,13 +48,173 @@ class User {
 
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION["name"] = $user["name"];
                 return true;
             }
         }
 
         return false;
     }
+
+    public function fillData($userId) {
+        $sql = "SELECT * from users WHERE user_id=?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s",$userId);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        if($results->num_rows == 1) {
+            return $results->fetch_assoc();
+        }
+    }
+
+    public function changeData() {
+        $counter = 0;
+        unset($_SESSION["message"]["type"]);
+        unset($_SESSION["message"]["text"]);
+        if($_SERVER["REQUEST_METHOD"]=="POST") {
+            $name = ["value" => $_POST['name'], "field" => "name"];
+            $surname = ["value" => $_POST['surname'], "field" => "surname"];
+            $email = ["value" => $_POST["email"], "field" => "email"];
+            $phone = ["value" => $_POST["phone-number"], "field" => "number"];
+            $oldPassword = $_POST["old-password"];
+            $newPassword = $_POST["new-password"];
+            $newRepPassword = $_POST["new-password-repeted"];
+            $inputChangeArray =  [$name,$surname,$email,$phone];
+            if($_SESSION["name"]) {
+                $sql = "SELECT * FROM users where user_id=?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("s",$_SESSION["user_id"]);
+                $stmt->execute();
+                $results = $stmt->get_result();
+                if($results->num_rows==1) {
+                    $data = $results->fetch_assoc();
+                    if(isset($oldPassword) && password_verify($oldPassword,$data["password"])) {
+                        foreach($inputChangeArray as $field) {
+                            if($field["value"] !== $data[$field["field"]]) {
+                                $sql = "UPDATE users SET ".$field['field']."=? WHERE user_id=?";
+                                $stmt = $this->conn->prepare($sql);
+                                $stmt->bind_param("ss", $field["value"], $_SESSION["user_id"]);
+                                $stmt->execute();
+                                $_SESSION["name"] = $name["value"];
+                                $counter++;
+                            }
+                        }
+                        if(isset($newPassword) && $this->passwordCheck($newPassword,$newRepPassword)) {
+                            $inputPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                            $sql = "UPDATE users SET password=? WHERE user_id=?";
+                            $stmt = $this->conn->prepare($sql);
+                            $stmt->bind_param("ss", $inputPassword, $_SESSION["user_id"]);
+                            $stmt->execute();
+                            $counter++;
+                        }
+                        if($counter > 0) {
+                            $_SESSION["message"]["type"] = "success";
+                            $_SESSION["message"]["text"] = "Uspiješno ste promijenili podatke";
+                        }else {
+                            $_SESSION["message"]["type"] = "danger";
+                            $_SESSION["message"]["text"] = "Niste promijenili nijedno polje. Pokušajte ponovno";
+                        }
+                    }else {
+                        $_SESSION["message"]["type"] = "danger";
+                        $_SESSION["message"]["text"] = "Pogrešna lozinka. Pokušajte ponovno";
+                    }
+                }
+            }
+        }
+    }
+
+    public function getMail() {
+        unset($_SESSION["message"]["type"]);
+        unset($_SESSION["message"]["text"]);
+        if($_SERVER["REQUEST_METHOD"]=="POST") {
+            $email = $_POST["email"];
+            $token = bin2hex(random_bytes(16));
+            $token_hash = hash("sha256", $token);
+            $expiry = date("Y-m-d H:i:s", strtotime("+5 minutes"));
+            $sql = "UPDATE users
+                        SET reset_token_hash =?, reset_token_expires_at = ?
+                    WHERE email = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("sss", $token_hash, $expiry, $email);
+            $stmt->execute();
+
+            if($this->conn->affected_rows) {
+               $mail = $this->smtpServer();
+               $mail->setFrom("noreplay@gmail.com");
+               $mail->addAddress($email);
+               $mail->Subject = "Resetiranje lozinke";
+               $mail->Body ="Kliknite http://localhost/yonex/reset-password.php?token=$token za resetiranje lozinke";
+               try{
+                $mail->send();
+               }catch(Exception $e) {
+                    $_SESSION["message"]["type"]="danger";
+                    $_SESSION["message"]["text"]="Poruku nije moguće poslati jer {$mail->ErrorInfo}";
+               }
+            }
+            $_SESSION["message"]["type"]="success";
+            $_SESSION["message"]["text"]="Poveznica je uspijesno poslana";
+        }
+    }
+
+    private function smtpServer() {
+        require __DIR__ . "/../../vendor/autoload.php";
     
+        $mail = new PHPMailer(true);
+    
+        // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        $mail->isSMTP();
+        $mail->SMTPAuth = true;
+    
+        $mail->Host = "smtp.gmail.com";
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
+        $mail->Username="cuckovichrvoje@gmail.com";
+        $mail->Password="mcws yeke qjzo dlbn";
+        return $mail;
+    }
+
+    public function tokenPassword() {
+        $token = $_GET["token"];
+
+        $token_hash = hash("sha256", $token);
+        $sql = "SELECT * from users WHERE reset_token_hash = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $token_hash);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+
+        if(!$user) {
+            die("Token nije pronađen");
+        }else if(strtotime($user["reset_token_expires_at"])<=time()) {
+            die("Token je istekao");
+        }else {
+            return true;
+        }
+    }
+
+    public function changePassword() {
+        unset($_SESSION["message"]["type"]);
+        unset($_SESSION["message"]["text"]);
+        $token_hash = hash("sha256", $_GET["token"]);
+        
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $password = $_POST["new_password"];
+            $passworEnc = password_hash($password, PASSWORD_DEFAULT);
+            $repetedPassword = $_POST["new_password_repeated"];
+            $passwordChecked = $this->passwordCheck($password,$repetedPassword);
+            if($passwordChecked) {
+                $sql = "UPDATE users SET password=? WHERE reset_token_hash=?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("ss", $passworEnc, $token_hash);
+                $stmt->execute();
+                $_SESSION["message"]["type"] = "success";
+                $_SESSION["message"]["text"] = "Uspiješno ste promijenili lozinku idite na <a href='login.php' class='text-decoration-underline'>prijava</a> i prijavite se ponovo";
+            }
+            // return $password;
+        }
+    }
+
     // provjera ulogiranosti
     public function is_logged() {
         if(isset($_SESSION['user_id'])) {
@@ -89,6 +254,26 @@ class User {
         if ($result->num_rows > 0) return true;
 
         return false;
+    }
+
+    public function passwordCheck($password, $repetedPassword=null) {
+        $uppercase = preg_match("@[A-Z]@", $password);
+        $lowercase = preg_match("@[a-z]@", $password);
+        $number = preg_match("@[0-9]@", $password);
+        $specialCharacter = preg_match('@[^\w]@',$password);
+
+        if(!$uppercase || !$lowercase || !$number || !$specialCharacter || strlen($password) < 9) {
+            return false;
+        }else {
+            if($repetedPassword) {
+                if($password != $repetedPassword) {
+                    return false;
+                }else {
+                    return true;
+                }
+            }
+            return true;
+        }
     }
 
 

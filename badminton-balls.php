@@ -1,4 +1,4 @@
-<?php require_once ("app/config/config.php");
+<?php 
  require_once("php/inc/header.php") ?>
    <div class="container-lg height__container">
       <div class="row my-3">

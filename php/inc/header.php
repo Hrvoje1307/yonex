@@ -36,12 +36,17 @@ $user -> searchResults();
             <div class="dropdown">
                <button class="btn p-0 dropdown-toggle d-flex gap-2 align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <i class="bi bi-person-fill text-secondary"></i>
-                  <p class="my-0 d-none d-md-block text-secondary">Moj račun</p>
+                  <?php if($user->is_logged()) : ?>
+                     <p class="my-0 d-none d-md-block text-secondary"><?php echo $_SESSION["name"];?></p>
+                  <?php else :?>
+                     <p class="my-0 d-none d-md-block text-secondary">Moj račun</p>
+                  <?php endif ;?>
                </button>
                
                <ul class="dropdown-menu">
                   <?php if ($user->is_logged()) : ?>
                      <li><a class="dropdown-item" href="logout.php">Odjava</a></li> 
+                     <li><a class="dropdown-item" href="account.php">Korisnički račun</a></li> 
                   <?php else : ?>
                         <li><a class="dropdown-item" href="login.php">Prijava</a></li>
                         <li><a class="dropdown-item" href="registration.php">Registracija</a></li>
