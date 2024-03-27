@@ -7,50 +7,46 @@
    <div class="container-lg height__container">
       <div class="row my-3">
         <div class="col-lg-3 d-none d-lg-block">
-          <p class="fs-3 fw-semibold">Filter</p>
-          <div class="accordion" id="accordionPanelsStayOpenExample">
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                  Cijena
-                </button>
-              </h2>
-              <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
-                <div class="accordion-body body__filters">
-                  <div class="d-flex gap-1 align-items-center">
-                    <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0 text-nowrap">€ -</p>
-                    <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0">€</p>
+          <form method="get">
+            <p class="fs-3 fw-semibold">Filter</p>
+            <div class="accordion" id="accordionPanelsStayOpenExample">
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                    Cijena
+                  </button>
+                </h2>
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                  <div class="accordion-body body__filters">
+                    <div class="d-flex gap-1 align-items-center">
+                        <?php
+                          $user->priceFilter();
+                        ?>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header">
-                <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                  Dostupnost
-                </button>
-              </h2>
-              <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
-                <div class="accordion-body body__filters">
-                  <ul class="list-group">
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="available">
-                      <label for="available">Dostupno</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="unavailable">
-                      <label for="unavailable">Nedostupno</label>
-                    </li>
-                  </ul>
+              <div class="accordion-item">
+                <h2 class="accordion-header">
+                  <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                    Dostupnost
+                  </button>
+                </h2>
+                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
+                  <div class="accordion-body body__filters">
+                    <ul class="list-group">
+                      <?php
+                        $user->availabilityFilter();
+                      ?>
+                    </ul>
+                  </div>
                 </div>
               </div>
+              <div class="mt-3 justify-content-end d-flex">
+                <button class="btn btn-secondary">Pretraži</button>
+              </div>
             </div>
-            <div class="mt-3 justify-content-end d-flex">
-              <button class="btn btn-secondary">Pretraži</button>
-            </div>
-          </div>
+          </form>
         </div>
         <div class="col-lg-9 col-12">
           <p class="fs-3 fw-semibold">Prigušivaći vibracije</p>
