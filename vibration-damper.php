@@ -53,7 +53,7 @@
           <div class="row">
             <div class="col-lg-12 col-8 d-flex gap-3">
               <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-lightgrey border border-0">Poredaj po:</button>
+                <button type="button" class="btn btn-lightgrey border border-0 text-nowrap">Poredaj po:</button>
                 <select name="sort" class="border border-top border-right border-bottom rounded-end">
                   <option value="classic">Standardno</option>
                   <option value="aToZ">Ime (A do Z)</option>
@@ -87,10 +87,7 @@
                     <p class="mb-0 text-dark fw-solidbold">Cijena</p>
                   </div>
                   <div class="col-6 d-flex gap-1 align-items-center">
-                    <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0">€ -</p>
-                    <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0">€</p>
+                    <?php $user->priceFilter(); ?>
                   </div>
                 </div>
                 <hr class="line__footer bg-dark">
@@ -100,14 +97,7 @@
                   </div>
                   <div class="col-6">
                     <ul class="list-group flex-wrap flex-row gap-2">
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="available">
-                        <label for="available">Dostupno</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="unavailable">
-                        <label for="unavailable">Nedostupno</label>
-                      </li>
+                      <?php $user->availabilityFilter(); ?>
                     </ul>
                   </div>
                 </div>
@@ -119,7 +109,7 @@
             </div>
           </div>
           <div class="row mt-3 ps-3 gap-2 justify-content-sm-start justify-content-center">
-            <?php $user->printProductCards("classicfilters", "vibrationDamper")?>
+            <?php $user->printClassicFilters("classicfilters", "vibrationDamper")?>
           </div>
         </div>
       </div>

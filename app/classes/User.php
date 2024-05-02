@@ -280,36 +280,9 @@ class User {
 
 
     //STORE PRINT PRODUCTS
-    public function printProductCards($table, $category) {
-        $products = [];
-        if(isset($_GET["filterAvailability"])) {
-            $returnArrayAvailability = $this->availabilityFilterProduct($table);
-            foreach($returnArrayAvailability as $product) {
-                $products[] = $product;
-            }
-        }if(isset($_GET["filterPrice"])) {
-            $returnArrayAvailability = $this->priceFilterProduct($table);
-            foreach($returnArrayAvailability as $product) {
-                $products[] = $product;
-            }
-        } else {
-            $sql = "SELECT * FROM $table";
-            $stmt = $this->conn->prepare($sql);
-            $stmt->execute();
-        
-            $results = $stmt->get_result();
-            $products = array();
-        
-            if ($results->num_rows > 0) {
-                while ($row = $results->fetch_assoc()) {
-                    $products[] = $row;
-                }
-            }
-
-        }
-        var_dump($products);
-        echo $this->cardPrint($products, $category);
-    }
+    // public function printProductCards($category, $array) {
+    //     echo $this->cardPrint($array, $category);
+    // }
 
     private function cardPrint($array, $category) {
         $code = "";
@@ -518,40 +491,6 @@ class User {
         
     }
 
-    private function availabilityFilterProduct($table) {
-        $checked = isset($_GET["filterAvailability"]) ? $_GET["filterAvailability"] : array();
-        $conditions = array();
-
-        foreach($checked as $row) {
-            $id =(int)$row;
-            if($id === 1) {
-                $conditions[] = "quantity > 0";
-            } else if($id === 2) {
-                $conditions[] = "quantity = 0";
-            }
-        }
-
-        $whereCondition = "";
-        if(!empty($conditions)) {
-            $whereCondition = " WHERE ".implode(" OR ",$conditions);
-        }
-
-        $sql ="SELECT * FROM $table".$whereCondition;
-
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-    
-        $results = $stmt->get_result();
-        $products = array();
-    
-        if ($results->num_rows > 0) {
-            while ($row = $results->fetch_assoc()) {
-                $products[] = $row;
-            }
-        }
-        return $products;
-    }
-
     public function priceFilter() {
         if(isset($_GET["filterPrice"])) {
             $this->minValue = $_GET["filterPrice"][0];
@@ -560,7 +499,7 @@ class User {
 
         echo "
             <br>
-            <input type='number' style='width:40%' name='filterPrice[]' min=0 value=".$this->minValue.">
+            <input type='number' style='width:40%' name='filterPrice[]' min=0 value=".$this->minValue   .">
             <p class='fw-semibold mb-0 text-nowrap'>€ -</p>
             <input type='number' style='width:40%' name='filterPrice[]' value=".$this->maxValue.">
             <p class='fw-semibold mb-0'>€</p>
@@ -568,20 +507,34 @@ class User {
 
     }
 
-    private function priceFilterProduct($table) {
-        $sql = "SELECT * FROM $table WHERE price>=$this->minValue and price<=$this->maxValue";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute();
-    
-        $results = $stmt->get_result();
-        $products = array();
-    
-        if ($results->num_rows > 0) {
-            while ($row = $results->fetch_assoc()) {
-                $products[] = $row;
+    public function printClassicFilters($table,$category) {
+        $products = [];
+        $additionalSql = [];
+        $available = false;
+        $unavailable = false;
+        $minPrice = +$_GET["filterPrice"][0];
+        $maxPrice = +$_GET["filterPrice"][1];
+        if(isset($_GET["filterAvailability"])) {
+            $filterAvailability = $_GET["filterAvailability"];
+            $available = in_array("1",$filterAvailability);
+            $unavailable = in_array("2",$filterAvailability);
+            if($available || $unavailable) {
+                if($available && $unavailable) {
+                    array_push($additionalSql, ""); 
+                }else {
+                    !$available ?: array_push($additionalSql, "AND quantity>0"); 
+                    !$unavailable ?: array_push($additionalSql, "AND quantity=0");
+                }
             }
         }
-
-        return $products;
+        $sql = "SELECT * from $table WHERE category = ? AND price>= ? AND price<= ? ".implode(" ",$additionalSql);
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("sdd", $category, $minPrice, $maxPrice);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        while($data = $results->fetch_assoc()) {
+            $products[] = $data;
+        }
+        echo $this->cardPrint($products, $category);
     }
 }
