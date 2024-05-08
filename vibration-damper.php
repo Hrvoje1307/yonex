@@ -1,9 +1,4 @@
-<?php
-  require_once ("app/config/config.php");
-  require_once ("app/classes/User.php");
-
-  $user = new User();
-   require_once("php/inc/header.php") ?>
+<?php require_once("php/inc/header.php") ?>
    <div class="container-lg height__container">
       <div class="row my-3">
         <div class="col-lg-3 d-none d-lg-block">
@@ -81,32 +76,34 @@
               </p>
             </div>
             <div class="collapse mt-2" id="collapseExample">
-              <div class="card card-body d-lg-none d-block">
-                <div class="row">
-                  <div class="col-6">
-                    <p class="mb-0 text-dark fw-solidbold">Cijena</p>
+                <form method="get">
+                  <div class="card card-body d-lg-none d-block">
+                    <div class="row">
+                      <div class="col-6">
+                        <p class="mb-0 text-dark fw-solidbold">Cijena</p>
+                      </div>
+                      <div class="col-6 d-flex gap-1 align-items-center">
+                        <?php $user->priceFilter(); ?>
+                      </div>
+                    </div>
+                    <hr class="line__footer bg-dark">
+                    <div class="row mt-3">
+                      <div class="col-6">
+                        <p class="mb-0 text-dark fw-solidbold">Dostupnost</p>
+                      </div>
+                      <div class="col-6">
+                        <ul class="list-group flex-wrap flex-row gap-2">
+                          <?php $user->availabilityFilter(); ?>
+                        </ul>
+                      </div>
+                    </div>
+                    <hr class="line__footer bg-dark">
+                    <div class="row">
+                      <button class="col-12 btn btn-secondary">Pretraži</button>
+                    </div>
                   </div>
-                  <div class="col-6 d-flex gap-1 align-items-center">
-                    <?php $user->priceFilter(); ?>
-                  </div>
-                </div>
-                <hr class="line__footer bg-dark">
-                <div class="row mt-3">
-                  <div class="col-6">
-                    <p class="mb-0 text-dark fw-solidbold">Dostupnost</p>
-                  </div>
-                  <div class="col-6">
-                    <ul class="list-group flex-wrap flex-row gap-2">
-                      <?php $user->availabilityFilter(); ?>
-                    </ul>
-                  </div>
-                </div>
-                <hr class="line__footer bg-dark">
-                <div class="row">
-                  <button class="col-12 btn btn-secondary">Pretraži</button>
-                </div>
+              </form>
               </div>
-            </div>
           </div>
           <div class="row mt-3 ps-3 gap-2 justify-content-sm-start justify-content-center">
             <?php $user->printClassicFilters("classicfilters", "vibrationDamper")?>

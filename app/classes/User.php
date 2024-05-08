@@ -7,7 +7,7 @@ use PHPMailer\PHPMailer\Exception;
 class User {
     protected $conn;
     private $minValue = 0;
-    private $maxValue = 100;
+    private $maxValue = 1000;
 
     public function __construct() {
         global $conn;
@@ -462,44 +462,71 @@ class User {
     }
 
     // Filters
+    private function checkboxFilterPrint($results, $filterName) {
+        $arrName = $filterName ."[]";
+        if($results->num_rows>=1) {
+            while($data = $results->fetch_assoc()) {
+                $checked = [];
+                if(isset($_GET[$filterName])) {
+                    $checked = $_GET[$filterName];
+                }
+                echo "
+                    <li class='d-flex gap-2 align-items-center list-group-item border border-0'>
+                        <input type='checkbox' name='".$arrName."' id='".$data["content"]."' value='".$data['content']."'";
+
+                if(in_array($data["content"], $checked)) {
+                    echo "checked";
+                }
+                        
+                echo ">
+                        <label for='".$data["content"]."'>".$data['content']."</label>
+                    </li>
+                ";
+            }
+        }
+    }
+
+    private function getDataWithOneCondition($table, $condition) {
+        $sql = "SELECT * FROM $table WHERE category = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s",$condition);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        return $results;
+    }
 
     public function availabilityFilter() {
         $sql = "SELECT * FROM availability";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $results = $stmt->get_result();
-        if($results->num_rows>=1) {
-            while($data = $results->fetch_assoc()) {
-                $checked = [];
-                if(isset($_GET["filterAvailability"])) {
-                    $checked = $_GET["filterAvailability"];
-                }
-                echo "
-                    <li class='d-flex gap-2 align-items-center list-group-item border border-0'>
-                        <input type='checkbox' name='filterAvailability[]' id='".$data["filter_name"]."' value='".$data['id']."'";
+        $this->checkboxFilterPrint($results,"filterAvailability");
+    }
 
-                if(in_array($data["id"], $checked)) {
-                    echo "checked";
-                }
-                        
-                echo ">
-                        <label for='".$data["filter_name"]."'>".$data['filter_name']."</label>
-                    </li>
-                ";
-            }
-        }
-        
+    public function racketWeight($sport) {
+        $results = $this->getDataWithOneCondition("racket_weight",$sport);
+        $this->checkboxFilterPrint($results,"filterRacketWeight");
+    }
+
+    public function racketType($sport) {
+        $results = $this->getDataWithOneCondition("racket_type",$sport);
+        $this->checkboxFilterPrint($results,"filterRacketType");
+    }
+
+    public function handleType($sport) {
+        $results = $this->getDataWithOneCondition("handle_type",$sport);
+        $this->checkboxFilterPrint($results,"filterHandleType");
     }
 
     public function priceFilter() {
         if(isset($_GET["filterPrice"])) {
-            $this->minValue = $_GET["filterPrice"][0];
-            $this->maxValue = $_GET["filterPrice"][1];
+            isset($_GET["filterPrice"][0]) ? $this->minValue = $_GET["filterPrice"][0] : $this->minValue;
+            isset($_GET["filterPrice"][1]) ? $this->maxValue = $_GET["filterPrice"][1] : $this->maxValue;
         }
 
         echo "
             <br>
-            <input type='number' style='width:40%' name='filterPrice[]' min=0 value=".$this->minValue   .">
+            <input type='number' style='width:40%' name='filterPrice[]' min=0 value=".$this->minValue.">
             <p class='fw-semibold mb-0 text-nowrap'>€ -</p>
             <input type='number' style='width:40%' name='filterPrice[]' value=".$this->maxValue.">
             <p class='fw-semibold mb-0'>€</p>
@@ -507,17 +534,18 @@ class User {
 
     }
 
+    // Printing products based on filters
     public function printClassicFilters($table,$category) {
         $products = [];
         $additionalSql = [];
         $available = false;
         $unavailable = false;
-        $minPrice = +$_GET["filterPrice"][0];
-        $maxPrice = +$_GET["filterPrice"][1];
+        $minPrice = isset($_GET["filterPrice"][0]) ? +$_GET["filterPrice"][0] : $this->minValue;
+        $maxPrice = isset($_GET["filterPrice"][1]) ? +$_GET["filterPrice"][1] : $this->maxValue;
         if(isset($_GET["filterAvailability"])) {
             $filterAvailability = $_GET["filterAvailability"];
-            $available = in_array("1",$filterAvailability);
-            $unavailable = in_array("2",$filterAvailability);
+            $available = in_array("Dostupno",$filterAvailability);
+            $unavailable = in_array("Nedostupno",$filterAvailability);
             if($available || $unavailable) {
                 if($available && $unavailable) {
                     array_push($additionalSql, ""); 
@@ -535,6 +563,101 @@ class User {
         while($data = $results->fetch_assoc()) {
             $products[] = $data;
         }
-        echo $this->cardPrint($products, $category);
+        if(count($products)) {
+            echo $this->cardPrint($products, $category);
+        }else {
+            echo "
+            <div class='d-flex justify-content-center align-items-center flex-column'>
+                <i class='text-danger fs-2 bi bi-ban'></i>
+                <p class='text-danger fs-2'>Nismo pronašli ništa!</p>
+            </div>
+            ";
+        }
+    }
+
+    public function printRacketFilters($table, $category) {
+        $products = [];
+        $additionalSql = [];
+        $available = false;
+        $unavailable = false;
+        $minPrice = isset($_GET["filterPrice"][0]) ? +$_GET["filterPrice"][0] : $this->minValue;
+        $maxPrice = isset($_GET["filterPrice"][1]) ? +$_GET["filterPrice"][1] : $this->maxValue;
+        $weightArr = isset($_GET["filterRacketWeight"]) ? $_GET["filterRacketWeight"] : null;
+        $typeArr = isset($_GET["filterRacketType"]) ? $_GET["filterRacketType"] : null;
+        $handlerArr = isset($_GET["filterHandleType"]) ? $_GET["filterHandleType"] : null;
+        if(isset($_GET["filterAvailability"])) {
+            $filterAvailability = $_GET["filterAvailability"];
+            $available = in_array("Dostupno",$filterAvailability);
+            $unavailable = in_array("Nedostupno",$filterAvailability);
+            if($available || $unavailable) {
+                if($available && $unavailable) {
+                    array_push($additionalSql, ""); 
+                }else {
+                    !$available ?: array_push($additionalSql, "AND quantity>0"); 
+                    !$unavailable ?: array_push($additionalSql, "AND quantity=0");
+                }
+            }
+        }
+
+        if(isset($_GET["filterRacketWeight"])) {
+            $weightArr = $_GET["filterRacketWeight"];
+            foreach ($weightArr as $key => $weight) {
+                array_push($additionalSql, "AND racketWeigth = ?");
+            }
+        }
+
+        if(isset($_GET["filterRacketType"])) {
+            $typeArr = $_GET["filterRacketType"];
+            foreach ($typeArr as $key => $type) {
+                array_push($additionalSql, "AND racketType = ?");
+            }
+        }
+
+        if(isset($_GET["filterHandleType"])) {
+            $handlerArr = $_GET["filterHandleType"];
+            foreach ($handlerArr as $key => $handler) {
+                array_push($additionalSql, "AND handlerSize = ?");
+            }
+        }
+        
+        $paramTypes = "ssd";
+        $paramValues = [$category, $minPrice, $maxPrice]; 
+        $sql = "SELECT * from $table WHERE category = ? AND price>= ? AND price<= ? ".implode(" ",$additionalSql);
+        $stmt = $this->conn->prepare($sql);
+
+        if($weightArr) {
+            foreach ($weightArr as $weight) {
+                $paramTypes .= "s";
+                array_push($paramValues, $weight);
+            }
+        }
+        if($typeArr) {
+            foreach ($typeArr as $type) {
+                $paramTypes .= "s";
+                array_push($paramValues, $type);
+            }
+        }
+        if($handlerArr) {
+            foreach ($handlerArr as $handler) {
+                $paramTypes .= "s";
+                array_push($paramValues, $handler);
+            }
+        }
+        $stmt->bind_param($paramTypes, ...$paramValues);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        while($data = $results->fetch_assoc()) {
+            $products[] = $data;
+        }
+        if(count($products)) {
+            echo $this->cardPrint($products, $category);
+        }else {
+            echo "
+            <div class='d-flex justify-content-center align-items-center flex-column'>
+                <i class='text-danger fs-2 bi bi-ban'></i>
+                <p class='text-danger fs-2'>Nismo pronašli ništa!</p>
+            </div>
+            ";
+        }
     }
 }
