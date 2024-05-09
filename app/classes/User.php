@@ -518,6 +518,26 @@ class User {
         $this->checkboxFilterPrint($results,"filterHandleType");
     }
 
+    public function shoesSize($sport) {
+        $results = $this->getDataWithOneCondition("shoes_size",$sport);
+        $this->checkboxFilterPrint($results,"filterShoesSize");
+    }
+
+    public function genderFilter($sport) {
+        $results = $this->getDataWithOneCondition("gender",$sport);
+        $this->checkboxFilterPrint($results,"filterGender");
+    }
+
+    public function cordWidth($sport) {
+        $results = $this->getDataWithOneCondition("cord_width",$sport);
+        $this->checkboxFilterPrint($results,"filterCordWidth");
+    }
+
+    public function cordLength($sport) {
+        $results = $this->getDataWithOneCondition("cord_length",$sport);
+        $this->checkboxFilterPrint($results,"filterCordLength");
+    }
+
     public function priceFilter() {
         if(isset($_GET["filterPrice"])) {
             isset($_GET["filterPrice"][0]) ? $this->minValue = $_GET["filterPrice"][0] : $this->minValue;
@@ -600,21 +620,18 @@ class User {
         }
 
         if(isset($_GET["filterRacketWeight"])) {
-            $weightArr = $_GET["filterRacketWeight"];
             foreach ($weightArr as $key => $weight) {
                 array_push($additionalSql, "AND racketWeigth = ?");
             }
         }
 
         if(isset($_GET["filterRacketType"])) {
-            $typeArr = $_GET["filterRacketType"];
             foreach ($typeArr as $key => $type) {
                 array_push($additionalSql, "AND racketType = ?");
             }
         }
 
         if(isset($_GET["filterHandleType"])) {
-            $handlerArr = $_GET["filterHandleType"];
             foreach ($handlerArr as $key => $handler) {
                 array_push($additionalSql, "AND handlerSize = ?");
             }
@@ -641,6 +658,146 @@ class User {
             foreach ($handlerArr as $handler) {
                 $paramTypes .= "s";
                 array_push($paramValues, $handler);
+            }
+        }
+        $stmt->bind_param($paramTypes, ...$paramValues);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        while($data = $results->fetch_assoc()) {
+            $products[] = $data;
+        }
+        if(count($products)) {
+            echo $this->cardPrint($products, $category);
+        }else {
+            echo "
+            <div class='d-flex justify-content-center align-items-center flex-column'>
+                <i class='text-danger fs-2 bi bi-ban'></i>
+                <p class='text-danger fs-2'>Nismo pronašli ništa!</p>
+            </div>
+            ";
+        }
+    }
+
+    public function printShoesFilters($table, $category) {
+        $products = [];
+        $additionalSql = [];
+        $available = false;
+        $unavailable = false;
+        $minPrice = isset($_GET["filterPrice"][0]) ? +$_GET["filterPrice"][0] : $this->minValue;
+        $maxPrice = isset($_GET["filterPrice"][1]) ? +$_GET["filterPrice"][1] : $this->maxValue;
+        $sizeArr = isset($_GET["filterShoesSize"]) ? $_GET["filterShoesSize"] : null;
+        $genderArr = isset($_GET["filterGender"]) ? $_GET["filterGender"] : null;
+        if(isset($_GET["filterAvailability"])) {
+            $filterAvailability = $_GET["filterAvailability"];
+            $available = in_array("Dostupno",$filterAvailability);
+            $unavailable = in_array("Nedostupno",$filterAvailability);
+            if($available || $unavailable) {
+                if($available && $unavailable) {
+                    array_push($additionalSql, ""); 
+                }else {
+                    !$available ?: array_push($additionalSql, "AND quantity>0"); 
+                    !$unavailable ?: array_push($additionalSql, "AND quantity=0");
+                }
+            }
+        }
+
+        if(isset($_GET["filterShoesSize"])) {
+            foreach ($sizeArr as $key => $size) {
+                array_push($additionalSql, "AND shoes_num = ?");
+            }
+        }
+
+        if(isset($_GET["filterGender"])) {
+            foreach ($handlerArr as $key => $handler) {
+                array_push($additionalSql, "AND sex = ?");
+            }
+        }
+        
+        $paramTypes = "ssd";
+        $paramValues = [$category, $minPrice, $maxPrice]; 
+        $sql = "SELECT * from $table WHERE category = ? AND price>= ? AND price<= ? ".implode(" ",$additionalSql);
+        $stmt = $this->conn->prepare($sql);
+
+        if($sizeArr) {
+            foreach ($sizeArr as $size) {
+                $paramTypes .= "s";
+                array_push($paramValues, $size);
+            }
+        }
+        if($genderArr) {
+            foreach ($genderArr as $gender) {
+                $paramTypes .= "s";
+                array_push($paramValues, $gender);
+            }
+        }
+        $stmt->bind_param($paramTypes, ...$paramValues);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        while($data = $results->fetch_assoc()) {
+            $products[] = $data;
+        }
+        if(count($products)) {
+            echo $this->cardPrint($products, $category);
+        }else {
+            echo "
+            <div class='d-flex justify-content-center align-items-center flex-column'>
+                <i class='text-danger fs-2 bi bi-ban'></i>
+                <p class='text-danger fs-2'>Nismo pronašli ništa!</p>
+            </div>
+            ";
+        }
+    }
+
+    public function printCordsFilters($table, $category) {
+        $products = [];
+        $additionalSql = [];
+        $available = false;
+        $unavailable = false;
+        $minPrice = isset($_GET["filterPrice"][0]) ? +$_GET["filterPrice"][0] : $this->minValue;
+        $maxPrice = isset($_GET["filterPrice"][1]) ? +$_GET["filterPrice"][1] : $this->maxValue;
+        $widthArr = isset($_GET["filterCordWidth"]) ? $_GET["filterCordWidth"] : null;
+        $lengthArr = isset($_GET["filterCordLength"]) ? $_GET["filterCordLength"] : null;
+        if(isset($_GET["filterAvailability"])) {
+            $filterAvailability = $_GET["filterAvailability"];
+            $available = in_array("Dostupno",$filterAvailability);
+            $unavailable = in_array("Nedostupno",$filterAvailability);
+            if($available || $unavailable) {
+                if($available && $unavailable) {
+                    array_push($additionalSql, ""); 
+                }else {
+                    !$available ?: array_push($additionalSql, "AND quantity>0"); 
+                    !$unavailable ?: array_push($additionalSql, "AND quantity=0");
+                }
+            }
+        }
+
+        if(isset($_GET["filterCordWidth"])) {
+            foreach ($widthArr as $key => $width) {
+                array_push($additionalSql, "AND thicknesses = ?");
+            }
+        }
+
+        if(isset($_GET["filterCordLength"])) {
+            foreach ($handlerArr as $key => $handler) {
+                array_push($additionalSql, "AND length = ?");
+            }
+        }
+        
+        $paramTypes = "ssd";
+        $paramValues = [$category, $minPrice, $maxPrice]; 
+        $sql = "SELECT * from $table WHERE category = ? AND price>= ? AND price<= ? ".implode(" ",$additionalSql);
+        $stmt = $this->conn->prepare($sql);
+
+        if($widthArr) {
+            foreach ($widthArr as $width) {
+                $paramTypes .= "s";
+                array_push($paramValues, $width);
+            }
+        }
+        if($lengthArr) {
+            foreach ($lengthArr as $length) {
+                $paramTypes .= "s";
+                array_push($paramValues, $length);
             }
         }
         $stmt->bind_param($paramTypes, ...$paramValues);

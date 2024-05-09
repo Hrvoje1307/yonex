@@ -1,7 +1,7 @@
-    <?php require_once("./php/inc/header.php");
+<?php require_once("./php/inc/header.php");
     require_once("app/classes/User.php");
     $user = new User();
-$user->getMail();
+    $user->getMail();
 ?>
 
 <div class="container mb-5 mt-3 d-flex flex-column align-items-md-start align-items-center">

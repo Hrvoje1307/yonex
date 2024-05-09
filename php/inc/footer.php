@@ -2,7 +2,9 @@
       <div class="container py-5">
          <div class="row">
             <div class="col-sm-6 col-12 d-flex justify-content-sm-start justify-content-center">
-               <img src="images/brand/logo.png" alt="Logo of our company">
+               <a class="navbar-brand" href="./index.php">
+                  <img src="./images/brand/logo.png" alt="Main logo">
+               </a>
             </div>
             <div class="col-sm-6 col-12 d-flex justify-content-sm-end justify-content-center">
                <ul class="list__footer d-flex gap-3 mb-0 justify-content-center p-3 p-sm-0">
