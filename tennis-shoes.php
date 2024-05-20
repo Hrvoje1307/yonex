@@ -42,7 +42,7 @@
                 <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show">
                   <div class="accordion-body body__filters">
                     <ul class="list-group">
-                      <?php $user->genderFilter("tennis");?>
+                      <?php $user->genderFilter();?>
                     </ul>
                   </div>
                 </div>
@@ -129,7 +129,7 @@
                     </div>
                     <div class="col-6">
                       <ul class="list-group flex-row flex-wrap gap-2">
-                        <?php $user->genderFilter("tennis");?>
+                        <?php $user->genderFilter();?>
                       </ul>
                     </div>
                   </div>

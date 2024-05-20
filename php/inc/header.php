@@ -5,7 +5,6 @@ require_once("app/classes/User.php");
 $user = new User();
 
 $user -> searchResults();
-
 ?>
 
 <!DOCTYPE html>
@@ -28,9 +27,9 @@ $user -> searchResults();
 <div class="container-lg">
    <div class="row my-3">
       <div class="col-12 d-flex gap-2 justify-content-end">
-         <a href="tel:+385955561897" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
+         <a href="tel:+385957056320" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
             <i class="bi bi-telephone-fill text-secondary"></i>
-            <p class="my-0 d-none d-md-block">+385955561897</p>
+            <p class="my-0 d-none d-md-block">+385957056320</p>
          </a>
          <div class="d-flex align-items-center gap-2">
             <div class="dropdown">
@@ -45,8 +44,8 @@ $user -> searchResults();
                
                <ul class="dropdown-menu">
                   <?php if ($user->is_logged()) : ?>
-                     <li><a class="dropdown-item" href="logout.php">Odjava</a></li> 
                      <li><a class="dropdown-item" href="account.php">Korisnički račun</a></li> 
+                     <li><a class="dropdown-item" href="logout.php">Odjava</a></li> 
                   <?php else : ?>
                         <li><a class="dropdown-item" href="login.php">Prijava</a></li>
                         <li><a class="dropdown-item" href="registration.php">Registracija</a></li>
@@ -56,7 +55,7 @@ $user -> searchResults();
          </div>
          <a href="wishlist.php" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
             <i class="bi bi-heart-fill text-secondary"></i>
-            <p class="my-0 d-none d-md-block">Lista želja (<span class="header__wishlish-quantity">0</span>)</p>
+            <p class="my-0 d-none d-md-block">Lista želja (<span class="header__wishlish-quantity"><?php echo $user->getWishlistData()[1]?></span>)</p>
          </a>
          <a href="cart.php" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
             <i class="bi bi-cart-fill text-secondary"></i>
@@ -163,10 +162,10 @@ $user -> searchResults();
                   </ul>
                </li>
                <li class="nav-item dropdown my-dropdown">
-                  <p class="nav-link my-0 text-uppercase fw-bold my-nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <p class="nav-link my-0 text-uppercase fw-bold my-nav-link " role="button" data-bs-toggle="dropdown" aria-expanded="false">
                      Odijeća
                   </p>
-                  <ul class="dropdown-menu my-dropdown-menu row">
+                  <ul class="dropdown-menu my-dropdown-menu row special__dropdown">
                      <div class="col d-lg-flex">
                         <li><a class="dropdown-item" href="jackets.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/jackets.jpeg" alt="Product image">
@@ -188,7 +187,7 @@ $user -> searchResults();
                      <div class="col d-lg-flex">
                         <li><a class="dropdown-item" href="dress.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/dress.webp" alt="Product image">
-                           <p class="my-0 text-lg-center text-wrap">Odijeća</p>
+                           <p class="my-0 text-lg-center text-wrap">Haljine</p>
                         </a></li>
                         <li><a class="dropdown-item" href="rest-clothing.php">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/rest.webp" alt="Product image">
@@ -209,7 +208,7 @@ $user -> searchResults();
                   <p class="nav-link my-0 text-uppercase fw-bold my-nav-link" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                      Dodatci
                   </p>
-                  <ul class="dropdown-menu my-dropdown-menu">
+                  <ul class="dropdown-menu my-dropdown-menu special__dropdown">
                      <li><a class="dropdown-item" href="towels.php">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/accessories/towels.webp" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Ručnici</p>

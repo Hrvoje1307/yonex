@@ -15,10 +15,7 @@
                 <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
                   <div class="accordion-body body__filters">
                     <div class="d-flex gap-1 align-items-center">
-                      <input type="number" style="width:40%">
-                      <p class="fw-semibold mb-0 text-nowrap">€ -</p>
-                      <input type="number" style="width:40%">
-                      <p class="fw-semibold mb-0">€</p>
+                      <?php $user->priceFilter();?>
                     </div>
                   </div>
                 </div>
@@ -111,7 +108,7 @@
                       <p class="mb-0 text-dark fw-solidbold">Cijena</p>
                     </div>
                     <div class="col-6 d-flex gap-1 align-items-center">
-                      <?php $user->availabilityFilter();?>
+                      <?php $user->priceFilter();?>
                     </div>
                   </div>
                   <hr class="line__footer bg-dark">
@@ -143,14 +140,7 @@
                     </div>
                     <div class="col-6">
                       <ul class="list-group flex-row flex-wrap gap-2">
-                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                          <input type="checkbox" id="available">
-                          <label for="available">Dostupno</label>
-                        </li>
-                        <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                          <input type="checkbox" id="unavailable">
-                          <label for="unavailable">Nedostupno</label>
-                        </li>
+                        <?php $user->availabilityFilter();?>
                       </ul>
                     </div>
                   </div>

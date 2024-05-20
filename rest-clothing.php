@@ -1,10 +1,11 @@
-
+ 
    <?php require_once("php/inc/header.php") ?>
    <div class="container-lg height__container">
       <div class="row my-3">
         <div class="col-lg-3 d-none d-lg-block">
-          <p class="fs-3 fw-semibold">Filter</p>
-          <div class="accordion" id="accordionPanelsStayOpenExample">
+          <form method="get">
+            <p class="fs-3 fw-semibold">Filter</p>
+            <div class="accordion" id="accordionPanelsStayOpenExample">
             <div class="accordion-item">
               <h2 class="accordion-header">
                 <button class="accordion-button bg-lightgrey text-dark fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
@@ -14,10 +15,7 @@
               <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
                 <div class="accordion-body body__filters">
                   <div class="d-flex gap-1 align-items-center">
-                    <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0">€ -</p>
-                    <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0">€</p>
+                    <?php $user->priceFilter();?>
                   </div>
                 </div>
               </div>
@@ -31,26 +29,7 @@
               <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
                 <div class="accordion-body body__filters">
                   <ul class="list-group">
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="S">
-                        <label for="S">S</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="M">
-                        <label for="M">M</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="L">
-                        <label for="L">L</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="XL">
-                        <label for="XL">XL</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="XXl">
-                        <label for="XXl">XXl</label>
-                      </li>
+                      <?php $user->clothingSize("clothing");?>
                   </ul>
                 </div>
               </div>
@@ -63,14 +42,7 @@
               <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse show">
                 <div class="accordion-body body__filters">
                   <ul class="list-group">
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="men">
-                      <label for="men">Muški</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="women">
-                      <label for="women">Ženski</label>
-                    </li>
+                    <?php $user->genderFilter();?>
                   </ul>
                 </div>
               </div>
@@ -84,26 +56,20 @@
               <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse show">
                 <div class="accordion-body body__filters">
                   <ul class="list-group">
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="available">
-                      <label for="available">Dostupno</label>
-                    </li>
-                    <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                      <input type="checkbox" id="unavailable">
-                      <label for="unavailable">Nedostupno</label>
-                    </li>
+                    <?php $user->availabilityFilter();?>
                   </ul>
                 </div>
               </div>
             </div>
             </div>
+          </form>
             <div class="mt-3 justify-content-end d-flex">
               <button class="btn btn-secondary">Pretraži</button>
             </div>
           </div>
         </div>
         <div class="col-lg-9 col-12">
-          <p class="fs-3 fw-semibold">Ostatak</p>
+          <p class="fs-3 fw-semibold">Ostalo</p>
           <div class="row">
             <div class="col-lg-12 col-8 d-flex gap-3">
               <div class="btn-group" role="group" aria-label="Basic example">
@@ -135,16 +101,14 @@
               </p>
             </div>
             <div class="collapse mt-2" id="collapseExample">
-              <div class="card card-body d-lg-none d-block">
+              <form method="get">
+                <div class="card card-body d-lg-none d-block">
                 <div class="row">
                   <div class="col-6">
                     <p class="mb-0 text-dark fw-solidbold">Cijena</p>
                   </div>
                   <div class="col-6 d-flex gap-1 align-items-center">
-                    <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0 text-nowrap">€ -</p>
-                    <input type="number" style="width:40%">
-                    <p class="fw-semibold mb-0">€</p>
+                    <?php $user->priceFilter();?>
                   </div>
                 </div>
                 <hr class="line__footer bg-dark">
@@ -154,26 +118,7 @@
                   </div>
                   <div class="col-6">
                     <ul class="list-group flex-row flex-wrap gap-2">
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="S">
-                        <label for="S">S</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="M">
-                        <label for="M">M</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="L">
-                        <label for="L">L</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="XL">
-                        <label for="XL">XL</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="XXl">
-                        <label for="XXl">XXl</label>
-                      </li>
+                      <?php $user->clothingSize("clothing");?>
                     </ul>
                   </div>
                 </div>
@@ -184,14 +129,7 @@
                   </div>
                   <div class="col-6">
                     <ul class="list-group flex-row flex-wrap gap-2">
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="men">
-                        <label for="men">Muški</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="women">
-                        <label for="women">Ženski</label>
-                      </li>
+                      <?php $user->genderFilter();?>
                     </ul>
                   </div>
                 </div>
@@ -202,14 +140,7 @@
                   </div>
                   <div class="col-6">
                     <ul class="list-group flex-row flex-wrap gap-2">
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="available">
-                        <label for="available">Dostupno</label>
-                      </li>
-                      <li class="d-flex gap-2 align-items-center list-group-item border border-0">
-                        <input type="checkbox" id="unavailable">
-                        <label for="unavailable">Nedostupno</label>
-                      </li>
+                      <?php $user->availabilityFilter();?>
                     </ul>
                   </div>
                 </div>
@@ -217,49 +148,12 @@
                 <div class="row">
                   <button class="col-12 btn btn-secondary">Pretraži</button>
                 </div>
-              </div>
+                </div>
+              </form>
             </div>
           </div>
           <div class="row mt-3 ps-3 gap-2 justify-content-sm-start justify-content-center">
-            <div class="card shop__card">
-              <img src="images/product-images/tennis/yell--balls.png" class="card-img-top" alt="...">
-              <div class="card-body">
-                  <h5 class="card-title fw-bold">Teniske loptice za trening 60 komada</h5>
-                  <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi possimus, </p>
-                  <p class="fs-3 m-0"><span>110,00</span>€</p>
-                  <p class="fs-5 m-0 mb-1"><span>110,00</span>€</p>
-                  <p class="fs-6 fw-semibold text-success m-0 mb-3">Dostupno</p>
-                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
-                        <i class="bi bi-cart-fill"></i>
-                        <p class="lead m-0">Dodaj u košaricu</p>
-                    </a>
-                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
-                        <i class="bi bi-heart"></i>
-                    </a>
-                  </div>
-              </div>
-            </div>
-            <div class="card shop__card">
-              <img src="images/product-images/tennis/yell--balls.png" class="card-img-top" alt="...">
-              <div class="card-body">
-                  <h5 class="card-title fw-bold">Teniske loptice za trening 60 komada</h5>
-                  <p class="card-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quasi possimus, </p>
-                  <p class="fs-3 m-0"><span>110,00</span>€</p>
-                  <p class="fs-5 m-0 mb-1"><span>110,00</span>€</p>
-                  <p class="fs-6 fw-semibold text-danger m-0 mb-3">Nedostupno</p>
-                  <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
-                        <i class="bi bi-cart-fill"></i>
-                        <p class="lead m-0">Dodaj u košaricu</p>
-                    </a>
-                    <a href="#" class="btn btn-light d-flex gap-1 justify-content-center align-items-center">
-                        <i class="bi bi-heart"></i>
-                    </a>
-                  </div>
-              </div>
-            </div>
-            </div>
+            <?php $user->printClothingFilters("clothing","rest");?>
           </div>
         </div>
       </div>

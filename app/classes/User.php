@@ -278,11 +278,85 @@ class User {
         }
     }
 
+    private function truncString($string, $length = 100, $append="...") {
+        if(strlen($string) > $length) {
+            $string =substr($string,0,$length).$append;
+        }
+        return $string;
+    }
 
-    //STORE PRINT PRODUCTS
-    // public function printProductCards($category, $array) {
-    //     echo $this->cardPrint($array, $category);
-    // }
+    public function searchResults() {
+        if(isset($_POST["submit-search"])) {
+            $search_input = $_POST["search-input"];
+
+            $sql = "(
+                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM classicfilters WHERE id LIKE ? OR name LIKE ?
+            ) UNION (
+                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM bags WHERE id LIKE ? OR name LIKE ?
+            ) UNION (
+                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM balls WHERE id LIKE ? OR name LIKE ?
+            ) UNION (
+                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM clothing WHERE id LIKE ? OR name LIKE ?
+            ) UNION (
+                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM cords WHERE id LIKE ? OR name LIKE ?
+            ) UNION (
+                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM rackets WHERE id LIKE ? OR name LIKE ?
+            ) UNION (
+                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM shoes WHERE id LIKE ? OR name LIKE ?
+            )";            
+            $stmt = $this->conn->prepare($sql);
+            $search_pattern = "%$search_input%";
+            $stmt->bind_param("ssssssssssssss", $search_pattern,$search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern     );
+            $stmt->execute();
+            $results = $stmt->get_result();
+            $products = array();
+        
+            if ($results->num_rows > 0) {
+                while ($row = $results->fetch_assoc()) {
+                    $products[] = $row;
+                }
+                $_SESSION["search_result"] = $this->cardPrint($products, "search");
+            }
+            header("Location: ./search.php");
+            exit();
+        }
+    }
+
+    public function getDataFromEachProduct($data_id) {
+        $sql = "(
+            SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM classicfilters WHERE id=?
+        ) UNION (
+            SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM bags WHERE id=?
+        ) UNION (
+            SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM balls WHERE id=?
+        ) UNION (
+            SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM clothing WHERE id=?
+        ) UNION (
+            SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM cords WHERE id=?
+        ) UNION (
+            SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM rackets WHERE id=?
+        ) UNION (
+            SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM shoes WHERE id=?
+        )"; 
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("sssssss",$data_id,$data_id,$data_id,$data_id,$data_id,$data_id,$data_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = $result->fetch_assoc();
+        return $data;
+    }
+
+    public function singleProduct() {
+        $data_id = isset($_GET["data"]) ? $_GET["data"] : null;
+
+        if($data_id) {
+            $data = $this->getDataFromEachProduct($data_id);
+            echo $this->productPrint($data);
+        }
+    }
+
+
+    //Code printing
 
     private function cardPrint($array, $category) {
         $code = "";
@@ -333,81 +407,6 @@ class User {
         return $code;
     }
 
-    
-
-    private function truncString($string, $length = 100, $append="...") {
-        if(strlen($string) > $length) {
-            $string =substr($string,0,$length).$append;
-        }
-        return $string;
-    }
-
-    public function searchResults() {
-        if(isset($_POST["submit-search"])) {
-            $search_input = $_POST["search-input"];
-
-            $sql = "(
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM classicfilters WHERE id LIKE ? OR name LIKE ?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM bags WHERE id LIKE ? OR name LIKE ?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM balls WHERE id LIKE ? OR name LIKE ?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM clothing WHERE id LIKE ? OR name LIKE ?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM cords WHERE id LIKE ? OR name LIKE ?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM rackets WHERE id LIKE ? OR name LIKE ?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM shoes WHERE id LIKE ? OR name LIKE ?
-            )";            
-            $stmt = $this->conn->prepare($sql);
-            $search_pattern = "%$search_input%";
-            $stmt->bind_param("ssssssssssssss", $search_pattern,$search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern, $search_pattern     );
-            $stmt->execute();
-            $results = $stmt->get_result();
-            $products = array();
-        
-            if ($results->num_rows > 0) {
-                while ($row = $results->fetch_assoc()) {
-                    $products[] = $row;
-                }
-                $_SESSION["search_result"] = $this->cardPrint($products, "search");
-            }
-            header("Location: ./search.php");
-            exit();
-        }
-    }
-
-    public function singleProduct() {
-        $data_id = isset($_GET["data"]) ? $_GET["data"] : null;
-
-        if($data_id) {
-            $sql = "(
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM classicfilters WHERE id=?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM bags WHERE id=?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM balls WHERE id=?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM clothing WHERE id=?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM cords WHERE id=?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM rackets WHERE id=?
-            ) UNION (
-                SELECT id, name, price, priceNOTAX, quantity, img_url, description FROM shoes WHERE id=?
-            )"; 
-            $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("sssssss",$data_id,$data_id,$data_id,$data_id,$data_id,$data_id,$data_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $data = $result->fetch_assoc();
-            
-            echo $this->productPrint($data);
-        }
-    }
-
     private function productPrint($data) {
         $code="";
         $code.= "
@@ -428,8 +427,8 @@ class User {
             $code.="<p class='mb-1'>Dostupnost: <span class='text-danger fw-bold'>Nedostupno</span></p>";
         }
         $code.="
-                <h2><span>".$data['price']."</span>€</h2>
-                <p class='fw-semibold text-secondary'>Bez PDV-a <span>".$data['priceNOTAX']."</span>€</p>
+                <h2><span>".$data['price']."</span> €</h2>
+                <p class='fw-semibold text-secondary'>Bez PDV-a <span>".$data['priceNOTAX']."</span> €</p>
                 <hr>
                 <h4>Dostupne mogućnosti</h4>
                 <p class='fw-semibold'>Količina</p>
@@ -461,6 +460,101 @@ class User {
         return $code;
     }
 
+    private function printWishlistCard($data) {
+        $code = "";
+        $code.= "
+        <div class='card mb-3 card__products'>
+            <a href='product.php?data=".$data['id']."'>
+                <div class='row g-0'>
+                <div class='col-md-4 d-flex justify-content-center'>
+                    <img src='".$data['img_url']."' class='img-fluid rounded-start' alt='".$data['description']."'>
+                </div>
+                <div class='col-md-8'>
+                    <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-6'>
+                        <h5 class='card-title fs-3 fw-bold'>".$data['name']."</h5>
+                        </div>
+                        <div class='col-6 pe-5 d-flex justify-content-end align-items-sm-start align-items-center'><i class='fs-5 text-danger bi bi-trash-fill'></i></div>
+                    </div>
+                    <p class='card-text'>".$data['description']."</p>
+                    <div class='row'>
+                        <div class='col-6 d-flex align-items-center gap-3'>
+                        <p class='fs-3 fw-semibold m-0'><span>".$data['price']."</span>€</p>
+                        <p class='fs-5 m-0'><span>".$data['priceNOTAX']."</span>€</p>
+                        </div>
+        ";
+        if($data["quantity"] > 0) {
+            $code.= "
+                    <div class='col-6 d-flex justify-content-end'>
+                    <button class='btn btn-lg btn-dark'>Dodaj u kosaricu</button>
+                </div>
+                </div>
+                <div class='d-flex justify-content-start'>
+                <p class='fs-6 fw-semibold text-success m-0'>Dostupno</p>
+                </div>
+            </div>
+            </div>
+        </div></a>
+        </div>
+            ";
+        }else {
+            $code.= "
+                    <div class='col-6 d-flex justify-content-end'>
+                    <button class='btn btn-lg btn-dark' disabled>Dodaj u kosaricu</button>
+                </div>
+                </div>
+                <div class='d-flex justify-content-start'>
+                <p class='fs-6 fw-semibold text-danger m-0'>Nedostupno</p>
+                </div>
+            </div>
+            </div>
+        </div></a>
+        </div>
+            ";
+        }
+
+        echo $code;
+    }
+
+    //Wishlist
+    public function getWishlistData() {
+        $sql = "SELECT * from wishlist where user_id =?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s",$_SESSION['user_id']);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        $data = array();
+        while ($row = $results->fetch_assoc())  {
+            $data[] = $row;
+        }
+        return [$data,$results->num_rows];
+    }
+
+    public function getProductsById() {
+        $resultArr = $this->getWishlistData()[0];
+        $idArr = array();
+        $products = array();
+        foreach ($resultArr as $key => $result) {
+            array_push($idArr,$result["product_id"]);
+        }
+        foreach ($idArr as $key => $id) {
+            $data = $this->getDataFromEachProduct($id);
+            array_push($products,$data);
+        }
+        return $products;
+    }
+
+    public function displayProductsInWishlist() {
+        $code="";
+        $products = $this->getProductsById();
+        foreach ($products as $key => $data) {
+            $code.= $this->printWishlistCard($data);
+        }
+
+        echo $code;
+    }
+
     // Filters
     private function checkboxFilterPrint($results, $filterName) {
         $arrName = $filterName ."[]";
@@ -486,56 +580,82 @@ class User {
         }
     }
 
-    private function getDataWithOneCondition($table, $condition) {
-        $sql = "SELECT * FROM $table WHERE category = ?";
+    private function getDataWithOneCondition( $filterName, $condition =  "everything") {
+        $sql = "SELECT * FROM `checkboxfilters` WHERE category = ? AND filterName = ?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s",$condition);
+        $stmt->bind_param("ss",$condition, $filterName);
         $stmt->execute();
         $results = $stmt->get_result();
         return $results;
     }
-
+    
     public function availabilityFilter() {
-        $sql = "SELECT * FROM availability";
+        $sql = "SELECT * FROM `checkboxfilters` WHERE category = 'everything' AND filterName = 'availability'";
         $stmt = $this->conn->prepare($sql);
+        // $stmt->bind_param("ss","everything", "availability");
         $stmt->execute();
         $results = $stmt->get_result();
         $this->checkboxFilterPrint($results,"filterAvailability");
     }
 
     public function racketWeight($sport) {
-        $results = $this->getDataWithOneCondition("racket_weight",$sport);
+        $results = $this->getDataWithOneCondition("racket_weight", $sport);
         $this->checkboxFilterPrint($results,"filterRacketWeight");
     }
 
     public function racketType($sport) {
-        $results = $this->getDataWithOneCondition("racket_type",$sport);
+        $results = $this->getDataWithOneCondition("racket_type", $sport);
         $this->checkboxFilterPrint($results,"filterRacketType");
     }
 
     public function handleType($sport) {
-        $results = $this->getDataWithOneCondition("handle_type",$sport);
+        $results = $this->getDataWithOneCondition("handle_type", $sport);
         $this->checkboxFilterPrint($results,"filterHandleType");
     }
 
     public function shoesSize($sport) {
-        $results = $this->getDataWithOneCondition("shoes_size",$sport);
+        $results = $this->getDataWithOneCondition($filterName ="shoes_size", $sport);
         $this->checkboxFilterPrint($results,"filterShoesSize");
     }
 
-    public function genderFilter($sport) {
-        $results = $this->getDataWithOneCondition("gender",$sport);
+    public function genderFilter() {
+        $results = $this->getDataWithOneCondition("gender");
         $this->checkboxFilterPrint($results,"filterGender");
     }
 
     public function cordWidth($sport) {
-        $results = $this->getDataWithOneCondition("cord_width",$sport);
+        $results = $this->getDataWithOneCondition("cord_width", $sport);
         $this->checkboxFilterPrint($results,"filterCordWidth");
     }
 
     public function cordLength($sport) {
-        $results = $this->getDataWithOneCondition("cord_length",$sport);
+        $results = $this->getDataWithOneCondition("cord_length", $sport);
         $this->checkboxFilterPrint($results,"filterCordLength");
+    }
+
+    public function ballType($sport) {
+        $results = $this->getDataWithOneCondition("ball_type", $sport);
+        $this->checkboxFilterPrint($results,"filterBallType");
+    }
+
+    public function ballSpeed($sport) {
+        $results = $this->getDataWithOneCondition("ball_speed", $sport);
+        $this->checkboxFilterPrint($results,"filterBallSpeed");
+    }
+
+    public function bagType($sport) {
+        $results = $this->getDataWithOneCondition("bag_type", $sport);
+        $this->checkboxFilterPrint($results,"filteBagType");
+    }
+
+    public function bagSize($sport) {
+        $results = $this->getDataWithOneCondition("bag_size", $sport);
+        $this->checkboxFilterPrint($results,"filteBagSize");
+    }
+
+    public function clothingSize($sport) {
+        $results = $this->getDataWithOneCondition("clothing_size", $sport);
+        $this->checkboxFilterPrint($results,"filteClothingSize");
     }
 
     public function priceFilter() {
@@ -778,7 +898,7 @@ class User {
         }
 
         if(isset($_GET["filterCordLength"])) {
-            foreach ($handlerArr as $key => $handler) {
+            foreach ($lengthArr as $key => $handler) {
                 array_push($additionalSql, "AND length = ?");
             }
         }
@@ -798,6 +918,219 @@ class User {
             foreach ($lengthArr as $length) {
                 $paramTypes .= "s";
                 array_push($paramValues, $length);
+            }
+        }
+        $stmt->bind_param($paramTypes, ...$paramValues);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        while($data = $results->fetch_assoc()) {
+            $products[] = $data;
+        }
+        if(count($products)) {
+            echo $this->cardPrint($products, $category);
+        }else {
+            echo "
+            <div class='d-flex justify-content-center align-items-center flex-column'>
+                <i class='text-danger fs-2 bi bi-ban'></i>
+                <p class='text-danger fs-2'>Nismo pronašli ništa!</p>
+            </div>
+            ";
+        }
+    }
+
+    public function printBallsFilters($table, $category) {
+        $products = [];
+        $additionalSql = [];
+        $available = false;
+        $unavailable = false;
+        $minPrice = isset($_GET["filterPrice"][0]) ? +$_GET["filterPrice"][0] : $this->minValue;
+        $maxPrice = isset($_GET["filterPrice"][1]) ? +$_GET["filterPrice"][1] : $this->maxValue;
+        $ballTypeArr = isset($_GET["filterBallType"]) ? $_GET["filterBallType"] : null;
+        $ballSpeedArr = isset($_GET["filterBallSpeed"]) ? $_GET["filterBallSpeed"] : null;
+        if(isset($_GET["filterAvailability"])) {
+            $filterAvailability = $_GET["filterAvailability"];
+            $available = in_array("Dostupno",$filterAvailability);
+            $unavailable = in_array("Nedostupno",$filterAvailability);
+            if($available || $unavailable) {
+                if($available && $unavailable) {
+                    array_push($additionalSql, ""); 
+                }else {
+                    !$available ?: array_push($additionalSql, "AND quantity>0"); 
+                    !$unavailable ?: array_push($additionalSql, "AND quantity=0");
+                }
+            }
+        }
+
+        if(isset($_GET["filterBallType"])) {
+            foreach ($ballTypeArr as $key => $type) {
+                array_push($additionalSql, "AND type = ?");
+            }
+        }
+
+        if(isset($_GET["filterBallSpeed"])) {
+            foreach ($ballSpeedArr as $key => $speed) {
+                array_push($additionalSql, "AND speed = ?");
+            }
+        }
+        
+        $paramTypes = "ssd";
+        $paramValues = [$category, $minPrice, $maxPrice]; 
+        $sql = "SELECT * from $table WHERE category = ? AND price>= ? AND price<= ? ".implode(" ",$additionalSql);
+        $stmt = $this->conn->prepare($sql);
+
+        if($ballTypeArr) {
+            foreach ($ballTypeArr as $type) {
+                $paramTypes .= "s";
+                array_push($paramValues, $type);
+            }
+        }
+
+        if($ballSpeedArr) {
+            foreach ($ballSpeedArr as $speed) {
+                $paramTypes .= "s";
+                array_push($paramValues, $speed);
+            }
+        }
+        $stmt->bind_param($paramTypes, ...$paramValues);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        while($data = $results->fetch_assoc()) {
+            $products[] = $data;
+        }
+        if(count($products)) {
+            echo $this->cardPrint($products, $category);
+        }else {
+            echo "
+            <div class='d-flex justify-content-center align-items-center flex-column'>
+                <i class='text-danger fs-2 bi bi-ban'></i>
+                <p class='text-danger fs-2'>Nismo pronašli ništa!</p>
+            </div>
+            ";
+        }
+    }
+
+    public function printBagsFilters($table, $category) {
+        $products = [];
+        $additionalSql = [];
+        $available = false;
+        $unavailable = false;
+        $minPrice = isset($_GET["filterPrice"][0]) ? +$_GET["filterPrice"][0] : $this->minValue;
+        $maxPrice = isset($_GET["filterPrice"][1]) ? +$_GET["filterPrice"][1] : $this->maxValue;
+        $bagTypeArr = isset($_GET["filteBagType"]) ? $_GET["filteBagType"] : null;
+        $begSizeArr = isset($_GET["filteBagSize"]) ? $_GET["filteBagSize"] : null;
+        if(isset($_GET["filterAvailability"])) {
+            $filterAvailability = $_GET["filterAvailability"];
+            $available = in_array("Dostupno",$filterAvailability);
+            $unavailable = in_array("Nedostupno",$filterAvailability);
+            if($available || $unavailable) {
+                if($available && $unavailable) {
+                    array_push($additionalSql, ""); 
+                }else {
+                    !$available ?: array_push($additionalSql, "AND quantity>0"); 
+                    !$unavailable ?: array_push($additionalSql, "AND quantity=0");
+                }
+            }
+        }
+
+        if(isset($_GET["filteBagType"])) {
+            foreach ($bagTypeArr as $key => $type) {
+                array_push($additionalSql, "AND type = ?");
+            }
+        }
+
+        if(isset($_GET["filteBagSize"])) {
+            foreach ($begSizeArr as $key => $size) {
+                array_push($additionalSql, "AND size = ?");
+            }
+        }
+        
+        $paramTypes = "ssd";
+        $paramValues = [$category, $minPrice, $maxPrice]; 
+        $sql = "SELECT * from $table WHERE category = ? AND price>= ? AND price<= ? ".implode(" ",$additionalSql);
+        $stmt = $this->conn->prepare($sql);
+
+        if($bagTypeArr) {
+            foreach ($bagTypeArr as $type) {
+                $paramTypes .= "s";
+                array_push($paramValues, $type);
+            }
+        }
+
+        if($begSizeArr) {
+            foreach ($begSizeArr as $size) {
+                $paramTypes .= "s";
+                array_push($paramValues, $size);
+            }
+        }
+        $stmt->bind_param($paramTypes, ...$paramValues);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        while($data = $results->fetch_assoc()) {
+            $products[] = $data;
+        }
+        if(count($products)) {
+            echo $this->cardPrint($products, $category);
+        }else {
+            echo "
+            <div class='d-flex justify-content-center align-items-center flex-column'>
+                <i class='text-danger fs-2 bi bi-ban'></i>
+                <p class='text-danger fs-2'>Nismo pronašli ništa!</p>
+            </div>
+            ";
+        }
+    }
+
+    public function printClothingFilters($table, $category) {
+        $products = [];
+        $additionalSql = [];
+        $available = false;
+        $unavailable = false;
+        $minPrice = isset($_GET["filterPrice"][0]) ? +$_GET["filterPrice"][0] : $this->minValue;
+        $maxPrice = isset($_GET["filterPrice"][1]) ? +$_GET["filterPrice"][1] : $this->maxValue;
+        $sizeArr = isset($_GET["filteClothingSize"]) ? $_GET["filteClothingSize"] : null;
+        $genderArr = isset($_GET["filterGender"]) ? $_GET["filterGender"] : null;
+        if(isset($_GET["filterAvailability"])) {
+            $filterAvailability = $_GET["filterAvailability"];
+            $available = in_array("Dostupno",$filterAvailability);
+            $unavailable = in_array("Nedostupno",$filterAvailability);
+            if($available || $unavailable) {
+                if($available && $unavailable) {
+                    array_push($additionalSql, ""); 
+                }else {
+                    !$available ?: array_push($additionalSql, "AND quantity>0"); 
+                    !$unavailable ?: array_push($additionalSql, "AND quantity=0");
+                }
+            }
+        }
+
+        if(isset($_GET["filteClothingSize"])) {
+            foreach ($sizeArr as $key => $size) {
+                array_push($additionalSql, "AND size = ?");
+            }
+        }
+
+        if(isset($_GET["filterGender"])) {
+            foreach ($genderArr as $key => $gender) {
+                array_push($additionalSql, "AND sex = ?");
+            }
+        }
+        
+        $paramTypes = "ssd";
+        $paramValues = [$category, $minPrice, $maxPrice]; 
+        $sql = "SELECT * from $table WHERE category = ? AND price>= ? AND price<= ? ".implode(" ",$additionalSql);
+        $stmt = $this->conn->prepare($sql);
+
+        if($sizeArr) {
+            foreach ($sizeArr as $size) {
+                $paramTypes .= "s";
+                array_push($paramValues, $size);
+            }
+        }
+
+        if($genderArr) {
+            foreach ($genderArr as $gender) {
+                $paramTypes .= "s";
+                array_push($paramValues, $gender);
             }
         }
         $stmt->bind_param($paramTypes, ...$paramValues);
