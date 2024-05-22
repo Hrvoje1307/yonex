@@ -2,6 +2,7 @@
 require_once("php/inc/header.php");
 require_once("app/classes/User.php");
 $user = new User();
+$user->updateWishlist();
 ?>
 
 <div class="container my-5">

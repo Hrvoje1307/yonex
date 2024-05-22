@@ -1,5 +1,5 @@
 <?php 
-
+require "./vendor/autoload.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
@@ -8,13 +8,14 @@ class User {
     protected $conn;
     private $minValue = 0;
     private $maxValue = 1000;
+    public $dotenv;
 
     public function __construct() {
         global $conn;
         $this->conn = $conn;
+        $this->dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+        $this->dotenv->load();
     }
-
-    
 
     // registracija
     public function create($name, $surname, $email, $number, $password) {
@@ -159,19 +160,20 @@ class User {
     }
 
     private function smtpServer() {
-        require __DIR__ . "/../../vendor/autoload.php";
+        // require __DIR__ . "/../../vendor/autoload.php";
     
+        // Create a new instance of PHPMailer
         $mail = new PHPMailer(true);
     
         // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
         $mail->isSMTP();
         $mail->SMTPAuth = true;
     
-        $mail->Host = "smtp.gmail.com";
+        $mail->Host = $_ENV["Host"];
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
-        $mail->Username="cuckovichrvoje@gmail.com";
-        $mail->Password="mcws yeke qjzo dlbn";
+        $mail->Port = $_ENV["Port"];
+        $mail->Username=$_ENV["Username"];
+        $mail->Password=$_ENV["Password"];
         return $mail;
     }
 
@@ -362,100 +364,129 @@ class User {
         $code = "";
         foreach($array as $product) {
             if($product["category"] == $category || $category == "search") {
+                $id = strval($product["id"]);
+                $isAlreadyAdded = $this->isProductAlreadyAdded($id);
                 $code.= "
                 <div class='card shop__card'>
-                <a href='product.php?data=".$product['id']."'>
-                    <img src='".$product['img_url']."' class='card-img-top' alt='".$product['description']."'>
-                    <div class='card-body'>
-                        <h5 class='card-title fw-bold'>".$product['name']."</h5>
-                        <p class='card-text'>".$this->truncString($product['description'])." </p>
-                        <p class='fs-3 m-0'><span>".$product['price']."</span>€</p>
-                        <p class='fs-5 m-0 mb-3'><span>".$product['priceNOTAX']."</span>€</p>
-                        ";
+                    <form method='post'>
+                        <a href='product.php?data=".$product['id']."'>
+                            <input type='hidden' name='product_id' value='".$product['id']."'>
+                            <img src='".$product['img_url']."' class='card-img-top' alt='".$product['description']."'>
+                            <div class='card-body'>
+                                <h5 class='card-title fw-bold'>".$product['name']."</h5>
+                                <p class='card-text'>".$this->truncString($product['description'])." </p>
+                                <p class='fs-3 m-0'><span>".$product['price']."</span>€</p>
+                                <p class='fs-5 m-0 mb-3'><span>".$product['priceNOTAX']."</span>€</p>
+                                ";
             if($product["quantity"]>0) {
                     $code.="
-                        <p class='fs-6 fw-semibold text-success m-0 mb-3'>Dostupno</p>
-                        <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
-                        <a href='#' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
-                            <i class='bi bi-cart-fill'></i>
-                            <p class='lead m-0'>Dodaj u košaricu</p>
-                        </a>
-                        <a href='#' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
-                            <i class='bi bi-heart'></i>
-                        </a>
-                        </div>";
-                   
+                                <p class='fs-6 fw-semibold text-success m-0 mb-3'>Dostupno</p>
+                                <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
+                                    <button type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
+                                        <i class='bi bi-cart-fill'></i>
+                                        <p class='lead m-0'>Dodaj u košaricu</p>
+                                    </button>
+                          ";
             }
             else if($product["quantity"]<= 0) {
                 $code.="
-                        <p class='fs-6 fw-semibold text-danger m-0 mb-3'>Nedostupno</p>
-                        <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
-                        <a href='#' class='btn btn-light d-flex gap-1 justify-content-center align-items-center disabled'>
-                            <i class='bi bi-cart-fill'></i>
-                            <p class='lead m-0'>Dodaj u košaricu</p>
-                        </a>
-                        <a href='#' class='btn btn-light d-flex gap-1 justify-content-center align-items-center disabled'>
-                            <i class='bi bi-heart'></i>
-                        </a>
-                        </div>
+                                <p class='fs-6 fw-semibold text-danger m-0 mb-3'>Nedostupno</p>
+                                <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
+                                    <button type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center disabled'>
+                                        <i class='bi bi-cart-fill'></i>
+                                        <p class='lead m-0'>Dodaj u košaricu</p>
+                                    </button>
                 ";
             }
-            $code.= " </div></a>
-            </div> ";
+            if(!$isAlreadyAdded) {
+                $code.= "
+                                    <button name='update_wishlist' type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
+                                        <i class='bi bi-heart'></i>
+                                    </button>
+                ";
+            }else  {
+                $code.= "
+                                    <button name='update_wishlist' type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center bg-danger border-danger'>
+                                        <i class='bi bi-heart-fill text-light'></i>
+                                    </button>
+                ";
+            }
+            $code.= " 
+                                </div> 
+                            </div>
+                        </a>
+                    </form>
+                </div> ";
             }
         }
         return $code;
     }
 
     private function productPrint($data) {
+        $isAddedToWishlist = $this->isProductAlreadyAdded($data["id"]);
         $code="";
         $code.= "
-        <div class='row mt-3 mb-5 justify-content-md-start justify-content-center'>
-            <div class='col-md-6 col-12 mb-3 mb-md-0'>
-                <div class='me-5 shadow shadow-sm border border-1 rounded d-flex justify-content-center align-items-center'>
-                    <img src='".$data['img_url']."'  class='img-fluid my-5' alt='".$data['description']."'>
-                </div>
-            </div>
-            <div class='col-md-6 col-12'>
-            <button class='btn btn-light border border-2'><i class='bi bi-heart'></i></button>
-                <h2 class='my-3'>".$data['name']."</h2>
-                <p class='mb-1'>Proizvođač: <span class='text-black fw-bold'>Yonex</span></p>
-                <p class='mb-1'>Šifra: <span class='text-black fw-bold'>".$data['id']."</span></p>";
-        if($data["quantity"]>0) {
-            $code.="<p class='mb-1'>Dostupnost: <span class='text-success fw-bold'>Dostupno</span></p>";
+            <form method='post'>
+                <input type='hidden' name='product_id' value='".$data['id']."'>
+                <div class='row mt-3 mb-5 justify-content-md-start justify-content-center'>
+                    <div class='col-md-6 col-12 mb-3 mb-md-0'>
+                        <div class='me-5 shadow shadow-sm border border-1 rounded d-flex justify-content-center align-items-center'>
+                            <img src='".$data['img_url']."'  class='img-fluid my-5' alt='".$data['description']."'>
+                        </div>
+                    </div>
+                    <div class='col-md-6 col-12'>
+            ";
+        if(!$isAddedToWishlist) {
+            $code.="        
+                    <button name='update_wishlist' type='submit' class='btn btn-light border border-2'><i class='bi bi-heart'></i></button>";
         }else {
-            $code.="<p class='mb-1'>Dostupnost: <span class='text-danger fw-bold'>Nedostupno</span></p>";
+            $code.="        
+                    <button name='update_wishlist' type='submit' class='btn btn-light border border-2 border-danger bg-danger'><i class='bi bi-heart-fill text-light'></i></button>";
+
         }
         $code.="
-                <h2><span>".$data['price']."</span> €</h2>
-                <p class='fw-semibold text-secondary'>Bez PDV-a <span>".$data['priceNOTAX']."</span> €</p>
-                <hr>
-                <h4>Dostupne mogućnosti</h4>
-                <p class='fw-semibold'>Količina</p>
-                <input type='number' class='form-control' value='1'>";
+                        <h2 class='my-3'>".$data['name']."</h2>
+                        <p class='mb-1'>Proizvođač: <span class='text-black fw-bold'>Yonex</span></p>
+                        <p class='mb-1'>Šifra: <span class='text-black fw-bold'>".$data['id']."</span></p>";
         if($data["quantity"]>0) {
             $code.="
-                <button class='btn btn-dark d-flex gap-3 mt-3'>
-                    <i class='text-light bi bi-cart-fill'></i>
-                    <span class='text-light'>Dodaj u košaricu</span>
-                </button>";
+                        <p class='mb-1'>Dostupnost: <span class='text-success fw-bold'>Dostupno</span></p>
+            ";
         }else {
             $code.="
-                <button class='btn btn-dark d-flex gap-3 mt-3 disabled'>
-                    <i class='text-light bi bi-cart-fill'></i>
-                    <span class='text-light'>Dodaj u košaricu</span>
-                </button>
+                        <p class='mb-1'>Dostupnost: <span class='text-danger fw-bold'>Nedostupno</span></p>
             ";
+        }
+        $code.="
+                        <h2><span>".$data['price']."</span> €</h2>
+                        <p class='fw-semibold text-secondary'>Bez PDV-a <span>".$data['priceNOTAX']."</span> €</p>
+                        <hr>
+                        <h4>Dostupne mogućnosti</h4>
+                        <p class='fw-semibold'>Količina</p>
+                        <input type='number' class='form-control' value='1'>";
+        if($data["quantity"]>0) {
+            $code.="
+                        <button class='btn btn-dark d-flex gap-3 mt-3'>
+                            <i class='text-light bi bi-cart-fill'></i>
+                            <span class='text-light'>Dodaj u košaricu</span>
+                        </button>";
+        }else {
+            $code.="
+                        <button class='btn btn-dark d-flex gap-3 mt-3 disabled'>
+                            <i class='text-light bi bi-cart-fill'></i>
+                            <span class='text-light'>Dodaj u košaricu</span>
+                        </button>
+                    ";
         }      
         $code.="
-            </div>
-        </div>
-        <div>
-            <h3>Opis</h3>
-            <hr>
-            <p>".$data['description']."</p>
-        </div>";
-
+                    </div>
+                </div>
+                <div>
+                    <h3>Opis</h3>
+                    <hr>
+                    <p>".$data['description']."</p>
+                </div>
+            </form>";
 
         return $code;
     }
@@ -463,61 +494,95 @@ class User {
     private function printWishlistCard($data) {
         $code = "";
         $code.= "
-        <div class='card mb-3 card__products'>
-            <a href='product.php?data=".$data['id']."'>
-                <div class='row g-0'>
-                <div class='col-md-4 d-flex justify-content-center'>
-                    <img src='".$data['img_url']."' class='img-fluid rounded-start' alt='".$data['description']."'>
-                </div>
-                <div class='col-md-8'>
-                    <div class='card-body'>
-                    <div class='row'>
-                        <div class='col-6'>
-                        <h5 class='card-title fs-3 fw-bold'>".$data['name']."</h5>
-                        </div>
-                        <div class='col-6 pe-5 d-flex justify-content-end align-items-sm-start align-items-center'><i class='fs-5 text-danger bi bi-trash-fill'></i></div>
-                    </div>
-                    <p class='card-text'>".$data['description']."</p>
-                    <div class='row'>
-                        <div class='col-6 d-flex align-items-center gap-3'>
-                        <p class='fs-3 fw-semibold m-0'><span>".$data['price']."</span>€</p>
-                        <p class='fs-5 m-0'><span>".$data['priceNOTAX']."</span>€</p>
-                        </div>
+            <div class='card mb-3 card__products'>
+                <form method='post'>
+                    <input type='hidden' name='product_id' value='".$data['id']."'>
+                    <a href='product.php?data=".$data['id']."'>
+                        <div class='row g-0'>
+                            <div class='col-md-4 d-flex justify-content-center'>
+                                <img src='".$data['img_url']."' class='img-fluid rounded-start' alt='".$data['description']."'>
+                            </div>
+                            <div class='col-md-8'>
+                                <div class='card-body'>
+                                    <div class='row'>
+                                        <div class='col-6'>
+                                        <h5 class='card-title fs-3 fw-bold'>".$data['name']."</h5>
+                                        </div>
+                                        <div class='col-6 pe-5 d-flex justify-content-end align-items-sm-start align-items-center bg-transparent'>
+                                            <button name='update_wishlist' type='submit' class='bg-transparent border border-0'>
+                                                <i class='fs-5 text-danger bi bi-trash-fill'></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <p class='card-text'>".$data['description']."</p>
+                                    <div class='row'>
+                                        <div class='col-6 d-flex align-items-center gap-3'>
+                                            <p class='fs-3 fw-semibold m-0'><span>".$data['price']."</span>€</p>
+                                            <p class='fs-5 m-0'><span>".$data['priceNOTAX']."</span>€</p>
+                                        </div>
         ";
         if($data["quantity"] > 0) {
             $code.= "
-                    <div class='col-6 d-flex justify-content-end'>
-                    <button class='btn btn-lg btn-dark'>Dodaj u kosaricu</button>
-                </div>
-                </div>
-                <div class='d-flex justify-content-start'>
-                <p class='fs-6 fw-semibold text-success m-0'>Dostupno</p>
-                </div>
-            </div>
-            </div>
-        </div></a>
-        </div>
+                                        <div class='col-6 d-flex justify-content-end'>
+                                            <button class='btn btn-lg btn-dark'>Dodaj u kosaricu</button>
+                                        </div>
+                                    </div>
+                                    <div class='d-flex justify-content-start'>
+                                        <p class='fs-6 fw-semibold text-success m-0'>Dostupno</p>
             ";
         }else {
             $code.= "
-                    <div class='col-6 d-flex justify-content-end'>
-                    <button class='btn btn-lg btn-dark' disabled>Dodaj u kosaricu</button>
-                </div>
-                </div>
-                <div class='d-flex justify-content-start'>
-                <p class='fs-6 fw-semibold text-danger m-0'>Nedostupno</p>
-                </div>
-            </div>
-            </div>
-        </div></a>
-        </div>
+                                        <div class='col-6 d-flex justify-content-end'>
+                                            <button class='btn btn-lg btn-dark' disabled>Dodaj u kosaricu</button>
+                                        </div>
+                                    </div>
+                                    <div class='d-flex justify-content-start'>
+                                        <p class='fs-6 fw-semibold text-danger m-0'>Nedostupno</p>
             ";
         }
+            $code.="
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </form>
+            </div>
+            ";
 
         echo $code;
     }
 
     //Wishlist
+    public function isProductAlreadyAdded($id) {
+        $sql = "SELECT * FROM wishlist WHERE product_id = ? and user_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('ss', $id, $_SESSION["user_id"]);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        if($results->num_rows > 0){ return true; } else return false;
+    }
+
+    public function updateWishlist() {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if(isset($_POST["product_id"]) && isset($_POST["update_wishlist"])) {
+                if($_SESSION["user_id"]) {
+                    if($this->isProductAlreadyAdded($_POST["product_id"])) {
+                        $sql = "DELETE FROM wishlist WHERE product_id = ? and user_id = ?";
+                    }else {
+                        $sql = "INSERT INTO wishlist (product_id, user_id) VALUES (?,?)";
+                    }
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->bind_param('ss',$_POST["product_id"],$_SESSION["user_id"]);
+                    $stmt->execute();
+                }else {
+                    header("Location: login.php");
+                    exit();
+                }
+            }
+        }
+    }
+
     public function getWishlistData() {
         $sql = "SELECT * from wishlist where user_id =?";
         $stmt = $this->conn->prepare($sql);

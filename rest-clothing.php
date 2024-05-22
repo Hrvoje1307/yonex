@@ -1,5 +1,8 @@
- 
-   <?php require_once("php/inc/header.php") ?>
+<?php 
+  ob_start();
+  require_once("php/inc/header.php");
+  $user->updateWishlist(); 
+  ?>
    <div class="container-lg height__container">
       <div class="row my-3">
         <div class="col-lg-3 d-none d-lg-block">
@@ -158,7 +161,8 @@
         </div>
       </div>
    </div>
-   <?php require_once("php/inc/footer.php") ?>
+   <?php require_once("php/inc/footer.php");
+ob_end_flush(); ?>
          
 </body>
 </html>
