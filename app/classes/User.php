@@ -160,20 +160,17 @@ class User {
     }
 
     private function smtpServer() {
-        // require __DIR__ . "/../../vendor/autoload.php";
-    
-        // Create a new instance of PHPMailer
         $mail = new PHPMailer(true);
     
         // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
         $mail->isSMTP();
         $mail->SMTPAuth = true;
     
-        $mail->Host = $_ENV["Host"];
+        $mail->Host = $_ENV["MAIL_HOST"];
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = $_ENV["Port"];
-        $mail->Username=$_ENV["Username"];
-        $mail->Password=$_ENV["Password"];
+        $mail->Port = $_ENV["MAIL_PORT"];
+        $mail->Username=$_ENV["MAIL_USERNAME"];
+        $mail->Password=$_ENV["MAIL_PASSWORD"];
         return $mail;
     }
 
@@ -215,7 +212,6 @@ class User {
                 $_SESSION["message"]["type"] = "success";
                 $_SESSION["message"]["text"] = "Uspiješno ste promijenili lozinku idite na <a href='login.php' class='text-decoration-underline'>prijava</a> i prijavite se ponovo";
             }
-            // return $password;
         }
     }
 
@@ -382,20 +378,20 @@ class User {
                     $code.="
                                 <p class='fs-6 fw-semibold text-success m-0 mb-3'>Dostupno</p>
                                 <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
-                                    <button type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
+                                    <div class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
                                         <i class='bi bi-cart-fill'></i>
                                         <p class='lead m-0'>Dodaj u košaricu</p>
-                                    </button>
+                                    </div>
                           ";
             }
             else if($product["quantity"]<= 0) {
                 $code.="
                                 <p class='fs-6 fw-semibold text-danger m-0 mb-3'>Nedostupno</p>
                                 <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
-                                    <button type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center disabled'>
+                                    <div class='btn btn-light d-flex gap-1 justify-content-center align-items-center disabled'>
                                         <i class='bi bi-cart-fill'></i>
                                         <p class='lead m-0'>Dodaj u košaricu</p>
-                                    </button>
+                                    </div>
                 ";
             }
             if(!$isAlreadyAdded) {
@@ -426,12 +422,12 @@ class User {
         $isAddedToWishlist = $this->isProductAlreadyAdded($data["id"]);
         $code="";
         $code.= "
-            <form method='post'>
-                <input type='hidden' name='product_id' value='".$data['id']."'>
+            <form method='post' class='my-5'>
+                <input type='hidden' name='product_id' value='".htmlspecialchars($data['id'], ENT_QUOTES, 'UTF-8')."'>
                 <div class='row mt-3 mb-5 justify-content-md-start justify-content-center'>
                     <div class='col-md-6 col-12 mb-3 mb-md-0'>
                         <div class='me-5 shadow shadow-sm border border-1 rounded d-flex justify-content-center align-items-center'>
-                            <img src='".$data['img_url']."'  class='img-fluid my-5' alt='".$data['description']."'>
+                            <img src='".htmlspecialchars($data['img_url'], ENT_QUOTES, 'UTF-8')."'  class='img-fluid my-5' alt='".htmlspecialchars($data['description'], ENT_QUOTES, 'UTF-8')."'>
                         </div>
                     </div>
                     <div class='col-md-6 col-12'>
@@ -445,9 +441,9 @@ class User {
 
         }
         $code.="
-                        <h2 class='my-3'>".$data['name']."</h2>
+                        <h2 class='my-3'>".htmlspecialchars($data['name'], ENT_QUOTES, 'UTF-8')."</h2>
                         <p class='mb-1'>Proizvođač: <span class='text-black fw-bold'>Yonex</span></p>
-                        <p class='mb-1'>Šifra: <span class='text-black fw-bold'>".$data['id']."</span></p>";
+                        <p class='mb-1'>Šifra: <span class='text-black fw-bold'>".htmlspecialchars($data['id'], ENT_QUOTES, 'UTF-8')."</span></p>";
         if($data["quantity"]>0) {
             $code.="
                         <p class='mb-1'>Dostupnost: <span class='text-success fw-bold'>Dostupno</span></p>
@@ -458,15 +454,15 @@ class User {
             ";
         }
         $code.="
-                        <h2><span>".$data['price']."</span> €</h2>
-                        <p class='fw-semibold text-secondary'>Bez PDV-a <span>".$data['priceNOTAX']."</span> €</p>
+                        <h2><span>".htmlspecialchars($data['price'], ENT_QUOTES, 'UTF-8')."</span> €</h2>
+                        <p class='fw-semibold text-secondary'>Bez PDV-a <span>".htmlspecialchars($data['priceNOTAX'], ENT_QUOTES, 'UTF-8')."</span> €</p>
                         <hr>
                         <h4>Dostupne mogućnosti</h4>
                         <p class='fw-semibold'>Količina</p>
-                        <input type='number' class='form-control' value='1'>";
+                        <input type='number' name='product_quantity' class='form-control' min='0' max='".htmlspecialchars($data['quantity'], ENT_QUOTES, 'UTF-8')."' value='1'>";
         if($data["quantity"]>0) {
             $code.="
-                        <button class='btn btn-dark d-flex gap-3 mt-3'>
+                        <button type='submit' name='add_to_cart' class='btn btn-dark d-flex gap-3 mt-3'>
                             <i class='text-light bi bi-cart-fill'></i>
                             <span class='text-light'>Dodaj u košaricu</span>
                         </button>";
@@ -484,7 +480,7 @@ class User {
                 <div>
                     <h3>Opis</h3>
                     <hr>
-                    <p>".$data['description']."</p>
+                    <p>".htmlspecialchars($data['description'], ENT_QUOTES, 'UTF-8')."</p>
                 </div>
             </form>";
 
@@ -492,6 +488,7 @@ class User {
     }
 
     private function printWishlistCard($data) {
+        $data = $data["data"];
         $code = "";
         $code.= "
             <div class='card mb-3 card__products'>
@@ -553,9 +550,51 @@ class User {
         echo $code;
     }
 
-    //Wishlist
-    public function isProductAlreadyAdded($id) {
-        $sql = "SELECT * FROM wishlist WHERE product_id = ? and user_id = ?";
+    private function printCartCard($data,$quantity) {
+        $code = "";
+        $code = "
+            <form method='post'>
+                <div class='row card__products border border-1 rounded shadow-sm mb-5'>
+                    <input type='hidden' name='product_id' value='".$data["id"]."' />
+                    <div class='col-12 col-lg-3 d-flex justify-content-center'>
+                         <img class='img-thumbnail border-0' src='".$data['img_url']."' alt='".$data['description']."'>
+                    </div>
+                    <div class='col-12 col-lg-4 my-5 ps-xl-0 ps-3'>
+                        <h1 class='fs-4 fw-bold'>".$data["name"]."</h1>
+                        <p class='fs-6 fw-semibold text-success m-0'>Dostupno</p>
+                    </div>
+                    <div class='col-12 col-lg-3 d-flex align-items-center justify-content-center gap-5'>
+                        <button type='submit' name='increaseQuantity' class='change__quantity-btn btn btn-lightgrey fs-5 fw-bold'>+</button>
+                        <input name='quantity' class='mb-0 text-center border border-0 quantity__product' max='".$data["quantity"]."' value='".$quantity."'>
+                        <button type='submit' name='decreaseQuantity' class='change__quantity-btn btn btn-lightgrey fs-5 px-3 fw-bold'>-</button>
+                    </div>
+                    <div class='col-12 col-lg-2 mt-5 d-flex flex-column align-items-lg-end align-items-start'>
+                        <p class=' fs-3 fw-semibold m-0'><span class='real__price'>".$data["price"]."</span>€</p>
+                        <p class='fs-5 m-0'><span>".$data["priceNOTAX"]."</span>€</p>
+                        <button class='btn btn-transparent text-danger text-decoration-underline px-0'>Izbriši</button>
+                    </div>
+                </div>
+            </form>
+        ";
+
+        echo $code;
+    }
+
+    public function getData($table) {
+        $sql = "SELECT * from $table where user_id =?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s",$_SESSION['user_id']);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        $data = array();
+        while ($row = $results->fetch_assoc())  {
+            $data[] = $row;
+        }
+        return [$data,$results->num_rows];
+    }
+
+    public function isProductAlreadyAdded($id,$table="wishlist") {
+        $sql = "SELECT * FROM $table WHERE product_id = ? and user_id = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param('ss', $id, $_SESSION["user_id"]);
         $stmt->execute();
@@ -563,11 +602,100 @@ class User {
         if($results->num_rows > 0){ return true; } else return false;
     }
 
+    public function getProductsById($results) {
+        $resultArr = $results;
+        $idArr = array();
+        $products = array();
+        foreach ($resultArr as $key => $result) {
+            if(isset($result["quantity"])) {
+                array_push($idArr,["id"=>$result["product_id"],"quantity"=>$result["quantity"]]);
+            }else {
+                array_push($idArr,["id"=>$result["product_id"]]);
+            }
+        }
+        foreach ($idArr as $key => $id) {
+            $data = $this->getDataFromEachProduct($id["id"]);
+            if(isset($result["quantity"])) {
+                array_push($products,["data"=>$data,"quantity"=>$id["quantity"]]);
+            }else {
+                array_push($products,["data"=>$data]);
+            }
+        }
+        return $products;
+    }
+
+    //Cart
+    public function getCartData() { return $this->getData("cart");}
+
+    public function displayProductsInCart() {
+        $code="";
+        $products = $this->getProductsById($this->getCartData()[0]);
+        // return $products;
+        foreach ($products as $key => $data) {
+            // var_dump($data["data"]);echo"<br>";
+            $code.= $this->printCartCard($data["data"],$data["quantity"]);
+        }
+
+        return $code;
+    }
+
+    public function changeChangeQuantity() {
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $quantity = +$_POST["quantity"];
+            $product_id = $_POST["product_id"];
+            $data = $this->getDataFromEachProduct($product_id);
+            if(isset($_POST["increaseQuantity"])) {
+                $quantity = $quantity+1;
+                if($quantity > $data["quantity"])
+                {
+                    $quantity = $data["quantity"];
+                }
+            }else if(isset($_POST["decreaseQuantity"])) {
+                $quantity = $quantity-1;
+                if($quantity < 0)
+                {
+                    $quantity = 0;
+                }
+            }
+            $sql = "UPDATE cart SET quantity=? WHERE product_id=?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ss",$quantity,$product_id);
+            $stmt->execute();
+        }
+    }
+
+    public function updateCart() {
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $quantity = $_POST["product_quantity"];
+            $product_id = $_POST["product_id"];
+            if($_SESSION["user_id"]) {
+                if(isset($_POST["add_to_cart"])) {
+                    if(isset($quantity) && isset($product_id)) {
+                        if(!$this->isProductAlreadyAdded($product_id,"cart")) {
+                            $sql = "INSERT INTO cart (product_id,user_id,quantity) VALUES(?, ?, ?)";
+                        }
+                        // else {
+    
+                        // }
+        
+                        $stmt = $this->conn->prepare($sql);
+                        $stmt->bind_param("sss",$product_id,$_SESSION["user_id"],$quantity);
+                        $stmt->execute();
+                    }
+                }
+            }else {
+                header("Location: login.php");
+                exit();
+            }
+        }
+    }
+
+    //Wishlist
     public function updateWishlist() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["product_id"]) && isset($_POST["update_wishlist"])) {
                 if($_SESSION["user_id"]) {
-                    if($this->isProductAlreadyAdded($_POST["product_id"])) {
+                    if($this->isProductAlreadyAdded($_POST["product_id"],"wishlist")) {
                         $sql = "DELETE FROM wishlist WHERE product_id = ? and user_id = ?";
                     }else {
                         $sql = "INSERT INTO wishlist (product_id, user_id) VALUES (?,?)";
@@ -583,36 +711,11 @@ class User {
         }
     }
 
-    public function getWishlistData() {
-        $sql = "SELECT * from wishlist where user_id =?";
-        $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s",$_SESSION['user_id']);
-        $stmt->execute();
-        $results = $stmt->get_result();
-        $data = array();
-        while ($row = $results->fetch_assoc())  {
-            $data[] = $row;
-        }
-        return [$data,$results->num_rows];
-    }
-
-    public function getProductsById() {
-        $resultArr = $this->getWishlistData()[0];
-        $idArr = array();
-        $products = array();
-        foreach ($resultArr as $key => $result) {
-            array_push($idArr,$result["product_id"]);
-        }
-        foreach ($idArr as $key => $id) {
-            $data = $this->getDataFromEachProduct($id);
-            array_push($products,$data);
-        }
-        return $products;
-    }
+    public function getWishlistData() {return $this->getData("wishlist");}
 
     public function displayProductsInWishlist() {
         $code="";
-        $products = $this->getProductsById();
+        $products = $this->getProductsById($this->getWishlistData()[0]);
         foreach ($products as $key => $data) {
             $code.= $this->printWishlistCard($data);
         }

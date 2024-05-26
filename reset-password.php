@@ -23,11 +23,11 @@ echo $user->changePassword();
         <form method="post">
             <div class="mb-3 col-12">
                 <label for="new_password" class="form-label">Nova lozinka</label>
-                <input type="text" class="form-control" name="new_password" id="new_password" placeholder="********">
+                <input type="password" class="form-control" name="new_password" id="new_password" placeholder="********">
             </div>
             <div class="mb-3 col-12">
                 <label for="new_password_repeated" class="form-label">Nova lozinka ponovljena</label>
-                <input type="text" class="form-control" name="new_password_repeated" id="new_password_repeated" placeholder="********">
+                <input type="password" class="form-control" name="new_password_repeated" id="new_password_repeated" placeholder="********">
             </div>
             <button class="btn btn-dark">Potvrdi</button>
         </form>

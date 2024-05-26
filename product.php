@@ -3,6 +3,7 @@
     require_once ("app/classes/User.php");
     $user = new User();
     $user->updateWishlist();
+    $user->updateCart();
 ?>
 
 <div class="container">

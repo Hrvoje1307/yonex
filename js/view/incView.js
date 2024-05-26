@@ -13,6 +13,7 @@ class Inc {
     document.querySelectorAll(".quantity__product")
   );
   #totalPrice = document.querySelector(".total__price");
+  #totalPriceInput = document.querySelector(".total_price_input");
   #changeQuantityBtn = document.querySelectorAll(".change__quantity-btn");
 
   footerContent() {
@@ -38,26 +39,9 @@ class Inc {
     this.#productPrice.forEach((e, i) => {
       totalPrice += +e.innerHTML * +self.#quantityProduct[i].value;
     });
+    totalPrice = totalPrice.toFixed(2);
     this.#totalPrice.innerHTML = totalPrice.toString();
-  }
-
-  changeQuantity() {
-    const self = this;
-    if (!this.#changeQuantityBtn) return;
-    this.#changeQuantityBtn.forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        let closestQuantity = e.target
-          .closest(".card__products")
-          .querySelector(".quantity__product").value;
-        const closestQuantityString = e.target
-          .closest(".card__products")
-          .querySelector(".quantity__product");
-        e.target.innerHTML === "+" ? closestQuantity++ : closestQuantity--;
-        closestQuantity < 0 ? (closestQuantity = 0) : closestQuantity;
-        closestQuantityString.value = closestQuantity;
-        self.totalPrice();
-      });
-    });
+    this.#totalPriceInput.value = totalPrice.toString();
   }
 }
 
