@@ -571,7 +571,7 @@ class User {
                     <div class='col-12 col-lg-2 mt-5 d-flex flex-column align-items-lg-end align-items-start'>
                         <p class=' fs-3 fw-semibold m-0'><span class='real__price'>".$data["price"]."</span>€</p>
                         <p class='fs-5 m-0'><span>".$data["priceNOTAX"]."</span>€</p>
-                        <button class='btn btn-transparent text-danger text-decoration-underline px-0'>Izbriši</button>
+                        <button name='remove_from_cart' type='submit' class='btn btn-transparent text-danger text-decoration-underline px-0'>Izbriši</button>
                     </div>
                 </div>
             </form>
@@ -657,6 +657,10 @@ class User {
                     $quantity = 0;
                 }
             }
+            if($quantity > $data["quantity"])
+            {
+                $quantity = $data["quantity"];
+            }
             $sql = "UPDATE cart SET quantity=? WHERE product_id=?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("ss",$quantity,$product_id);
@@ -664,24 +668,66 @@ class User {
         }
     }
 
+    public function findSetQuantityInCart($product_id) {
+        $sql = "SELECT quantity FROM cart WHERE product_id=? AND user_id=?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ss",$product_id,$_SESSION["user_id"]);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        $data = $results->fetch_assoc();
+        return $data;
+    }
+
     public function updateCart() {
         if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $quantity = $_POST["product_quantity"];
             $product_id = $_POST["product_id"];
+            $availableQuantity = $this->getDataFromEachProduct($product_id)["quantity"];
             if($_SESSION["user_id"]) {
                 if(isset($_POST["add_to_cart"])) {
+                    $quantity = $_POST["product_quantity"];
                     if(isset($quantity) && isset($product_id)) {
                         if(!$this->isProductAlreadyAdded($product_id,"cart")) {
-                            $sql = "INSERT INTO cart (product_id,user_id,quantity) VALUES(?, ?, ?)";
+                            var_dump($availableQuantity);
+                            var_dump($quantity);
+                            if($quantity <= $availableQuantity) {
+                                $sql = "INSERT INTO cart (product_id,user_id,quantity) VALUES(?, ?, ?)";
+                                $stmt = $this->conn->prepare($sql);
+                                $stmt->bind_param("sss",$product_id,$_SESSION["user_id"],$quantity);
+                                $stmt->execute();
+                                header("Location: cart.php");
+                                exit();
+                            }
                         }
-                        // else {
-    
-                        // }
+                        else {
+                            $quantity = +$quantity;
+                            $quantityInCart = $this->findSetQuantityInCart($product_id)["quantity"];
+                            $newQuantity = $quantityInCart + $quantity;
+                            $availableAmount = $availableQuantity - $quantityInCart;
+                            if($newQuantity <= $availableQuantity) {
+                                $sql = "UPDATE cart SET quantity = ? WHERE product_id = ? AND user_id = ?";
+                                $stmt = $this->conn->prepare($sql);
+                                $stmt->bind_param("sss",$newQuantity,$product_id,$_SESSION["user_id"]);
+                                $stmt->execute();
+                                header("Location: cart.php");
+                                exit();
+                            }else {
+                                $_SESSION["message"]["type"] = "danger";
+                                $_SESSION["message"]["text"] = "Nažalost unijeli ste količinu veće od dostupne, probajte sa količinom do $availableAmount";
+                            }
+                        }
         
-                        $stmt = $this->conn->prepare($sql);
-                        $stmt->bind_param("sss",$product_id,$_SESSION["user_id"],$quantity);
-                        $stmt->execute();
                     }
+                }if(isset($_POST["remove_from_cart"])) {
+                    echo"AJMOOOOO";
+                    $sql = "DELETE FROM cart WHERE product_id = ? AND user_id =?";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->bind_param("ss",$product_id,$_SESSION["user_id"]);
+                    $stmt->execute();
+                }if(isset($_POST["remove_all_cart"])) {
+                    $sql = "DELETE FROM cart WHERE user_id =?";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->bind_param("s",$_SESSION["user_id"]);
+                    $stmt->execute();
                 }
             }else {
                 header("Location: login.php");

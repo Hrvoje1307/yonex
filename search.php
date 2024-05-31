@@ -1,4 +1,5 @@
 <?php 
+ob_start();
 require_once("php/inc/header.php");
 require_once("app/classes/User.php");
 $user = new User();
@@ -8,7 +9,7 @@ $user->updateWishlist();
 <div class="container my-5">
     <h3 class="fw-bold">Rezultati pretraživanja</h3>
     <hr>
-    <div class="d-flex gap-3">
+    <div class="d-flex gap-3 flex-wrap">
         <?php
             if(isset($_SESSION["search_result"])) {
                 echo $_SESSION["search_result"];
@@ -24,4 +25,4 @@ $user->updateWishlist();
 </div>
 
 
-<?php require_once("php/inc/footer.php");?>
+<?php require_once("php/inc/footer.php");ob_end_flush();?>
