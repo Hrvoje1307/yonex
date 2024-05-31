@@ -353,12 +353,56 @@ class User {
         }
     }
 
+    public function getInfo($table, $category) {
+        $pageNum = isset($_GET["page"]) ? +$_GET["page"] : null;
+        $sql = "SELECT * FROM $table WHERE category = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s",$category);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $numProducts = $result->num_rows;
+        $numPages = ceil($numProducts/$_ENV["PRODUCTS_PER_PAGE"]);
+        return [
+            "pageNum" => $pageNum,
+            "numProducts" => $numProducts,
+            "numPages" => $numPages
+        ];
+    }
+
+    public function printPagesButtons($table, $category) {
+        $pageNum = $this->getInfo($table, $category)["pageNum"];
+        $numPages = $this->getInfo($table, $category)["numPages"];
+        var_dump($numPages == $pageNum);
+        $code = "";
+        if($pageNum === 1) {
+            $code.= "
+                <div class='container d-flex justify-content-end my-5'>
+                    <button name='next__page' type='submit' class='btn btn-secondary'>Sljedeća 2</button>
+                </div>
+            ";
+        }else if ($pageNum == $numPages) {
+            $code.= "
+                <div class='container d-flex justify-content-start my-5'>
+                    <button name='previous__page' type='submit' class='btn btn-secondary'>Prethodna 1</button>
+                </div>
+            ";
+        }else {
+            $code.= "
+                <div class='container d-flex justify-content-between my-5'>
+                    <button name='previous__page' type='submit' class='btn btn-secondary'>Prethodna 1</button>
+                    <button name='next__page' type='submit' class='btn btn-secondary'>Sljedeća 3</button>
+                </div> 
+            ";
+        }
+        echo $code;
+    }
+
 
     //Code printing
 
     private function cardPrint($array, $category) {
         $code = "";
-        foreach($array as $product) {
+        foreach($array as $key => $product) {
             if($product["category"] == $category || $category == "search") {
                 $id = strval($product["id"]);
                 $isAlreadyAdded = $this->isProductAlreadyAdded($id);

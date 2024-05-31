@@ -2,6 +2,7 @@
   ob_start();
   require_once("php/inc/header.php");
   $user->updateWishlist();
+  var_dump($user->getInfo("rackets", "badminton"));
 ?>
    <div class="container-lg height__container">
       <div class="row my-3">
@@ -184,6 +185,19 @@
             <?php $user->printRacketFilters("rackets","badminton");?>
             
           </div>
+          <form method="post">
+            <!-- <div class="container d-flex justify-content-end my-5">
+              <button name="next__page" type="submit" class="btn btn-secondary">Sljedeća 2</button>
+            </div>
+            <div class="container d-flex justify-content-start my-5">
+              <button name="previous__page" type="submit" class="btn btn-secondary">Prethodna 1</button>
+            </div>
+            <div class="container d-flex justify-content-between my-5">
+              <button name="previous__page" type="submit" class="btn btn-secondary">Prethodna 1</button>
+              <button name="next__page" type="submit" class="btn btn-secondary">Sljedeća 3</button>
+            </div> -->
+            <?php $user->printPagesButtons("rackets","badminton");?>
+          </form>
         </div>
       </div>
    </div>

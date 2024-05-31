@@ -122,7 +122,7 @@ $user -> searchResults();
                   </p>
                   <ul class="dropdown-menu my-dropdown-menu row">
                      <div class="col d-lg-flex">
-                        <li><a class="dropdown-item" href="badminton-rackets.php">
+                        <li><a class="dropdown-item" href="badminton-rackets.php?page=2">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/badminton/recket.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Reketi</p>
                         </a></li>
