@@ -87,25 +87,25 @@ $user -> searchResults();
                   </p>
                   <ul class="dropdown-menu my-dropdown-menu row">
                      <div class="col d-lg-flex">
-                        <li><a class="dropdown-item" href="vibration-damper.php">
+                        <li><a class="dropdown-item" href="vibration-damper.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/tennis/vibration__dampers.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Prigušivaći vibracije</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="tennis-rackets.php">
+                        <li><a class="dropdown-item" href="tennis-rackets.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/tennis/racket.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Reketi</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="tennis-shoes.php">
+                        <li><a class="dropdown-item" href="tennis-shoes.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/tennis/shoes.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Obuća</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="tennis-cords.php">
+                        <li><a class="dropdown-item" href="tennis-cords.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/tennis/string.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Žice</p>
                         </a></li>
                      </div>
                      <div class="col d-lg-flex">
-                        <li><a class="dropdown-item" href="tennis-balls.php">
+                        <li><a class="dropdown-item" href="tennis-balls.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/tennis/balls.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Loptice</p>
                         </a></li>
@@ -122,19 +122,19 @@ $user -> searchResults();
                   </p>
                   <ul class="dropdown-menu my-dropdown-menu row">
                      <div class="col d-lg-flex">
-                        <li><a class="dropdown-item" href="badminton-rackets.php?page=2">
+                        <li><a class="dropdown-item" href="badminton-rackets.php?page=1" ?>
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/badminton/recket.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Reketi</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="badminton-shoes.php">
+                        <li><a class="dropdown-item" href="badminton-shoes.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/badminton/shoes.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Obuća</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="badminton-cords.php">
+                        <li><a class="dropdown-item" href="badminton-cords.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/badminton/cords.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Žice</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="badminton-balls.php">
+                        <li><a class="dropdown-item" href="badminton-balls.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/badminton/balls.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Loptice</p>
                         </a></li>
@@ -152,11 +152,11 @@ $user -> searchResults();
                      Torbe
                   </p>
                   <ul class="dropdown-menu my-dropdown-menu">
-                     <li><a class="dropdown-item" href="rucksacks.php">
+                     <li><a class="dropdown-item" href="rucksacks.php?page=1">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/bags/rucksack.jpeg" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Ruksaci</p>
                      </a></li>
-                     <li><a class="dropdown-item" href="bags.php">
+                     <li><a class="dropdown-item" href="bags.php?page=1">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/bags/bags.jpeg" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Torbe</p>
                      </a></li>
@@ -168,33 +168,33 @@ $user -> searchResults();
                   </p>
                   <ul class="dropdown-menu my-dropdown-menu row special__dropdown">
                      <div class="col d-lg-flex">
-                        <li><a class="dropdown-item" href="jackets.php">
+                        <li><a class="dropdown-item" href="jackets.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/jackets.jpeg" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Jakne</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="shorts.php">
+                        <li><a class="dropdown-item" href="shorts.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/shorts.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Kratke hlače</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="t-shirts.php">
+                        <li><a class="dropdown-item" href="t-shirts.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/t-shirts.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Majce kratkih rukava</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="socks.php">
+                        <li><a class="dropdown-item" href="socks.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/socks.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Čarape</p>
                         </a></li>
                      </div>
                      <div class="col d-lg-flex">
-                        <li><a class="dropdown-item" href="dress.php">
+                        <li><a class="dropdown-item" href="dress.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/dress.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Haljine</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="rest-clothing.php">
+                        <li><a class="dropdown-item" href="rest-clothing.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/rest.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Ostalo</p>
                         </a></li>
-                        <li><a class="dropdown-item" href="pants.php">
+                        <li><a class="dropdown-item" href="pants.php?page=1">
                            <img class="nav__product-img d-none d-lg-block" src="./images/product-images/clothing/pants.webp" alt="Product image">
                            <p class="my-0 text-lg-center text-wrap">Trenirke</p>
                         </a></li>
@@ -210,23 +210,23 @@ $user -> searchResults();
                      Dodatci
                   </p>
                   <ul class="dropdown-menu my-dropdown-menu special__dropdown">
-                     <li><a class="dropdown-item" href="towels.php">
+                     <li><a class="dropdown-item" href="towels.php?page=1">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/accessories/towels.webp" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Ručnici</p>
                      </a></li>
-                     <li><a class="dropdown-item" href="gums.php">
+                     <li><a class="dropdown-item" href="gums.php?page=1">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/accessories/gum.webp" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Gume</p>
                      </a></li>
-                     <li><a class="dropdown-item" href="rest.php">
+                     <li><a class="dropdown-item" href="rest.php?page=1">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/accessories/rest.webp" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Ostatak</p>
                      </a></li>
-                     <li><a class="dropdown-item" href="tints.php">
+                     <li><a class="dropdown-item" href="tints.php?page=1">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/accessories/stencils.webp" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Šablone i tinte</p>
                      </a></li>
-                     <li><a class="dropdown-item" href="sweats.php">
+                     <li><a class="dropdown-item" href="sweats.php?page=1">
                         <img class="nav__product-img d-none d-lg-block" src="./images/product-images/accessories/sweatpants.webp" alt="Product image">
                         <p class="my-0 text-lg-center text-wrap">Znojnici</p>
                      </a></li>
@@ -243,7 +243,7 @@ $user -> searchResults();
             </form>
             <a href="cart.php" class="btn btn-dark d-flex gap-1 text-light">
                <i class="bi bi-cart-fill"></i>
-               <span class="product-number">0</span> proizvoda <span>-</span> <span class="price">0</span> €
+               <span class="product-number">0</span> 
             </a>
          </div>
       </div>

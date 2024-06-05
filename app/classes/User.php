@@ -9,6 +9,7 @@ class User {
     private $minValue = 0;
     private $maxValue = 1000;
     public $dotenv;
+    public $pageNumber = 1;
 
     public function __construct() {
         global $conn;
@@ -372,29 +373,80 @@ class User {
     public function printPagesButtons($table, $category) {
         $pageNum = $this->getInfo($table, $category)["pageNum"];
         $numPages = $this->getInfo($table, $category)["numPages"];
-        var_dump($numPages == $pageNum);
+        $numProducts = $this->getInfo($table, $category)["numProducts"];
         $code = "";
-        if($pageNum === 1) {
-            $code.= "
-                <div class='container d-flex justify-content-end my-5'>
-                    <button name='next__page' type='submit' class='btn btn-secondary'>Sljedeća 2</button>
-                </div>
-            ";
-        }else if ($pageNum == $numPages) {
-            $code.= "
-                <div class='container d-flex justify-content-start my-5'>
-                    <button name='previous__page' type='submit' class='btn btn-secondary'>Prethodna 1</button>
-                </div>
-            ";
-        }else {
-            $code.= "
-                <div class='container d-flex justify-content-between my-5'>
-                    <button name='previous__page' type='submit' class='btn btn-secondary'>Prethodna 1</button>
-                    <button name='next__page' type='submit' class='btn btn-secondary'>Sljedeća 3</button>
-                </div> 
-            ";
+        if($pageNum < 1) {$pageNum = 1;}
+        if($numProducts >= $_ENV["PRODUCTS_PER_PAGE"]) {
+            if($pageNum === 1) {
+                $code.= "
+                    <div class='container d-flex justify-content-end my-5'>
+                        <button name='next__page' type='submit' class='btn btn-secondary'>Sljedeća ".($pageNum + 1)."</button>
+                    </div>
+                ";
+            }else if ($pageNum == $numPages) {
+                $code.= "
+                    <div class='container d-flex justify-content-start my-5'>
+                        <button name='previous__page' type='submit' class='btn btn-secondary'>Prethodna ".($pageNum - 1)."</button>
+                    </div>
+                ";
+            }else {
+                $code.= "
+                    <div class='container d-flex justify-content-between my-5'>
+                        <button name='previous__page' type='submit' class='btn btn-secondary'>Prethodna ".($pageNum - 1)."</button>
+                        <button name='next__page' type='submit' class='btn btn-secondary'>Sljedeća ".($pageNum +1)."</button>
+                    </div> 
+                ";
+            }
         }
         echo $code;
+    }
+
+    public function previousAndNextPage($urlBeggining) {
+        $pageNum = isset($_GET["page"]) ? +$_GET["page"] : 1;
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
+            if(isset($_POST["next__page"])) {
+                $pageNum = $pageNum + 1;
+            }if(isset($_POST["previous__page"])) {
+                $pageNum = $pageNum - 1;
+            }
+            $_SESSION["pageNumber"] = $pageNum;
+            $url = $this->newUrl($_SESSION["pageNumber"]);
+            header("Location: $url");
+            exit();
+        }
+    }
+    public function test() {
+        if(isset($_SESSION["pageNumber"])) {
+            var_dump($_SESSION["pageNumber"]);
+        }
+    }
+
+    public function newUrl($page=1) {
+        var_dump($page);
+        $newURL = null;
+        $currentUrl = $_SERVER['REQUEST_URI'];
+        $urlParts = parse_url($currentUrl);
+
+        $queryParams = array();
+        if(isset($urlParts['query'])) {
+            parse_str($urlParts['query'], $queryParams);
+        }
+        // unset($queryParams['page']);
+        $queryParams['page'] = $page;
+        $formattedQueryParams = array();
+        foreach ($queryParams as $key => $value) {
+            if(is_array($value)) {
+                foreach ($value as $index => $subValue) {
+                    $formattedQueryParams["{$key}[{$index}]"] = $subValue;
+                }
+            } else {
+                $formattedQueryParams[$key] = $value;
+            }
+        }
+        $newQueryString = http_build_query($queryParams);
+        $baseURL = $urlParts['path'];
+        $newURL .= $baseURL . '?' . $newQueryString;
+        return $newURL;
     }
 
 
@@ -402,61 +454,66 @@ class User {
 
     private function cardPrint($array, $category) {
         $code = "";
+        $pageNum = isset($_GET["page"]) ? +$_GET["page"] : 1;
+        $min = ($pageNum * $_ENV["PRODUCTS_PER_PAGE"]) - $_ENV["PRODUCTS_PER_PAGE"];
+        $max = ($pageNum * $_ENV["PRODUCTS_PER_PAGE"]) -1;
         foreach($array as $key => $product) {
-            if($product["category"] == $category || $category == "search") {
-                $id = strval($product["id"]);
-                $isAlreadyAdded = $this->isProductAlreadyAdded($id);
-                $code.= "
-                <div class='card shop__card'>
-                    <form method='post'>
-                        <a href='product.php?data=".$product['id']."'>
-                            <input type='hidden' name='product_id' value='".$product['id']."'>
-                            <img src='".$product['img_url']."' class='card-img-top' alt='".$product['description']."'>
-                            <div class='card-body'>
-                                <h5 class='card-title fw-bold'>".$product['name']."</h5>
-                                <p class='card-text'>".$this->truncString($product['description'])." </p>
-                                <p class='fs-3 m-0'><span>".$product['price']."</span>€</p>
-                                <p class='fs-5 m-0 mb-3'><span>".$product['priceNOTAX']."</span>€</p>
-                                ";
-            if($product["quantity"]>0) {
+            if($key >= $min && $key<=$max) {
+                if($product["category"] == $category || $category == "search") {
+                    $id = strval($product["id"]);
+                    $isAlreadyAdded = $this->isProductAlreadyAdded($id);
+                    $code.= "
+                    <div class='card shop__card product__card'>
+                        <form method='post'>
+                            <a href='product.php?data=".$product['id']."'>
+                                <input type='hidden' name='product_id' value='".$product['id']."'>
+                                <img src='".$product['img_url']."' class='card-img-top' alt='".$product['description']."'>
+                                <div class='card-body'>
+                                    <h5 class='card-title fw-bold'>".$product['name']."</h5>
+                                    <p class='card-text'>".$this->truncString($product['description'])." </p>
+                                    <p class='fs-3 m-0'><span>".$product['price']."</span>€</p>
+                                    <p class='fs-5 m-0 mb-3'><span>".$product['priceNOTAX']."</span>€</p>
+                                    ";
+                if($product["quantity"]>0) {
+                        $code.="
+                                    <p class='fs-6 fw-semibold text-success m-0 mb-3'>Dostupno</p>
+                                    <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
+                                        <div class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
+                                            <i class='bi bi-cart-fill'></i>
+                                            <p class='lead m-0'>Dodaj u košaricu</p>
+                                        </div>
+                              ";
+                }
+                else if($product["quantity"]<= 0) {
                     $code.="
-                                <p class='fs-6 fw-semibold text-success m-0 mb-3'>Dostupno</p>
-                                <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
-                                    <div class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
-                                        <i class='bi bi-cart-fill'></i>
-                                        <p class='lead m-0'>Dodaj u košaricu</p>
-                                    </div>
-                          ";
-            }
-            else if($product["quantity"]<= 0) {
-                $code.="
-                                <p class='fs-6 fw-semibold text-danger m-0 mb-3'>Nedostupno</p>
-                                <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
-                                    <div class='btn btn-light d-flex gap-1 justify-content-center align-items-center disabled'>
-                                        <i class='bi bi-cart-fill'></i>
-                                        <p class='lead m-0'>Dodaj u košaricu</p>
-                                    </div>
-                ";
-            }
-            if(!$isAlreadyAdded) {
-                $code.= "
-                                    <button name='update_wishlist' type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
-                                        <i class='bi bi-heart'></i>
-                                    </button>
-                ";
-            }else  {
-                $code.= "
-                                    <button name='update_wishlist' type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center bg-danger border-danger'>
-                                        <i class='bi bi-heart-fill text-light'></i>
-                                    </button>
-                ";
-            }
-            $code.= " 
-                                </div> 
-                            </div>
-                        </a>
-                    </form>
-                </div> ";
+                                    <p class='fs-6 fw-semibold text-danger m-0 mb-3'>Nedostupno</p>
+                                    <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
+                                        <div class='btn btn-light d-flex gap-1 justify-content-center align-items-center disabled'>
+                                            <i class='bi bi-cart-fill'></i>
+                                            <p class='lead m-0'>Dodaj u košaricu</p>
+                                        </div>
+                    ";
+                }
+                if(!$isAlreadyAdded) {
+                    $code.= "
+                                        <button name='update_wishlist' type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
+                                            <i class='bi bi-heart'></i>
+                                        </button>
+                    ";
+                }else  {
+                    $code.= "
+                                        <button name='update_wishlist' type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center bg-danger border-danger'>
+                                            <i class='bi bi-heart-fill text-light'></i>
+                                        </button>
+                    ";
+                }
+                $code.= " 
+                                    </div> 
+                                </div>
+                            </a>
+                        </form>
+                    </div> ";
+                }
             }
         }
         return $code;
@@ -565,7 +622,7 @@ class User {
         if($data["quantity"] > 0) {
             $code.= "
                                         <div class='col-6 d-flex justify-content-end'>
-                                            <button class='btn btn-lg btn-dark'>Dodaj u kosaricu</button>
+                                            <button type='submit' name='add_to_cart' class='btn btn-lg btn-dark'>Dodaj u kosaricu</button>
                                         </div>
                                     </div>
                                     <div class='d-flex justify-content-start'>
@@ -674,9 +731,7 @@ class User {
     public function displayProductsInCart() {
         $code="";
         $products = $this->getProductsById($this->getCartData()[0]);
-        // return $products;
         foreach ($products as $key => $data) {
-            // var_dump($data["data"]);echo"<br>";
             $code.= $this->printCartCard($data["data"],$data["quantity"]);
         }
 
@@ -728,7 +783,7 @@ class User {
             $availableQuantity = $this->getDataFromEachProduct($product_id)["quantity"];
             if($_SESSION["user_id"]) {
                 if(isset($_POST["add_to_cart"])) {
-                    $quantity = $_POST["product_quantity"];
+                    $quantity = isset($_POST["product_quantity"]) ? $_POST["product_quantity"] : 1;
                     if(isset($quantity) && isset($product_id)) {
                         if(!$this->isProductAlreadyAdded($product_id,"cart")) {
                             var_dump($availableQuantity);
@@ -929,7 +984,6 @@ class User {
             <input type='number' style='width:40%' name='filterPrice[]' value=".$this->maxValue.">
             <p class='fw-semibold mb-0'>€</p>
         ";  
-
     }
 
     // Printing products based on filters
@@ -1045,7 +1099,9 @@ class User {
             $products[] = $data;
         }
         if(count($products)) {
+            echo "<div id='productContainer' class='row mt-3 ps-3 gap-2 justify-content-sm-start justify-content-center'>";
             echo $this->cardPrint($products, $category);
+            echo "</div>";
         }else {
             echo "
             <div class='d-flex justify-content-center align-items-center flex-column'>
@@ -1054,6 +1110,9 @@ class User {
             </div>
             ";
         }
+
+        $newUrl = $this->newUrl($this->pageNumber);
+        echo "<script>window.history.pushState(null, '', '{$newUrl}');</script>";
     }
 
     public function printShoesFilters($table, $category) {

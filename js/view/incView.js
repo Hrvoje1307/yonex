@@ -16,6 +16,10 @@ class Inc {
   #totalPriceInput = document.querySelector(".total_price_input");
   #changeQuantityBtn = document.querySelectorAll(".change__quantity-btn");
 
+  //Products
+  #productContainer = document.querySelectorAll("#productContainer");
+  #pagesBtns = document.querySelector("#pageForm");
+
   footerContent() {
     const year = new Date().getFullYear();
     if (!this.#footerConntainer) return;
@@ -42,6 +46,14 @@ class Inc {
     totalPrice = totalPrice.toFixed(2);
     this.#totalPrice.innerHTML = totalPrice.toString();
     this.#totalPriceInput.value = totalPrice.toString();
+  }
+
+  productCards() {
+    if (this.#productContainer) {
+      if (!document.querySelectorAll(".product__card").length) {
+        this.#pagesBtns.style = "display:none";
+      }
+    }
   }
 }
 
