@@ -2,6 +2,7 @@
   ob_start();
   require_once("php/inc/header.php");
   $user->updateWishlist(); 
+  $user->previousAndNextPage();
 ?>
    <div class="container-lg height__container">
       <div class="row my-3">
@@ -74,29 +75,7 @@
         <div class="col-lg-9 col-12">
           <p class="fs-3 fw-semibold">Teniske žice</p>
           <div class="row">
-            <div class="col-lg-12 col-8 d-flex gap-3">
-              <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-lightgrey border border-0">Poredaj po:</button>
-                <select name="sort" class="border border-top border-right border-bottom rounded-end">
-                  <option value="classic">Standardno</option>
-                  <option value="aToZ">Ime (A do Z)</option>
-                  <option value="zToA">Ime (A do A)</option>
-                  <option value="priceDown">Cijena (+/-)</option>
-                  <option value="priceUp">Cijena (-/+)</option>
-                </select>
-              </div>
-              <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-lightgrey border border-0">Pokazati:</button>
-                <select name="view" class="border border-top border-right border-bottom rounded-end">
-                  <option value="15">15</option>
-                  <option value="25">25</option>
-                  <option value="50">50</option>
-                  <option value="75">75</option>
-                  <option value="100">100</option>
-                </select>
-              </div>
-            </div>
-            <div class="col-4 d-lg-none d-block d-flex align-items-center justify-content-end">
+            <div class="col-12 d-lg-none d-block d-flex align-items-center justify-content-end">
               <p class="d-inline-flex gap-1 mb-0">
                 <button class="btn btn-lightgrey" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                   Filteri
@@ -158,6 +137,9 @@
           <div class="row mt-3 ps-3 gap-2 justify-content-sm-start justify-content-center">
             <?php $user->printCordsFilters("cords", "tennis")?>
           </div>
+          <form id="pageForm" method="post">
+            <?php $user->printPagesButtons("cords","tennis");?>
+          </form>
         </div>
       </div>
    </div>

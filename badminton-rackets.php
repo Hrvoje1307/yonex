@@ -2,8 +2,7 @@
   ob_start();
   require_once("php/inc/header.php");
   $user->updateWishlist();
-  $user->previousAndNextPage("badminton-rackets");
-  $user->test();
+  $user->previousAndNextPage();
 ?>
    <div class="container-lg height__container">
       <div class="row my-3">

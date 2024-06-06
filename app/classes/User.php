@@ -401,7 +401,7 @@ class User {
         echo $code;
     }
 
-    public function previousAndNextPage($urlBeggining) {
+    public function previousAndNextPage() {
         $pageNum = isset($_GET["page"]) ? +$_GET["page"] : 1;
         if($_SERVER['REQUEST_METHOD'] == 'POST') {
             if(isset($_POST["next__page"])) {
@@ -413,11 +413,6 @@ class User {
             $url = $this->newUrl($_SESSION["pageNumber"]);
             header("Location: $url");
             exit();
-        }
-    }
-    public function test() {
-        if(isset($_SESSION["pageNumber"])) {
-            var_dump($_SESSION["pageNumber"]);
         }
     }
 
@@ -1110,9 +1105,6 @@ class User {
             </div>
             ";
         }
-
-        $newUrl = $this->newUrl($this->pageNumber);
-        echo "<script>window.history.pushState(null, '', '{$newUrl}');</script>";
     }
 
     public function printShoesFilters($table, $category) {

@@ -19,6 +19,7 @@ class Inc {
   //Products
   #productContainer = document.querySelectorAll("#productContainer");
   #pagesBtns = document.querySelector("#pageForm");
+  #productCards = document.querySelectorAll(".product__card");
 
   footerContent() {
     const year = new Date().getFullYear();
@@ -50,7 +51,15 @@ class Inc {
 
   productCards() {
     if (this.#productContainer) {
-      if (!document.querySelectorAll(".product__card").length) {
+      let page = null;
+      const url = window.location.search;
+      const urlParts = new URLSearchParams(url);
+      urlParts.forEach((element, key) => {
+        if (key === "page") {
+          page = +element;
+        }
+      });
+      if (this.#productCards.length < 5 && (page === 1 || page === null)) {
         this.#pagesBtns.style = "display:none";
       }
     }
