@@ -152,3 +152,22 @@ a:visited {
     left: -20rem !important;
   }
 }
+
+.table__height {
+  height: 90vh;
+  overflow-y: scroll;
+}
+
+.table__height::-webkit-scrollbar {
+  width: 1rem;
+}
+
+.table__height::-webkit-scrollbar-thumb {
+  background-color: var(--blue);
+  border-radius: 3px;
+}
+
+.table__head {
+  position: sticky;
+  top: 0px;
+}

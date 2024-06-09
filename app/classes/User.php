@@ -40,7 +40,7 @@ class User {
 
     // prijava
     public function login($email, $password) {
-        $sql = "SELECT user_id, password,name FROM users WHERE email = ?";
+        $sql = "SELECT user_id, password,name, is_admin FROM users WHERE email = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $email);
         $stmt->execute();
@@ -53,7 +53,11 @@ class User {
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION["name"] = $user["name"];
-                return true;
+                if($user["is_admin"] == "1") {
+                    return "admin";
+                }else {
+                    return true;
+                }
             }
         }
 

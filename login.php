@@ -15,10 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
    $isLogged = $user->login($email, $password);
 
-   if($isLogged) {
+   if($isLogged === "admin") {
+      header("Location: dataDisplay.php");
+      exit();
+   } else if($isLogged) {
       header("Location: index.php");
       exit();
-   } else {
+   }else {
       $_SESSION['message']['type'] = 'danger';
       $_SESSION['message']['text'] = 'Krivi email ili lozinka'; // ovaj $_SESSION['message'] isprintas di oces gresku
    }
