@@ -228,6 +228,20 @@ class User {
         return false;
     }
 
+    public function is_admin($user_id) {
+        if(!isset($_SESSION['user_id'])) return false;
+        $sql = "SELECT is_admin FROM users WHERE user_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $user_id);
+        $stmt->execute();
+        $reuslt = $stmt->get_result();
+        while ($row = $reuslt->fetch_assoc()) {
+            $data = $row;
+            $is_admin = $data["is_admin"] == 1 ? true: false;
+        }
+        return $is_admin;
+    }
+
     // odjava
     public function logout() {
         unset($_SESSION['user_id']);
@@ -281,7 +295,7 @@ class User {
         }
     }
 
-    private function truncString($string, $length = 100, $append="...") {
+    public function truncString($string, $length = 100, $append="...") {
         if(strlen($string) > $length) {
             $string =substr($string,0,$length).$append;
         }

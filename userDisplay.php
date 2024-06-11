@@ -10,18 +10,16 @@
     <table class="table table-striped table-hover">
       <thead class="table__head">
         <tr>
-          <th>Pozicija</th>
           <th>ID</th>
           <th>Ime</th>
-          <th>Slika</th>
-          <th>Cijena</th>
-          <th>Nabavna cijena</th>
-          <th>Opis</th>
-          <th>Kategorija</th>
+          <th>Prezime</th>
+          <th>Email</th>
+          <th>Broj mobitela</th>
+          <th>Admin</th>
         </tr>
       </thead>
       <tbody>
-        <?php ($data->printProducts()); ?>
+        <?php ($data->printUsers()); ?>
       </tbody>
     </table>
   </div>
