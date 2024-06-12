@@ -3,6 +3,8 @@
   require_once("app/classes/dataInterface.php");
 
   $data = new Model($user);
+  $user->relocate();
+
 ?>
 
 <div class="container mt-5">

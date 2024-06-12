@@ -242,6 +242,13 @@ class User {
         return $is_admin;
     }
 
+    public function relocate() {
+        $is_admin = $this->is_admin($_SESSION["user_id"]);
+        if($is_admin) return false;
+        header("Location: index.php");
+        exit();
+    }
+
     // odjava
     public function logout() {
         unset($_SESSION['user_id']);
@@ -478,7 +485,7 @@ class User {
                     $code.= "
                     <div class='card shop__card product__card'>
                         <form method='post'>
-                            <a href='product.php?data=".$product['id']."'>
+                              
                                 <input type='hidden' name='product_id' value='".$product['id']."'>
                                 <img src='".$product['img_url']."' class='card-img-top' alt='".$product['description']."'>
                                 <div class='card-body'>
@@ -830,7 +837,6 @@ class User {
         
                     }
                 }if(isset($_POST["remove_from_cart"])) {
-                    echo"AJMOOOOO";
                     $sql = "DELETE FROM cart WHERE product_id = ? AND user_id =?";
                     $stmt = $this->conn->prepare($sql);
                     $stmt->bind_param("ss",$product_id,$_SESSION["user_id"]);

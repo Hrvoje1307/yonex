@@ -79,22 +79,61 @@
       foreach ($users as $key => $user) {
         $row = "";
         $row.= "
-          <tr>
-            <td>".$user['user_id']."</td>
-            <td>".$user['name']."</td>
-            <td>".$user['surname']."</td>
-            <td>".$user['email']."</td>
-            <td>".$user['number']."</td>";
+          <tr onclick =\"window.location.href='singleUser.php?data=".$user['user_id']."'\">
+              <td>".$user['user_id']."</td>
+              <td>".$user['name']."</td>
+              <td>".$user['surname']."</td>
+              <td>".$user['email']."</td>
+              <td>".$user['number']."</td>";
         if($user["is_admin"] == 1) {
             $row.= "
-            <td>admin</td>
+              <td>admin</td>
             ";
         }else {
           $row.= "
-            <td>kosrinik</td>
+              <td>kosrinik</td>
           ";
         }
+        $row.= "
+          </tr>
+        ";
         echo $row;
+      }
+    }
+
+    public function changeUserSettings() {
+      $counter = 0;
+      if($_SERVER["REQUEST_METHOD"] == "POST") {
+        if(isset($_POST["submit"])) {
+          $name = ["value" => $_POST["name"], "name" => "name"];
+          $surname = ["value" => $_POST["surname"], "name" => "surname"];
+          $email = ["value" => $_POST["email"], "name" => "email"];
+          $number = ["value" => $_POST["number"], "name" => "number"];
+          $admin = $_POST["userType"] == "1" ? ["value" => "1", "name" => "is_admin"] : ["value" => "0", "name" => "is_admin"];
+          $toChange = [$name,$surname,$email,$number,$admin];
+          $sql = "SELECT * from users WHERE user_id=?";
+          $stmt = $this->conn->prepare($sql);
+          $stmt->bind_param("s", $_GET["data"]);
+          $stmt->execute();
+          $results = $stmt->get_result();
+          $row = $results->fetch_assoc();
+          foreach ($toChange as $key => $value) {
+            if($value["value"] != $row[$value["name"]]) {
+              $sql = "UPDATE users SET ".$value['name']."=? WHERE user_id=?";
+              $stmt = $this->conn->prepare($sql);
+              $stmt->bind_param("ss", $value['value'], $_GET["data"]);
+              $stmt->execute();
+              $counter++;
+            }
+          }
+          if($counter > 0) {
+            $_SESSION["message"]["type"] = "success";
+            $_SESSION["message"]["text"] = "Uspiješno ste promijenili podatke";
+          }else {
+            $_SESSION["message"]["type"] = "danger";
+            $_SESSION["message"]["text"] = "Niste promijenili nijedno polje. Pokušajte ponovno";
+          }
+        }
       }
     }
   }
