@@ -252,7 +252,7 @@ $user -> searchResults();
             </form>
             <a href="cart.php" class="btn btn-dark d-flex gap-1 text-light">
                <i class="bi bi-cart-fill"></i>
-               <span class="product-number">0</span> 
+               <span class="product-number"><?php echo $user->getData("cart")[1];?></span> 
             </a>
          </div>
       </div>

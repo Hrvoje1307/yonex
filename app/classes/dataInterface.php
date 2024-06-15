@@ -39,22 +39,58 @@
       return $products;
     }
 
-    public function printProducts() {
-      $products = $this->getProducts();
+    public function getInfoProducts() {
+      $pageNum = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+      $productsNum = count($this->getProducts());
+      $numPages = ceil($productsNum/$_ENV["PRODUCTS_PER_PAGE"]);
 
+      return [
+        "productsNum" => $productsNum,
+        "numPages" => $numPages,
+        "pageNum" => $pageNum,
+      ];
+    }
+
+    public function printPagesButtons() {
+      $pageNum = $this->getInfoProducts()["pageNum"];
+      $productsNum = $this->getInfoProducts()["productsNum"];
+      $numPages = $this->getInfoProducts()["numPages"];
+      echo $this->user->pagesButtonsCode($pageNum,$numPages,$productsNum);
+    }
+
+    public function changePageNumber() {
+      if($_SERVER["REQUEST_METHOD"] == "POST") {
+        $pageNum = $this->getInfoProducts()["pageNum"];
+        if(isset($_POST["next__page"])) {
+          $pageNum++;
+        }else if(isset($_POST["previous__page"])) {
+          $pageNum--;
+        }
+        header("Location: dataDisplay.php?page=".$pageNum);
+        exit();
+      }
+    }
+
+    public function printProducts() {
+      $pageNum = $this->getInfoProducts()["pageNum"];
+      $min = ($pageNum * $_ENV["PRODUCTS_PER_PAGE"]) - $_ENV["PRODUCTS_PER_PAGE"];
+      $max = ($pageNum * $_ENV["PRODUCTS_PER_PAGE"]) -1;
+      $products = $this->getProducts();
       foreach ($products as $key => $product) {
-        echo "
-          <tr>
-            <td>".$product['position']."</td>
-            <td>".$product['id']."</td>
-            <td>".$product['name']."</td>
-            <td><img src=".$product["img"]."></td>
-            <td>".$product['price']." €</td>
-            <td>".$product['priceNOTAX']." €</td>
-            <td>".$this->user->truncString($product["description"])."</td>
-            <td>".$product['category']."</td>
-          </tr>
-        ";
+        if($key >= $min && $key <= $max) {
+          echo "
+            <tr>
+              <td>".$product['position']."</td>
+              <td>".$product['id']."</td>
+              <td>".$product['name']."</td>
+              <td><img src=".$product["img"]."></td>
+              <td>".$product['price']." €</td>
+              <td>".$product['priceNOTAX']." €</td>
+              <td>".$this->user->truncString($product["description"])."</td>
+              <td>".$product['category']."</td>
+            </tr>
+          ";
+        }
       }
     }
 

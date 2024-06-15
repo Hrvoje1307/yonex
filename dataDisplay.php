@@ -4,7 +4,7 @@
 
   $data = new Model($user);
   $user->relocate();
-
+  $data->changePageNumber();
 ?>
 
 <div class="container mt-5">
@@ -26,5 +26,10 @@
         <?php ($data->printProducts()); ?>
       </tbody>
     </table>
+  </div>
+  <div>
+    <form method="post">
+      <?php $data->printPagesButtons(); ?>
+    </form>
   </div>
 </div>

@@ -1,7 +1,8 @@
-import { COMPANY, AUTHORS } from "../../js/config.js";
+import { COMPANY, AUTHORS, PRODUCTS_PER_PAGE } from "../../js/config.js";
 
 class Inc {
   #footerConntainer = document.querySelector(".footer__info");
+  #test = document.querySelector(".test");
 
   //---------Products------
   //Wishlist
@@ -49,6 +50,10 @@ class Inc {
     this.#totalPriceInput.value = totalPrice.toString();
   }
 
+  test() {
+    this.#test.innerHTML = PRODUCTS_PER_PAGE;
+  }
+
   productCards() {
     if (this.#productContainer) {
       let page = null;
@@ -59,7 +64,10 @@ class Inc {
           page = +element;
         }
       });
-      if (this.#productCards.length < 5 && (page === 1 || page === null)) {
+      if (
+        this.#productCards.length < PRODUCTS_PER_PAGE &&
+        (page === 1 || page === null)
+      ) {
         this.#pagesBtns.style = "display:none";
       }
     }

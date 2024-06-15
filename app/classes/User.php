@@ -399,6 +399,10 @@ class User {
         $pageNum = $this->getInfo($table, $category)["pageNum"];
         $numPages = $this->getInfo($table, $category)["numPages"];
         $numProducts = $this->getInfo($table, $category)["numProducts"];
+        echo $this->pagesButtonsCode($pageNum, $numPages, $numProducts);
+    }
+
+    public function pagesButtonsCode($pageNum,$numPages,$numProducts) {
         $code = "";
         if($pageNum < 1) {$pageNum = 1;}
         if($numProducts >= $_ENV["PRODUCTS_PER_PAGE"]) {
@@ -423,7 +427,7 @@ class User {
                 ";
             }
         }
-        echo $code;
+        return $code;
     }
 
     public function previousAndNextPage() {
@@ -442,7 +446,6 @@ class User {
     }
 
     public function newUrl($page=1) {
-        var_dump($page);
         $newURL = null;
         $currentUrl = $_SERVER['REQUEST_URI'];
         $urlParts = parse_url($currentUrl);
@@ -485,7 +488,7 @@ class User {
                     $code.= "
                     <div class='card shop__card product__card'>
                         <form method='post'>
-                              
+                            <a href='product.php?data=".$product['id']."'>  
                                 <input type='hidden' name='product_id' value='".$product['id']."'>
                                 <img src='".$product['img_url']."' class='card-img-top' alt='".$product['description']."'>
                                 <div class='card-body'>

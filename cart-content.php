@@ -13,7 +13,7 @@
         <div class="d-flex gap-5 align-items-start">
           <div>
             <p class="fw-bold fs-4 mb-0">Ukupno</p>
-            <p class="text-secondary m-0"><span class="cart__quantitiy">1 </span><span class="quantity__word">proizvoda</span></p>
+            <p class="text-secondary m-0"><span class="cart__quantitiy"><?php echo $user->getData("cart")[1];?> </span><span class="quantity__word">proizvoda</span></p>
           </div>
           <p class="total fs-1 fw-bold mb-0"><span class="total__price"></span>€</p>
         </div>
