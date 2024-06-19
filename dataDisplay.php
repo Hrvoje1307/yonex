@@ -8,6 +8,10 @@
 ?>
 
 <div class="container mt-5">
+  <pre><?php 
+  // $data->aiTranslation($data->makeJson());
+  $data->productsTranslated();
+  ?></pre>
   <div class="table__height ">
     <table class="table table-striped table-hover">
       <thead class="table__head">
@@ -20,6 +24,7 @@
           <th>Nabavna cijena</th>
           <th>Opis</th>
           <th>Kategorija</th>
+          <th>Količina</th>
         </tr>
       </thead>
       <tbody>

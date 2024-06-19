@@ -1,8 +1,6 @@
 import { COMPANY, AUTHORS } from "../../js/config.js";
 
 class Data {
-  #container = document.querySelector(".data__container");
-
   async printJson() {
     try {
       const json = await fetch("app/config/products.json");
@@ -10,15 +8,16 @@ class Data {
         throw new Error("Something went wrong 💣💣💣" + json.statusText);
       const products = await json.json();
       const jsonString = JSON.stringify(products, null, 2);
-      const id = [];
       const eachProduct = products["podjetje"]["izdelki"]["izdelek"];
-      Object.entries(eachProduct).forEach((product, i) => {
-        if (i < 3) {
-          console.log(product[1]["izdelekID"]);
-        }
+      const array = [];
+
+      eachProduct.forEach((element) => {
+        const category = element["kategorija"]["__cdata"];
+        array.push(category);
       });
-      // console.log(id);
-      this.#container.textContent = jsonString;
+      const categories = new Set(array);
+      const categoriesArray = Array.from(categories);
+      // categories.forEach((category) => console.log(category));
     } catch (err) {
       console.error(err);
     }

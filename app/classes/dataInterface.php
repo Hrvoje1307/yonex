@@ -1,6 +1,8 @@
 <?php
   require "./vendor/autoload.php";
 
+  use Orhanerday\OpenAi\OpenAi;
+
   $user = new User();
 
 
@@ -33,6 +35,7 @@
           "priceNOTAX" => $product["nabavnaCena"],
           "description" => $product["opis"],
           "category" => $product["kategorija"]["__cdata"],
+          "quantity" => $product["tocnaZaloga"],
         ]);
       } 
 
@@ -88,11 +91,76 @@
               <td>".$product['priceNOTAX']." €</td>
               <td>".$this->user->truncString($product["description"])."</td>
               <td>".$product['category']."</td>
+              <td>".$product['quantity']."</td>
             </tr>
           ";
         }
       }
     }
+
+    public function makeJson() {
+      $json = array();
+      $products = $this->getProducts();
+      foreach ($products as $key => $product) {
+        if($key<1) {
+          array_push($json, [
+            "ID" => $product['id'],
+            "name" => $product['name'],
+            "img_url" => $product["img"],
+            "price" => $product["price"],
+            "priceNOTAX" => $product["priceNOTAX"],
+            "description" => $product["description"],
+            "category" => $product["category"],
+          ]);
+        }
+      }
+
+      return json_encode($json);
+    }
+
+    public function productsTranslated() {
+      $json = file_get_contents("./app/config/prijevod.json");
+      $obj = json_decode($json, true);
+      $productId = $obj[0]["ID"];
+      $productName = $obj[0]["name"];
+      $productImg = $obj[0]["img_url"];
+      $productPrice = $obj[0]["price"];
+      $productPriceNoTax = $obj[0]["priceNOTAX"];
+      $productDescription = $obj[0]["description"];
+      $productCategory = $obj[0]["category"];
+      $productRacketWeight = $obj[0]["racketWeight"];
+      $productRacketType = $obj[0]["racketType"];
+      $productHandlerType = $obj[0]["handlerType"];
+      $productQuantity = $obj[0]["quantity"];
+
+      $sql = "INSERT INTO rackets (id, name, price, priceNOTAX, img_url, racketType, racketWeigth, handlerSize, quantity, category, description) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bind_param("sssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productRacketType,$productRacketWeight,$productHandlerType,$productQuantity,$productCategory,$productDescription);
+      $stmt->execute();
+    }
+
+    // public function aiTranslation($json) {
+    //   // var_dump($json);
+    //   $openAiKey = $_ENV["API_KEY_OPENAI"];
+    //   $open_ai = new OpenAi($openAiKey);
+
+    //   $chat = $open_ai->chat([
+    //     'model' => 'gpt-3.5-turbo',
+    //     'messages' => [
+    //         [
+    //             "role" => "user",
+    //             "content" => "Translate everything from this $json from Slovenian to Croatian in JSON formatt"
+    //         ]
+    //     ],
+    //     'temperature' => 1.0,
+    //     'max_tokens' => 4000,
+    //     'frequency_penalty' => 0,
+    //     'presence_penalty' => 0,
+    //   ]);
+    //   $d = json_decode($chat);
+    //   // Get Content
+    //   echo($d->choices[0]->message->content);
+    // }
 
     public function getUsers() {
       $sql = "SELECT * FROM users";
