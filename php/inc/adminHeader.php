@@ -48,7 +48,7 @@ $user = new User();
                <a class="nav-link active" aria-current="page" href="userDisplay.php">Korisnici</a>
             </li>
             <li class="nav-item">
-               <a class="nav-link active" aria-current="page" href="orderDisplay.php">Narudžbe</a>
+               <a class="nav-link active" aria-current="page" href="callFunction.php">Podatci</a>
             </li>
             <div class="dropdown mb-0 d-flex ms-3">
                <button class="btn p-0 dropdown-toggle d-flex gap-2 align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">

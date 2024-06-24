@@ -12,7 +12,8 @@
   $data->changeUserSettings();
 ?>
 
-<div class="container my-5">
+<div class="container my-5 d-flex flex-column">
+  <button type="button" class="btn btn-danger align-self-end close__btn"><i class="bi bi-x-lg"></i></button>
   <?php
     if(isset($_SESSION["message"]["type"])) {
       echo "

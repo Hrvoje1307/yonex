@@ -89,10 +89,10 @@
               </div>
           </div>
           <div class="row mt-3 ps-3 gap-2 justify-content-sm-start justify-content-center">
-            <?php $user->printClassicFilters("classicfilters", "rest")?>
+            <?php $user->printClassicFilters("classicfilters", "restAccessories")?>
           </div>
           <form id="pageForm" method="post">
-            <?php $user->printPagesButtons("classicfilters","rest");?>
+            <?php $user->printPagesButtons("classicfilters","restAccessories");?>
           </form>
         </div>
       </div>

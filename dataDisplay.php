@@ -5,14 +5,10 @@
   $data = new Model($user);
   $user->relocate();
   $data->changePageNumber();
-?>
+  ?>
 
 <div class="container mt-5">
-  <pre><?php 
-  // $data->aiTranslation($data->makeJson());
-  $data->productsTranslated();
-  ?></pre>
-  <div class="table__height ">
+  <div class="table__height">
     <table class="table table-striped table-hover">
       <thead class="table__head">
         <tr>

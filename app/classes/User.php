@@ -490,7 +490,7 @@ class User {
                         <form method='post'>
                             <a href='product.php?data=".$product['id']."'>  
                                 <input type='hidden' name='product_id' value='".$product['id']."'>
-                                <img src='".$product['img_url']."' class='card-img-top' alt='".$product['description']."'>
+                                <img src='".$product['img_url']."' class='card-img-top' alt='".$product['id']."'>
                                 <div class='card-body'>
                                     <h5 class='card-title fw-bold'>".$product['name']."</h5>
                                     <p class='card-text'>".$this->truncString($product['description'])." </p>
@@ -1075,7 +1075,7 @@ class User {
 
         if(isset($_GET["filterRacketWeight"])) {
             foreach ($weightArr as $key => $weight) {
-                array_push($additionalSql, "AND racketWeigth = ?");
+                array_push($additionalSql, "AND racketWeight = ?");
             }
         }
 
