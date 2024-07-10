@@ -87,7 +87,7 @@
       $balls = ["Žogice"];
       $cords = ["Strune"];
       $shoes = ["Obutev"];
-      $clothing = ["Nogavice", "Kratke hlače", "Majce", "Jakne", "Trenirke", "Obleke", "Ostalo-odijeća"];
+      $clothing = ["Nogavice", "Kratke hlače", "Majice", "Jakne", "Trenirke", "Obleke", "Ostalo-odijeća"];
       $json = ["classicFilters"=> array(), "rackets"=>array(), "bags"=>array(), "balls"=>array(), "cords"=>array(), "shoes"=>array(), "clothing"=>array()];
       $products = $this->getProducts();
       foreach ($products as $key => $product) {
@@ -458,6 +458,185 @@
       file_put_contents("./app/config/counter.json", json_encode($counterJson, JSON_PRETTY_PRINT));
     }
 
+    public function cords() {
+      $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
+      $counter = (int)$counterJson["cords"];
+      $batchSize = 10;
+      $start = $counter;
+      $end = $counter + $batchSize;
+      $dataCroatian = $this->getJson("./app/config/prijevod.json");
+      $cordsArrayCroatian = $dataCroatian["cords"];
+      $myJsonData = $this->getJson("./app/config/productsMy.json");
+      $cordsProducts = $myJsonData["cords"];
+      $allowedCategories = ["badminton", "tennis"];
+      $allowedThicknessesTennis = ["1.15 mm", "1.20 mm", "1.25 mm", "1.30 mm"];
+      $allowedLengthTennis = ["Role [200m-500m]", "12m"];
+      $allowedThicknessesBadminton = ["/"];
+      $allowedLengthBadminton = ["Role [200m-500m]", "10m"];
+      foreach ($cordsProducts as $key => $product) {
+        if($key >= $start && $key < $end) {
+          $newName = $this->translateName($product["name"]);
+          $newDescription = $this->translateDescription($product["description"]);
+          $category = $this->getCategory($newName, $newDescription,$allowedCategories, $allowedCategories[0]);
+          if ($category == $allowedCategories[0]) {
+            $allowedThicknesses = $allowedThicknessesBadminton;
+            $allowedLength = $allowedLengthBadminton;
+          } else {
+            $allowedThicknesses = $allowedThicknessesTennis;
+            $allowedLength = $allowedLengthTennis;
+          }
+
+          $cordThickness = $this->getThicknesses($newName, $newDescription, $allowedThicknesses, $allowedThicknesses[0]);
+          $cordLength = $this->getLength($newName, $newDescription, $allowedLength, $allowedLength[0]);
+
+          $croatianItem = [
+            "ID" => $product["ID"],
+            "name" => $newName,
+            "price" => $product["price"],
+            "priceNOTAX" => $product["priceNOTAX"],
+            "img_url" => $product["img_url"],
+            "cordThickness" => $cordThickness,
+            "cordLength" => $cordLength,
+            "quantity" => $product["quantity"],
+            "category" => $category,
+            "description" => $newDescription,
+          ];
+
+          $itemExists = false;
+          foreach ($cordsArrayCroatian as $key => $item) {
+            if($item["ID"] == $croatianItem["ID"]) {
+              $itemExists = true;
+              break;
+            }
+          }
+
+          if(!$itemExists) {
+            array_push($cordsArrayCroatian, $croatianItem);
+            $dataCroatian["cords"] = $cordsArrayCroatian; 
+            file_put_contents("./app/config/prijevod.json", json_encode($dataCroatian, JSON_PRETTY_PRINT));
+          }else {
+            echo "NIJE DODANO<br/>";
+          }
+        }
+      }
+      $counter = $end;
+      $counterJson["cords"] = strval($counter);
+      file_put_contents("./app/config/counter.json", json_encode($counterJson, JSON_PRETTY_PRINT));
+    }
+
+    public function shoes() {
+      $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
+      $counter = (int)$counterJson["shoes"];
+      $batchSize = 5;
+      $start = $counter;
+      $end = $counter + $batchSize;
+      $dataCroatian = $this->getJson("./app/config/prijevod.json");
+      $shoesArrayCroatian = $dataCroatian["shoes"];
+      $myJsonData = $this->getJson("./app/config/productsMy.json");
+      $shoesProducts = $myJsonData["shoes"];
+      $allowedCategories = ["badminton", "tennis"];
+      $allowedShoesSize = ["36", "36.5", "37", "37.5", "38", "38.5", "39", "39.5", "40", "40.5", "41", "41.5", "42", "42.5", "43", "43.5", "44", "44.5", "45", "45.5", "46", "46.5", "47"];
+      $allowedShoesSex = ["Muški", "Ženski", "Uniseks"];
+      foreach ($shoesProducts as $key => $product) {
+        if($key >= $start && $key < $end) {
+          $newName = $this->translateName($product["name"]);
+          $newDescription = $this->translateDescription($product["description"]);
+          $category = $this->getCategory($newName, $newDescription,$allowedCategories, $allowedCategories[0]);
+          $shoeSize = $this->getProductSize($newName, $newDescription, $allowedShoesSize, $allowedShoesSize[8]);
+          $shoeSex = $this->getProductSex($newName, $newDescription, $allowedShoesSex, $allowedShoesSex[0]);
+          
+          $croatianItem = [
+            "ID" => $product["ID"],
+            "name" => $newName,
+            "price" => $product["price"],
+            "priceNOTAX" => $product["priceNOTAX"],
+            "img_url" => $product["img_url"],
+            "shoeSize" => $shoeSize,
+            "shoeSex" => $shoeSex,
+            "quantity" => $product["quantity"],
+            "category" => $category,
+            "description" => $newDescription,
+          ];
+
+          $itemExists = false;
+          foreach ($shoesArrayCroatian as $key => $item) {
+            if($item["ID"] == $croatianItem["ID"]) {
+              $itemExists = true;
+              break;
+            }
+          }
+
+          if(!$itemExists) {
+            array_push($shoesArrayCroatian, $croatianItem);
+            $dataCroatian["shoes"] = $shoesArrayCroatian; 
+            file_put_contents("./app/config/prijevod.json", json_encode($dataCroatian, JSON_PRETTY_PRINT));
+          }else {
+            echo "NIJE DODANO<br/>";
+          }
+        }
+      }
+      $counter = $end;
+      $counterJson["shoes"] = strval($counter);
+      file_put_contents("./app/config/counter.json", json_encode($counterJson, JSON_PRETTY_PRINT));
+    }
+
+    public function clothing() {
+      $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
+      $counter = (int)$counterJson["clothing"];
+      $batchSize = 10;
+      $start = $counter;
+      $end = $counter + $batchSize;
+      $dataCroatian = $this->getJson("./app/config/prijevod.json");
+      $clothingArrayCroatian = $dataCroatian["clothing"];
+      $myJsonData = $this->getJson("./app/config/productsMy.json");
+      $clothingProducts = $myJsonData["clothing"];
+      $allowedCategories = ["jackets", "socks", "rest", "shorts", "t-shirts", "sweatpants", "dress"];
+      $allowedSizes = ["S", "M", "L", "XL", "XXL"];
+      $allowedClothingSex = ["Muški", "Ženski", "Uniseks"];
+      foreach ($clothingProducts as $key => $product) {
+        if($key >= $start && $key < $end) {
+          $slovenianCategory = $product["category"];
+          $newName = $this->translateName($product["name"]);
+          $newDescription = $this->translateDescription($product["description"]);
+          $category = $this->getCategoryClothing($newName, $newDescription, $slovenianCategory, $allowedCategories, $allowedCategories[0]);
+          $clothingSize = $this->getProductSize($newName, $newDescription, $allowedSizes, $allowedSizes[0]);
+          $clothingSex = $this->getProductSex($newName, $newDescription, $allowedClothingSex, $allowedClothingSex[0]);
+          
+          $croatianItem = [
+            "ID" => $product["ID"],
+            "name" => $newName,
+            "price" => $product["price"],
+            "priceNOTAX" => $product["priceNOTAX"],
+            "img_url" => $product["img_url"],
+            "clothingSize" => $clothingSize,
+            "clothingSex" => $clothingSex,
+            "quantity" => $product["quantity"],
+            "category" => $category,
+            "description" => $newDescription,
+          ];
+
+          $itemExists = false;
+          foreach ($clothingArrayCroatian as $key => $item) {
+            if($item["ID"] == $croatianItem["ID"]) {
+              $itemExists = true;
+              break;
+            }
+          }
+
+          if(!$itemExists) {
+            array_push($clothingArrayCroatian, $croatianItem);
+            $dataCroatian["clothing"] = $clothingArrayCroatian; 
+            file_put_contents("./app/config/prijevod.json", json_encode($dataCroatian, JSON_PRETTY_PRINT));
+          }else {
+            echo "NIJE DODANO<br/>";
+          }
+        }
+      }
+      $counter = $end;
+      $counterJson["clothing"] = strval($counter);
+      file_put_contents("./app/config/counter.json", json_encode($counterJson, JSON_PRETTY_PRINT));
+    }
+
     public function callTrainslationFunctions() {
       if(isset($_SERVER['REQUEST_METHOD']) ) {
         if(isset($_POST["classicFiltersTranslation"])) {
@@ -476,6 +655,18 @@
           return $this->balls();
         }else if(isset($_POST["ballsDataBase"])) {
           return $this->productTranslatedBalls();
+        }else if(isset($_POST["cordsTranslation"])) {
+          return $this->cords();
+        }else if(isset($_POST["cordsDataBase"])) {
+          return $this->productTranslatedCords();
+        }else if(isset($_POST["shoesTranslation"])) {
+          return $this->shoes();
+        }else if(isset($_POST["shoesDataBase"])) {
+          return $this->productTranslatedShoes();
+        }else if(isset($_POST["clothingTranslation"])) {
+          return $this->clothing();
+        }else if(isset($_POST["clothingDataBase"])) {
+          return $this->productTranslatedClothing();
         }
       }
     }
@@ -492,6 +683,17 @@
 
     public function getCategory($newName,$newDescription,$allowedCategories, $alternativeCategory) {
       $category = $this->aiTranslation("Determine the category for this product based on its name and description. The category must be one of the following: ".implode(", ",$allowedCategories).". Only provide the category name, nothing else. Example input: Name: 'Ručnik AC1110, crna/mint'. Description: 'Pamuk ručnik koji upija znoj'. Example output: 'towels'. Input Name: '".$newName."'. Input Description: '".$newDescription."'.");
+
+      if (!in_array($category, $allowedCategories)) {
+          $category = $alternativeCategory;
+      }
+      return $category;
+    }
+
+    public function getCategoryClothing($newName,$newDescription,$slovenianCategory, $allowedCategories, $alternativeCategory) {
+      $category = $this->aiTranslation("Determine the category for this product based on its name and description. You also have $slovenianCategory that you can translate to Croatian to get the category. The category must be one of the following: ".implode(", ",$allowedCategories).". Only provide the category name, nothing else. 
+      Example input: Name: 'Ručnik AC1110, crna/mint'. Description: 'Pamuk ručnik koji upija znoj'. Example output: 'towels'.Input Name: '".$newName."'. 
+      Input Description: '".$newDescription."'.");
 
       if (!in_array($category, $allowedCategories)) {
           $category = $alternativeCategory;
@@ -584,6 +786,65 @@
       return $ballSpeed;
     }
 
+    public function getThicknesses($newName, $newDescription, $allowedThicknesses, $alternativeThicknesses) {
+      $message = "Determine the cord thickness for this product based on its name and description. The cord thickness must be one of the following: ".implode(", ", $allowedThicknesses).". 
+                  Only provide the cord thickness, nothing else. 
+                  Example input: Name: 'Wilson Sensation 16'. Description: 'Teniska žica promjera 1.30mm za optimalan osjećaj'. Example output: '1.30mm'.
+                  Input Name: '".$newName."'. 
+                  Input Description: '".$newDescription."'.";
+
+      $cordThicknesses = $this->aiTranslation($message);
+      if(!in_array($cordThicknesses, $allowedThicknesses)) {
+        $cordThicknesses = $alternativeThicknesses;
+      }
+
+      return $cordThicknesses;
+    }
+
+    public function getLength($newName, $newDescription, $allowedCordLengths, $alternativeCordLength) {
+      $message = "Determine the cord length for this product based on its name and description. The cord length must be one of the following: ".implode(", ", $allowedCordLengths).". 
+                  Only provide the cord length, nothing else.
+                  Example input: Name: 'Yonex BG65'. Description: 'Visokokvalitetna badmintonska žica duljine 10m za dugotrajnost'. Example output: '10m'.
+                  Input Name: '".$newName."'. 
+                  Input Description: '".$newDescription."'.";
+
+      $cordLength = $this->aiTranslation($message);
+      if(!in_array($cordLength, $allowedCordLengths)) {
+        $cordLength = $alternativeCordLength;
+      }
+
+      return $cordLength;
+    }
+
+    public function getProductSize($newName, $newDescription, $allowedProductSize, $alternativeProductSize) {
+      $message = "Determine the shoe size for this product based on its name and description. The shoe size must be one of the following: ".implode(", ", $allowedProductSize).". Only provide the shoe size, nothing else. 
+                  Example input: Name: 'Yonex Power Cushion 65'. Description: 'Profesionalne badmintonske tenisice veličine 42'. Example output: '42'.
+                  Example input: Name: 'Yonex Tournament Shirt'. Description: 'Profesionalna badmintonska majica veličine L'. Example output: 'L'.
+                  Input Name: '".$newName."'. 
+                  Input Description: '".$newDescription."'.";
+
+      $productSize = $this->aiTranslation($message);
+      if(!in_array($productSize, $allowedProductSize)) {
+        $productSize = $alternativeProductSize;
+      }
+
+      return $productSize;
+    }
+
+    public function getProductSex($newName, $newDescription, $allowedProductSex, $alternativeProductSex) {
+      $message = "Determine the shoe sex for this product based on its name and description. The shoe sex must be one of the following: ".implode(", ", $allowedProductSex).". Only provide the shoe sex, nothing else. 
+                  Example input: Name: 'Yonex Power Cushion 65'. Description: 'Profesionalne badmintonske tenisice za muškarce'. Example output: 'Muški'.
+                  Input Name: '".$newName."'. 
+                  Input Description: '".$newDescription."'.";
+
+      $productSex = $this->aiTranslation($message);
+      if(!in_array($productSex, $allowedProductSex)) {
+        $productSex = $alternativeProductSex;
+      }
+
+      return $productSex;
+    }
+
     public function productsTranslatedClassicFilters() {
       $json = $this->getJson("./app/config/prijevod.json")["classicFilters"];
       foreach ($json as $key => $product) {
@@ -659,6 +920,66 @@
         $sql = "INSERT INTO balls (id, name, price, priceNOTAX, img_url, quantity, category, description, speed, type) VALUES (?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("ssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productQuantity,$productCategory,$productDescription, $productBallSpeed, $productBallType);
+        $stmt->execute();
+      }
+    }
+
+    public function productTranslatedCords() {
+      $json = $this->getJson("./app/config/prijevod.json")["cords"];
+      foreach ($json as $key => $product) {
+        $productId = $product["ID"];
+        $productName = $product["name"];
+        $productImg = $product["img_url"];
+        $productPrice = $product["price"];
+        $productPriceNoTax = $product["priceNOTAX"];
+        $productDescription = $product["description"];
+        $productQuantity = $product["quantity"];
+        $productCategory = $product["category"];
+        $productThickness = $product["cordThickness"];
+        $productLength = $product["cordLength"];
+        $sql = "INSERT INTO cords (id, name, price, priceNOTAX, img_url, quantity, category, description, thicknesses, length) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productQuantity,$productCategory,$productDescription, $productThickness, $productLength);
+        $stmt->execute();
+      }
+    }
+
+    public function productTranslatedShoes() {
+      $json = $this->getJson("./app/config/prijevod.json")["shoes"];
+      foreach ($json as $key => $product) {
+        $productId = $product["ID"];
+        $productName = $product["name"];
+        $productImg = $product["img_url"];
+        $productPrice = $product["price"];
+        $productPriceNoTax = $product["priceNOTAX"];
+        $productDescription = $product["description"];
+        $productQuantity = $product["quantity"];
+        $productCategory = $product["category"];
+        $productShoesSize = $product["shoeSize"];
+        $productShoesSex = $product["shoeSex"];
+        $sql = "INSERT INTO shoes (id, name, price, priceNOTAX, img_url, quantity, category, description, shoes_num, sex) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productQuantity,$productCategory,$productDescription, $productShoesSize, $productShoesSex);
+        $stmt->execute();
+      }
+    }
+
+    public function productTranslatedClothing() {
+      $json = $this->getJson("./app/config/prijevod.json")["clothing"];
+      foreach ($json as $key => $product) {
+        $productId = $product["ID"];
+        $productName = $product["name"];
+        $productImg = $product["img_url"];
+        $productPrice = $product["price"];
+        $productPriceNoTax = $product["priceNOTAX"];
+        $productDescription = $product["description"];
+        $productQuantity = $product["quantity"];
+        $productCategory = $product["category"];
+        $productClothingSize = $product["clothingSize"];
+        $productClothingsSex = $product["clothingSex"];
+        $sql = "INSERT INTO clothing (id, name, price, priceNOTAX, img_url, quantity, category, description, size, sex) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productQuantity,$productCategory,$productDescription, $productClothingSize, $productClothingsSex);
         $stmt->execute();
       }
     }

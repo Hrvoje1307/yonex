@@ -41,33 +41,48 @@ $user = new User();
          </button>
          <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-               <a class="nav-link active" aria-current="page" href="dataDisplay.php?page=1">Proizvodi</a>
-            </li>
-            <li class="nav-item">
-               <a class="nav-link active" aria-current="page" href="userDisplay.php">Korisnici</a>
-            </li>
-            <li class="nav-item">
-               <a class="nav-link active" aria-current="page" href="callFunction.php">Podatci</a>
-            </li>
-            <div class="dropdown mb-0 d-flex ms-3">
-               <button class="btn p-0 dropdown-toggle d-flex gap-2 align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <?php if($user->is_logged()) : ?>
-                     <p class="my-0 d-none d-md-block text-secondary"><?php echo $_SESSION["name"];?></p>
-                  <?php else :?>
-                     <p class="my-0 d-none d-md-block text-secondary">Moj račun</p>
-                  <?php endif ;?>
-               </button>
-               
-               <ul class="dropdown-menu">
-                  <?php if ($user->is_logged()) : ?>
-                     <li><a class="dropdown-item" href="logout.php">Odjava</a></li> 
-                  <?php else : ?>
-                        <li><a class="dropdown-item" href="login.php">Prijava</a></li>
-                        <li><a class="dropdown-item" href="registration.php">Registracija</a></li>
-                  <?php endif; ?>
-               </ul>
-            </div>
+               <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="dataDisplay.php?page=1">Proizvodi Slo</a>
+               </li>
+               <div class="dropdown mb-0 d-flex ms-3">
+                  <button class="btn p-0 dropdown-toggle d-flex gap-2 align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                     <p class="my-0 d-none d-md-block text-dark">Proizvodi Hr</p>
+                  </button>
+                  
+                  <ul class="dropdown-menu">
+                     <li><a class="dropdown-item" href="dataCroatianClassicFilters.php?page=1">Classic filters</a></li> 
+                     <li><a class="dropdown-item" href="dataCroatianRackets.php?page=1">Reketi</a></li> 
+                     <li><a class="dropdown-item" href="dataCroatianBags.php?page=1">Torbe</a></li> 
+                     <li><a class="dropdown-item" href="dataCroatianCords.php?page=1">Žice</a></li> 
+                     <li><a class="dropdown-item" href="dataCroatianClothing.php?page=1">Odijeća</a></li> 
+                     <li><a class="dropdown-item" href="dataCroatianShoes.php?page=1">Obuća</a></li> 
+                     <li><a class="dropdown-item" href="dataCroatianBalls.php?page=1">Lopte</a></li> 
+                  </ul>
+               </div>
+               <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="userDisplay.php">Korisnici</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="callFunction.php">Podatci</a>
+               </li>
+               <div class="dropdown mb-0 d-flex ms-3">
+                  <button class="btn p-0 dropdown-toggle d-flex gap-2 align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                     <?php if($user->is_logged()) : ?>
+                        <p class="my-0 d-none d-md-block text-secondary"><?php echo $_SESSION["name"];?></p>
+                     <?php else :?>
+                        <p class="my-0 d-none d-md-block text-secondary">Moj račun</p>
+                     <?php endif ;?>
+                  </button>
+                  
+                  <ul class="dropdown-menu">
+                     <?php if ($user->is_logged()) : ?>
+                        <li><a class="dropdown-item" href="logout.php">Odjava</a></li> 
+                     <?php else : ?>
+                           <li><a class="dropdown-item" href="login.php">Prijava</a></li>
+                           <li><a class="dropdown-item" href="registration.php">Registracija</a></li>
+                     <?php endif; ?>
+                  </ul>
+               </div>
             </ul>
          </div>
       </div>

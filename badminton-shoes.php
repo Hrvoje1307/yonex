@@ -33,7 +33,7 @@
                 <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse show">
                   <div class="accordion-body body__filters">
                     <ul class="list-group">
-                      <?php $user->shoesSize("badminton");?>
+                      <?php $user->shoesSize();?>
                     </ul>
                   </div>
                 </div>
@@ -100,7 +100,7 @@
                     </div>
                     <div class="col-6">
                       <ul class="list-group flex-row flex-wrap gap-2">
-                        <?php $user->shoesSize("badminton");?>
+                        <?php $user->shoesSize();?>
                       </ul>
                     </div>
                   </div>

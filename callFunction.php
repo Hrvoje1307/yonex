@@ -5,7 +5,7 @@
   $data = new Model($user);
   $user->relocate();
   $data->callTrainslationFunctions();
-  // $data->makeJson();
+  $data->makeJson();
 ?>
 
 <div class="container my-5">

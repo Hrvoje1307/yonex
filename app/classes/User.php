@@ -472,8 +472,85 @@ class User {
         return $newURL;
     }
 
+    public function getProductsRackets($category) {
+        $sql = "SELECT * FROM rackets WHERE category=?";
+        $stmt= $this->conn->prepare($sql);
+        $stmt->bind_param("s",$category);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $data = [];
+        while($row = $result->fetch_assoc()) {
+            array_push($data,$row);
+        }
+
+        return $this->cardPrintIndex($data,$category);
+    }
+
 
     //Code printing
+    private function cardPrintIndex($array, $category) {
+        $code = "";
+        foreach($array as $key => $product) {
+            if($key<=1) {
+                if($product["category"] == $category || $category == "search") {
+                    $id = strval($product["id"]);
+                    $isAlreadyAdded = $this->isProductAlreadyAdded($id);
+                    $code.= "
+                    <div class='card shop__card product__card' style='width: 49%;'>
+                        <form method='post'>
+                            <a href='product.php?data=".$product['id']."'>  
+                                <input type='hidden' name='product_id' value='".$product['id']."'>
+                                <img src='".$product['img_url']."' class='card-img-top' alt='".$product['id']."'>
+                                <div class='card-body'>
+                                    <h5 class='card-title fw-bold'>".$product['name']."</h5>
+                                    <p class='card-text'>".$this->truncString($product['description'])." </p>
+                                    <p class='fs-3 m-0'><span>".$product['price']."</span>€</p>
+                                    <p class='fs-5 m-0 mb-3'><span>".$product['priceNOTAX']."</span>€</p>
+                                    ";
+                if($product["quantity"]>0) {
+                        $code.="
+                                    <p class='fs-6 fw-semibold text-success m-0 mb-3'>Dostupno</p>
+                                    <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
+                                        <div class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
+                                            <i class='bi bi-cart-fill'></i>
+                                            <p class='lead m-0'>Dodaj u košaricu</p>
+                                        </div>
+                              ";
+                }
+                else if($product["quantity"]<= 0) {
+                    $code.="
+                                    <p class='fs-6 fw-semibold text-danger m-0 mb-3'>Nedostupno</p>
+                                    <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
+                                        <div class='btn btn-light d-flex gap-1 justify-content-center align-items-center disabled'>
+                                            <i class='bi bi-cart-fill'></i>
+                                            <p class='lead m-0'>Dodaj u košaricu</p>
+                                        </div>
+                    ";
+                }
+                if(!$isAlreadyAdded) {
+                    $code.= "
+                                        <button name='update_wishlist' type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center'>
+                                            <i class='bi bi-heart'></i>
+                                        </button>
+                    ";
+                }else  {
+                    $code.= "
+                                        <button name='update_wishlist' type='submit' class='btn btn-light d-flex gap-1 justify-content-center align-items-center bg-danger border-danger'>
+                                            <i class='bi bi-heart-fill text-light'></i>
+                                        </button>
+                    ";
+                }
+                $code.= " 
+                                    </div> 
+                                </div>
+                            </a>
+                        </form>
+                    </div> ";
+                }
+            }
+        }
+        return $code;
+    }
 
     private function cardPrint($array, $category) {
         $code = "";
@@ -948,8 +1025,8 @@ class User {
         $this->checkboxFilterPrint($results,"filterHandleType");
     }
 
-    public function shoesSize($sport) {
-        $results = $this->getDataWithOneCondition($filterName ="shoes_size", $sport);
+    public function shoesSize() {
+        $results = $this->getDataWithOneCondition($filterName ="shoes_size");
         $this->checkboxFilterPrint($results,"filterShoesSize");
     }
 
@@ -1164,7 +1241,7 @@ class User {
         }
 
         if(isset($_GET["filterGender"])) {
-            foreach ($handlerArr as $key => $handler) {
+            foreach ($genderArr as $key => $gender) {
                 array_push($additionalSql, "AND sex = ?");
             }
         }

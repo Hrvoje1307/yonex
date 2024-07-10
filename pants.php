@@ -135,10 +135,10 @@
             </div>
           </div>
           <div class="row mt-3 ps-3 gap-2 justify-content-sm-start justify-content-center">
-            <?php $user->printClothingFilters("clothing","pants");?>
+            <?php $user->printClothingFilters("clothing","sweatpants");?>
           </div>
           <form id="pageForm" method="post">
-            <?php $user->printPagesButtons("clothing","pants");?>
+            <?php $user->printPagesButtons("clothing","sweatpants");?>
           </form>
         </div>
       </div>
