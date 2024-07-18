@@ -49,7 +49,7 @@ class Data {
           // prettier-ignore
           table.innerHTML += `
             <tr onclick="window.location.href='productSingle.php?id=${product.ID}'">
-              <th scope="row">${key}</th>
+              <th scope="row">${key+1}</th>
               <td>${product["ID"]}</td>
               <td>${product["name"]}</td>
               <td><img width="50px" src="${product["img_url"]}" alt=""></td>
@@ -126,6 +126,7 @@ class Data {
   }
 
   printBtnsPages(totalProducts) {
+    if (totalProducts < PRODUCTS_PER_PAGE) return;
     const lastPage = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
     if (this.#pageNum === 1) {
       this.#pagesBtnContainer.innerHTML = `
@@ -176,10 +177,7 @@ class Data {
 
   closeUser() {
     if (!this.#closeBtn) return;
-    this.#closeBtn.addEventListener(
-      "click",
-      () => (window.location = "userDisplay.php")
-    );
+    this.#closeBtn.addEventListener("click", () => history.back());
   }
 }
 

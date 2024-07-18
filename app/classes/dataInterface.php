@@ -1109,5 +1109,209 @@
         }
       }
     }
+
+    public function getProductTable($product_id) {
+      $tables = ["classicfilters", "bags", "balls", "clothing", "cords", "rackets", "shoes"];
+      foreach ($tables as $key => $table) {
+        $sql = "SELECT * FROM $table WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s",$product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if($result->num_rows > 0) {
+         return $table;
+        }
+      }
+    }
+
+    public function getDataFromEachProduct($product_id) {
+      $table = $this->getProductTable($product_id);
+      $sql = "SELECT * FROM $table WHERE id=?"; 
+      $stmt = $this->conn->prepare($sql);
+      $stmt->bind_param("s",$product_id);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      $data = $result->fetch_assoc();
+      return $data;
+    }
+
+    public function makeRadioButtons($array, $checkField,$label,$name) {
+      if(!$array) return;
+      $code="";
+      $code.= "
+        <div class='mb-3'>
+          <label for='productCategory' class='form-label'>$label</label>
+          <div class='d-flex gap-5 flex-wrap my-3'>
+      ";
+      foreach ($array as $key => $filter) {
+        $checked = $filter === htmlspecialchars(trim($checkField)) ? "checked" : null;
+        $code.="
+            <div class='mb-3 form-check'>
+              <input type='radio' class='form-check-input' name='$name' id='$name$key' value='$filter' ".$checked.">
+              <label class='form-check-label' for='$name$key'>$filter</label>
+            </div>
+        ";
+      }
+      $code.= "
+         </div>
+        </div>
+      ";
+
+      return $code;
+    }
+
+    public function printProductForm($product_id) {
+      $table = $this->getProductTable($product_id);
+      $categories = ["classicfilters" => ["vibrationDamper", "tints", "sweats", "gums", "towels", "restAccessories"], 
+      "rackets" => ["tennis", "badminton"], "bags" => ["rucksack", "bags"], "cords" => ["tennis", "badminton"], 
+      "clothing" => ["jackets", "socks", "rest", "shorts", "t-shirts", "sweatpants", "dress"], "shoes" => ["tennis", "badminton"],
+      "balls" => ["tennis", "badminton"]];
+      // var_dump($categories["classicfilters"]);
+      $productData = $this->getDataFromEachProduct($product_id);
+      $code = "";
+      $code.= "
+        <h3 class='mt-5'>Osnovni podatci</h3>
+        <hr>
+        <div class='mb-3'>
+          <label for='productId' class='form-label'>ID proizvoda</label>
+          <input type='text' name='productId' class='form-control' id='productId' value='".htmlspecialchars(trim($productData["id"]))."'>
+        </div>
+        <div class='mb-3'>
+          <label for='productName' class='form-label'>Ime</label>
+          <input type='text' name='productName' class='form-control' id='productName' value='".htmlspecialchars(trim($productData["name"]))."'>
+        </div>
+        <div class='mb-3'>
+          <label for='productImgUrl' class='form-label'>Url slike</label>
+          <input type='text' name='productUrl' class='form-control' id='productImgUrl' value='".htmlspecialchars(trim($productData["img_url"]))."'>
+        </div>
+        <div class='mb-3'>
+          <label for='price' class='form-label'>Cijena</label>
+          <div class='input-group mb-3'>
+            <input type='text' class='form-control' id='price' value='1'>
+            <label name='productPrice' class='input-group-text bg-primary text-light' for='price'>€</label>
+          </div>
+        </div>
+        <div class='mb-3'>
+          <label for='priceNoTax' class='form-label'>Nabavna cijena</label>
+          <div class='input-group mb-3'>
+            <input type='text' class='form-control' id='priceNoTax' value='".htmlspecialchars(trim($productData["priceNOTAX"]))."'>
+            <label name='productPriceNoTax' class='input-group-text bg-primary text-light' for='priceNoTax'>€</label>
+          </div>
+        </div>
+        <div class='mb-3'>
+          <label for='productDescription' class='form-label'>Opis</label>
+          <input type='text' name='productDescription' class='form-control' id='productDescription' value='".htmlspecialchars(trim($productData["description"]))."'>
+        </div>";
+      $code.= $this->makeRadioButtons($categories[$table], $productData["category"], "Kategorija proizvoda","category");
+      $code.="
+        <div class='mb-3'>
+          <label for='productQuantity' class='form-label'>Količina</label>
+          <input type='number' name='productQuantity' class='form-control' id='productQuantity' value='".htmlspecialchars(trim($productData["quantity"]))."'>
+        </div>
+      ";
+
+      if($table === "rackets") {
+        $racketType = ["tennis" => ["Ezoni","Percept","Vcore","Vcore Pro"], 
+                       "badminton" => ["Arcsaber","Astrox","B-seria","Duora","Muscle power","Nanoflare","Nanozraci","Dječji","Voltric"]];
+        $racketWeight = ["tennis" => ["240g","250g","260g","270g","280g","290g","300g","310g","320g","330g","340g"], 
+                        "badminton" => ["2F = 68g","2U = 90-94.9g","3U = 85-89.9g","4U = 80-84.9g","5U = 75-79.9g"]];
+        $handlerSize = ["tennis" => ["G0","G1","G2","G3","G4"], "badminton" => ["G4", "G5", "G7"]];
+        $code.= "
+        <h3 class='mt-5'>Filteri</h3>
+        <hr>";
+        $code.= $this->makeRadioButtons($racketType[$productData["category"]], $productData["racketType"], "Tip reketa","racketType");
+        $code.= $this->makeRadioButtons($racketWeight[$productData["category"]], $productData["racketWeight"], "Tezina reketa", "racketWeight");
+        $code.= $this->makeRadioButtons($handlerSize[$productData["category"]], $productData["handlerSize"], "Veličina ručke", "handlerSize");
+      }
+      
+      if($table === "bags") {
+        $code.= "
+        <h3 class='mt-5'>Filteri</h3>
+        <hr>";
+        $bagSize = ["rucksack" => [], "bags" => ["3 reketa", "6 reketa", "8-12 reketa", "Ostale torbe"]];
+        $bagType = ["rucksack" => [], "bags" => ["Aktivna", "Pro serija", "Timska serija"]];
+        $code.= $this->makeRadioButtons($bagSize[$productData["category"]], $productData["size"], "Veličina torbe", "bagSize");
+        $code.= $this->makeRadioButtons($bagType[$productData["category"]], $productData["type"], "Veličina torbe", "bagType");
+      }
+      
+      if($table === "cords") {
+        $code.= "
+        <h3 class='mt-5'>Filteri</h3>
+        <hr>";
+        $cordThickness = ["tennis" => ["1.15 mm", "1.20 mm", "1.25 mm" ,"1.30 mm"], "badminton" => []];
+        $cordLength = ["tennis" => ["Role [200m-500m]","12 m"], "badminton" => ["Role [200m-500m]","10 m"]];
+        $code.= $this->makeRadioButtons($cordThickness[$productData["category"]], $productData["thicknesses"], "Debljina žice", "cordThickness");
+        $code.= $this->makeRadioButtons($cordLength[$productData["category"]], $productData["length"], "Duljina žice", "cordLength");
+      }
+      
+      if($table === "clothing") {
+        $code.= "
+        <h3 class='mt-5'>Filteri</h3>
+        <hr>";
+        $size = ["S", "M", "L", "XL", "XXL"];
+        $gender = ["Muški", "Ženski", "Uniseks"];
+        $code.= $this->makeRadioButtons($size, $productData["size"], "Veličina", "clothingSize");
+        $code.= $this->makeRadioButtons($gender, $productData["sex"], "Spol", "clothingGender");
+      }
+
+      if($table === "shoes") {
+        $code.= "
+        <h3 class='mt-5'>Filteri</h3>
+        <hr>";
+        $size = ["38","38.5","39","39.5", "40", "40.5", "41", "41.5", "42", "42.5", "43", "43.5", "44", "44.5", "45", "45.5", "46", "46.5", "47"];
+        $gender = ["Muški", "Ženski", "Uniseks"];
+        $code.= $this->makeRadioButtons($size, $productData["shoes_num"], "Veličina", "shoesSize");
+        $code.= $this->makeRadioButtons($gender, $productData["sex"], "Spol", "shoesGender");
+      }
+      
+      if($table === "balls") {
+        $code.= "
+        <h3 class='mt-5'>Filteri</h3>
+        <hr>";
+        $type = ["tennis" => ["Turnir", "Trening"], "badminton" => ["Najlon", "Perje"]];
+        $speed = ["tennis" => [], "badminton" => ["Brze", "Brzina 3", "Srednje", "Spore"]];
+        $code.= $this->makeRadioButtons($type[$productData["category"]], $productData["type"], "Tip loptice", "ballType");
+        $code.= $this->makeRadioButtons($speed[$productData["category"]], $productData["speed"], "Brzina loptice", "ballSpeed");
+      }
+      echo $code;
+    }
+
+    public function changeProductData() {
+      if($_SERVER["REQUEST_METHOD"] == "POST") {
+        if(isset($_POST["submitChanges"])) {
+          $id = isset($_POST["productId"]) ? ["value" => +$_POST["productId"], "databaseKey" => "id"] : null;
+          $name = isset($_POST["productName"]) ? ["value" => $_POST["productName"], "databaseKey" => "name"] : null;
+          $url = isset($_POST["productUrl"]) ? ["value" => $_POST["productUrl"], "databaseKey" => "img_url"] : null;
+          $price = isset($_POST["productPrice"]) ? ["value" => $_POST["productPrice"], "databaseKey" => "price"] : null;
+          $priceNoTax = isset($_POST["productPriceNoTax"]) ? ["value" => $_POST["productPriceNoTax"], "databaseKey" => "priceNOTAX"] : null;
+          $description = isset($_POST["productDescription"]) ? ["value" => $_POST["productDescription"], "databaseKey" => "description"] : null;
+          $category = isset($_POST["category"]) ? ["value" => $_POST["category"], "databaseKey" => "category"] : null;
+          $quantity = isset($_POST["productQuantity"]) ? ["value" => +$_POST["productQuantity"], "databaseKey" => "quantity"] : null;
+          $racketType = isset($_POST["racketType"]) ? ["value" => $_POST["racketType"], "databaseKey" => "racketType"] : null;
+          $racketWeight = isset($_POST["racketWeight"]) ? ["value" => $_POST["racketWeight"], "databaseKey" => "racketWeight"] : null;
+          $handlerSize = isset($_POST["handlerSize"]) ? ["value" => $_POST["handlerSize"], "databaseKey" => "handlerSize"] : null;
+          $bagSize = isset($_POST["bagSize"]) ? ["value" => $_POST["bagSize"], "databaseKey" => "size"] : null;
+          $bagType = isset($_POST["bagType"]) ? ["value" => $_POST["bagType"], "databaseKey" => "type"] : null;
+          $cordThickness = isset($_POST["cordThickness"]) ? ["value" => $_POST["cordThickness"], "databaseKey" => "thicknesses"] : null;
+          $cordLength = isset($_POST["cordLength"]) ? ["value" => $_POST["cordLength"], "databaseKey" => "length"] : null;
+          $clothingSize = isset($_POST["clothingSize"]) ? ["value" => $_POST["clothingSize"], "databaseKey" => "size"] : null;
+          $clothingGender = isset($_POST["clothingGender"]) ? ["value" => $_POST["clothingGender"], "databaseKey" => "sex"] : null;
+          $shoesSize = isset($_POST["shoesSize"]) ? ["value" => $_POST["shoesSize"], "databaseKey" => "shoes_num"] : null;
+          $shoesGender = isset($_POST["shoesGender"]) ? ["value" => $_POST["shoesGender"], "databaseKey" => "sex"] : null;
+          $ballType = isset($_POST["ballType"]) ? ["value" => $_POST["ballType"], "databaseKey" => "type"] : null;
+          $ballSpeed = isset($_POST["ballSpeed"]) ? ["value" => $_POST["ballSpeed"], "databaseKey" => "speed"] : null;
+          $productCurrentData = $this->getDataFromEachProduct($id["value"]);
+          $toChange = [$id,$name,$url,$price,$priceNoTax,$description,$category,$quantity,$racketType,$racketWeight,$handlerSize,$bagSize,$bagType,$cordThickness,$cordLength,$clothingSize,
+                        $clothingGender,$shoesSize,$shoesGender,$ballType,$ballSpeed];
+          
+          foreach ($toChange as $key => $value) {
+            if($value !== null && ($productCurrentData[$value["databaseKey"]] !== $value["value"])) {
+              var_dump($value);
+              var_dump($productCurrentData[$value["databaseKey"]]);
+            }
+          }
+        }
+      }
+    }
   }
 ?>
