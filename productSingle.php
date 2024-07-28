@@ -9,9 +9,17 @@
 ?>
 
 <div class="container my-5">
-  <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-danger close__btn"><i class="bi bi-x-lg"></i></button>
-  </div>
+  <?php
+      if(isset($_SESSION["message"]["type"])) {
+        echo "
+            <div class='mt-3 mb-3 alert alert-".$_SESSION["message"]["type"]."' role='alert'>
+              ".$_SESSION['message']['text']."
+            </div>
+        ";
+        unset($_SESSION["message"]["type"]);
+        unset($_SESSION["message"]["text"]);
+      }
+  ?>
   <form method="post">
     <?php $data->printProductForm($product_id);?>
     <div class="d-flex justify-content-end">

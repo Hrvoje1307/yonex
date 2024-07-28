@@ -1174,7 +1174,7 @@
         <hr>
         <div class='mb-3'>
           <label for='productId' class='form-label'>ID proizvoda</label>
-          <input type='text' name='productId' class='form-control' id='productId' value='".htmlspecialchars(trim($productData["id"]))."'>
+          <input type='text' name='productId' class='form-control' id='productId' value='".htmlspecialchars(trim($productData["id"]))."' readonly='true'>
         </div>
         <div class='mb-3'>
           <label for='productName' class='form-label'>Ime</label>
@@ -1187,7 +1187,7 @@
         <div class='mb-3'>
           <label for='price' class='form-label'>Cijena</label>
           <div class='input-group mb-3'>
-            <input type='text' class='form-control' id='price' value='1'>
+            <input type='text' class='form-control' id='price' value='".htmlspecialchars(trim($productData["price"]))."'>
             <label name='productPrice' class='input-group-text bg-primary text-light' for='price'>€</label>
           </div>
         </div>
@@ -1279,6 +1279,7 @@
     public function changeProductData() {
       if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["submitChanges"])) {
+          $counter = 0;
           $id = isset($_POST["productId"]) ? ["value" => +$_POST["productId"], "databaseKey" => "id"] : null;
           $name = isset($_POST["productName"]) ? ["value" => $_POST["productName"], "databaseKey" => "name"] : null;
           $url = isset($_POST["productUrl"]) ? ["value" => $_POST["productUrl"], "databaseKey" => "img_url"] : null;
@@ -1301,14 +1302,23 @@
           $ballType = isset($_POST["ballType"]) ? ["value" => $_POST["ballType"], "databaseKey" => "type"] : null;
           $ballSpeed = isset($_POST["ballSpeed"]) ? ["value" => $_POST["ballSpeed"], "databaseKey" => "speed"] : null;
           $productCurrentData = $this->getDataFromEachProduct($id["value"]);
-          $toChange = [$id,$name,$url,$price,$priceNoTax,$description,$category,$quantity,$racketType,$racketWeight,$handlerSize,$bagSize,$bagType,$cordThickness,$cordLength,$clothingSize,
+          $toChange = [$name,$url,$price,$priceNoTax,$description,$category,$quantity,$racketType,$racketWeight,$handlerSize,$bagSize,$bagType,$cordThickness,$cordLength,$clothingSize,
                         $clothingGender,$shoesSize,$shoesGender,$ballType,$ballSpeed];
           
           foreach ($toChange as $key => $value) {
             if($value !== null && ($productCurrentData[$value["databaseKey"]] !== $value["value"])) {
-              var_dump($value);
-              var_dump($productCurrentData[$value["databaseKey"]]);
+              $table = $this->getProductTable($id["value"]);
+              $sql = "UPDATE $table SET ".$value['databaseKey']." = ? WHERE id=?";
+              $stmt = $this->conn->prepare($sql);
+              $stmt->bind_param("ss", $value["value"] , $id["value"]);
+              $stmt->execute();
+              $counter++;
             }
+          }
+
+          if($counter) {
+            $_SESSION["message"]["type"] = "success";
+            $_SESSION["message"]["text"] = "Uspješno ste promijenili podatke";
           }
         }
       }
