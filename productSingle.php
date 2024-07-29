@@ -23,7 +23,7 @@
   <form method="post">
     <?php $data->printProductForm($product_id);?>
     <div class="d-flex justify-content-end">
-      <button name="submitChanges" type="submit" class="btn btn-success align-self-start">Promijeni</button>
+      <button name="submitChanges" type="submit" class="btn btn-success align-self-start submit__btn">Promijeni</button>
     </div>
   </form>
 </div>

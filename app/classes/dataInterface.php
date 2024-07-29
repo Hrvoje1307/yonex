@@ -1147,7 +1147,7 @@
         $checked = $filter === htmlspecialchars(trim($checkField)) ? "checked" : null;
         $code.="
             <div class='mb-3 form-check'>
-              <input type='radio' class='form-check-input' name='$name' id='$name$key' value='$filter' ".$checked.">
+              <input type='radio' class='form-check-input product-input__field' name='$name' id='$name$key' value='$filter' ".$checked.">
               <label class='form-check-label' for='$name$key'>$filter</label>
             </div>
         ";
@@ -1166,7 +1166,6 @@
       "rackets" => ["tennis", "badminton"], "bags" => ["rucksack", "bags"], "cords" => ["tennis", "badminton"], 
       "clothing" => ["jackets", "socks", "rest", "shorts", "t-shirts", "sweatpants", "dress"], "shoes" => ["tennis", "badminton"],
       "balls" => ["tennis", "badminton"]];
-      // var_dump($categories["classicfilters"]);
       $productData = $this->getDataFromEachProduct($product_id);
       $code = "";
       $code.= "
@@ -1174,39 +1173,39 @@
         <hr>
         <div class='mb-3'>
           <label for='productId' class='form-label'>ID proizvoda</label>
-          <input type='text' name='productId' class='form-control' id='productId' value='".htmlspecialchars(trim($productData["id"]))."' readonly='true'>
+          <input type='text' name='ID' class='form-control product-input__field' id='productId' value='".htmlspecialchars(trim($productData["id"]))."' readonly='true'>
         </div>
         <div class='mb-3'>
           <label for='productName' class='form-label'>Ime</label>
-          <input type='text' name='productName' class='form-control' id='productName' value='".htmlspecialchars(trim($productData["name"]))."'>
+          <input type='text' name='name' class='form-control product-input__field' id='productName' value='".htmlspecialchars(trim($productData["name"]))."'>
         </div>
         <div class='mb-3'>
           <label for='productImgUrl' class='form-label'>Url slike</label>
-          <input type='text' name='productUrl' class='form-control' id='productImgUrl' value='".htmlspecialchars(trim($productData["img_url"]))."'>
+          <input type='text' name='img_url' class='form-control product-input__field' id='productImgUrl' value='".htmlspecialchars(trim($productData["img_url"]))."'>
         </div>
         <div class='mb-3'>
           <label for='price' class='form-label'>Cijena</label>
           <div class='input-group mb-3'>
-            <input type='text' class='form-control' id='price' value='".htmlspecialchars(trim($productData["price"]))."'>
-            <label name='productPrice' class='input-group-text bg-primary text-light' for='price'>€</label>
+            <input name='price' type='text' class='form-control product-input__field' id='price' value='".htmlspecialchars(trim($productData["price"]))."'>
+            <label  class='input-group-text bg-primary text-light' for='price'>€</label>
           </div>
         </div>
         <div class='mb-3'>
           <label for='priceNoTax' class='form-label'>Nabavna cijena</label>
           <div class='input-group mb-3'>
-            <input type='text' class='form-control' id='priceNoTax' value='".htmlspecialchars(trim($productData["priceNOTAX"]))."'>
-            <label name='productPriceNoTax' class='input-group-text bg-primary text-light' for='priceNoTax'>€</label>
+            <input type='text' name='priceNoTax' class='form-control product-input__field' id='priceNoTax' value='".htmlspecialchars(trim($productData["priceNOTAX"]))."'>
+            <label class='input-group-text bg-primary text-light' for='priceNoTax'>€</label>
           </div>
         </div>
         <div class='mb-3'>
           <label for='productDescription' class='form-label'>Opis</label>
-          <input type='text' name='productDescription' class='form-control' id='productDescription' value='".htmlspecialchars(trim($productData["description"]))."'>
+          <input type='text' name='description' class='form-control product-input__field' id='productDescription' value='".htmlspecialchars(trim($productData["description"]))."'>
         </div>";
       $code.= $this->makeRadioButtons($categories[$table], $productData["category"], "Kategorija proizvoda","category");
       $code.="
         <div class='mb-3'>
           <label for='productQuantity' class='form-label'>Količina</label>
-          <input type='number' name='productQuantity' class='form-control' id='productQuantity' value='".htmlspecialchars(trim($productData["quantity"]))."'>
+          <input type='number' name='quantity' class='form-control product-input__field' id='productQuantity' value='".htmlspecialchars(trim($productData["quantity"]))."'>
         </div>
       ";
 
@@ -1239,7 +1238,7 @@
         <h3 class='mt-5'>Filteri</h3>
         <hr>";
         $cordThickness = ["tennis" => ["1.15 mm", "1.20 mm", "1.25 mm" ,"1.30 mm"], "badminton" => []];
-        $cordLength = ["tennis" => ["Role [200m-500m]","12 m"], "badminton" => ["Role [200m-500m]","10 m"]];
+        $cordLength = ["tennis" => ["Role [200m-500m]","12m"], "badminton" => ["Role [200m-500m]","10m"]];
         $code.= $this->makeRadioButtons($cordThickness[$productData["category"]], $productData["thicknesses"], "Debljina žice", "cordThickness");
         $code.= $this->makeRadioButtons($cordLength[$productData["category"]], $productData["length"], "Duljina žice", "cordLength");
       }
@@ -1251,7 +1250,7 @@
         $size = ["S", "M", "L", "XL", "XXL"];
         $gender = ["Muški", "Ženski", "Uniseks"];
         $code.= $this->makeRadioButtons($size, $productData["size"], "Veličina", "clothingSize");
-        $code.= $this->makeRadioButtons($gender, $productData["sex"], "Spol", "clothingGender");
+        $code.= $this->makeRadioButtons($gender, $productData["sex"], "Spol", "clothingSex");
       }
 
       if($table === "shoes") {
@@ -1261,7 +1260,7 @@
         $size = ["38","38.5","39","39.5", "40", "40.5", "41", "41.5", "42", "42.5", "43", "43.5", "44", "44.5", "45", "45.5", "46", "46.5", "47"];
         $gender = ["Muški", "Ženski", "Uniseks"];
         $code.= $this->makeRadioButtons($size, $productData["shoes_num"], "Veličina", "shoesSize");
-        $code.= $this->makeRadioButtons($gender, $productData["sex"], "Spol", "shoesGender");
+        $code.= $this->makeRadioButtons($gender, $productData["sex"], "Spol", "shoesSex");
       }
       
       if($table === "balls") {
@@ -1280,14 +1279,14 @@
       if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["submitChanges"])) {
           $counter = 0;
-          $id = isset($_POST["productId"]) ? ["value" => +$_POST["productId"], "databaseKey" => "id"] : null;
-          $name = isset($_POST["productName"]) ? ["value" => $_POST["productName"], "databaseKey" => "name"] : null;
-          $url = isset($_POST["productUrl"]) ? ["value" => $_POST["productUrl"], "databaseKey" => "img_url"] : null;
-          $price = isset($_POST["productPrice"]) ? ["value" => $_POST["productPrice"], "databaseKey" => "price"] : null;
-          $priceNoTax = isset($_POST["productPriceNoTax"]) ? ["value" => $_POST["productPriceNoTax"], "databaseKey" => "priceNOTAX"] : null;
-          $description = isset($_POST["productDescription"]) ? ["value" => $_POST["productDescription"], "databaseKey" => "description"] : null;
+          $id = isset($_POST["ID"]) ? ["value" => +$_POST["ID"], "databaseKey" => "id"] : null;
+          $name = isset($_POST["name"]) ? ["value" => $_POST["name"], "databaseKey" => "name"] : null;
+          $url = isset($_POST["img_url"]) ? ["value" => $_POST["img_url"], "databaseKey" => "img_url"] : null;
+          $price = isset($_POST["price"]) ? ["value" => $_POST["price"], "databaseKey" => "price"] : null;
+          $priceNoTax = isset($_POST["priceNoTax"]) ? ["value" => $_POST["priceNoTax"], "databaseKey" => "priceNOTAX"] : null;
+          $description = isset($_POST["description"]) ? ["value" => $_POST["description"], "databaseKey" => "description"] : null;
           $category = isset($_POST["category"]) ? ["value" => $_POST["category"], "databaseKey" => "category"] : null;
-          $quantity = isset($_POST["productQuantity"]) ? ["value" => +$_POST["productQuantity"], "databaseKey" => "quantity"] : null;
+          $quantity = isset($_POST["quantity"]) ? ["value" => +$_POST["quantity"], "databaseKey" => "quantity"] : null;
           $racketType = isset($_POST["racketType"]) ? ["value" => $_POST["racketType"], "databaseKey" => "racketType"] : null;
           $racketWeight = isset($_POST["racketWeight"]) ? ["value" => $_POST["racketWeight"], "databaseKey" => "racketWeight"] : null;
           $handlerSize = isset($_POST["handlerSize"]) ? ["value" => $_POST["handlerSize"], "databaseKey" => "handlerSize"] : null;
@@ -1296,9 +1295,9 @@
           $cordThickness = isset($_POST["cordThickness"]) ? ["value" => $_POST["cordThickness"], "databaseKey" => "thicknesses"] : null;
           $cordLength = isset($_POST["cordLength"]) ? ["value" => $_POST["cordLength"], "databaseKey" => "length"] : null;
           $clothingSize = isset($_POST["clothingSize"]) ? ["value" => $_POST["clothingSize"], "databaseKey" => "size"] : null;
-          $clothingGender = isset($_POST["clothingGender"]) ? ["value" => $_POST["clothingGender"], "databaseKey" => "sex"] : null;
+          $clothingGender = isset($_POST["clothingSex"]) ? ["value" => $_POST["clothingSex"], "databaseKey" => "sex"] : null;
           $shoesSize = isset($_POST["shoesSize"]) ? ["value" => $_POST["shoesSize"], "databaseKey" => "shoes_num"] : null;
-          $shoesGender = isset($_POST["shoesGender"]) ? ["value" => $_POST["shoesGender"], "databaseKey" => "sex"] : null;
+          $shoesGender = isset($_POST["shoesSex"]) ? ["value" => $_POST["shoesSex"], "databaseKey" => "sex"] : null;
           $ballType = isset($_POST["ballType"]) ? ["value" => $_POST["ballType"], "databaseKey" => "type"] : null;
           $ballSpeed = isset($_POST["ballSpeed"]) ? ["value" => $_POST["ballSpeed"], "databaseKey" => "speed"] : null;
           $productCurrentData = $this->getDataFromEachProduct($id["value"]);

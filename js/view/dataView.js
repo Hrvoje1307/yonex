@@ -3,6 +3,11 @@ import { COMPANY, AUTHORS, PRODUCTS_PER_PAGE } from "../../js/config.js";
 class Data {
   //BTNS
   #closeBtn = document.querySelector(".close__btn");
+  #submitBtn = document.querySelector(".submit__btn");
+
+  //ADDITIONAL SELECTORS
+  #inputForm = document.querySelectorAll(".product-input__field");
+
 
   //TABLES
   #tableBodyClassicFilters = document.querySelector(
@@ -49,7 +54,7 @@ class Data {
           // prettier-ignore
           table.innerHTML += `
             <tr onclick="window.location.href='productSingle.php?id=${product.ID}'">
-              <th scope="row">${key+1}</th>
+              <th scope="row">${key + 1}</th>
               <td>${product["ID"]}</td>
               <td>${product["name"]}</td>
               <td><img width="50px" src="${product["img_url"]}" alt=""></td>
@@ -131,28 +136,24 @@ class Data {
     if (this.#pageNum === 1) {
       this.#pagesBtnContainer.innerHTML = `
         <div class="d-flex justify-content-end">
-          <button class="btn btn-secondary next__page">Sljedeća ${
-            this.#pageNum + 1
-          }</button>
+          <button class="btn btn-secondary next__page">Sljedeća ${this.#pageNum + 1
+        }</button>
         </div>
       `;
     } else if (this.#pageNum === lastPage) {
       this.#pagesBtnContainer.innerHTML = `
         <div class="d-flex justify-content-start">
-          <button class="btn btn-secondary previous__page">Prethodna ${
-            this.#pageNum - 1
-          }</button>
+          <button class="btn btn-secondary previous__page">Prethodna ${this.#pageNum - 1
+        }</button>
         </div>
       `;
     } else {
       this.#pagesBtnContainer.innerHTML = `
         <div class="d-flex justify-content-between">
-          <button class="btn btn-secondary previous__page">Prethodna ${
-            this.#pageNum - 1
-          }</button>
-          <button class="btn btn-secondary next__page">Sljedeća ${
-            this.#pageNum + 1
-          }</button>
+          <button class="btn btn-secondary previous__page">Prethodna ${this.#pageNum - 1
+        }</button>
+          <button class="btn btn-secondary next__page">Sljedeća ${this.#pageNum + 1
+        }</button>
         </div>
       `;
     }
@@ -178,6 +179,53 @@ class Data {
   closeUser() {
     if (!this.#closeBtn) return;
     this.#closeBtn.addEventListener("click", () => history.back());
+  }
+
+  async updateJsonProduct() {
+    try {
+      if (!this.#submitBtn) return;
+      this.#submitBtn.addEventListener("click", async (e) => {
+        // e.preventDefault();
+        const productObject = {};
+        const urlParams = window.location.search;
+        const id = urlParams.slice(4);
+        const data = await this.getJson("app/config/prijevod.json");
+        const dataArray = [];
+        Object.entries(data).map(entry => dataArray.push(entry[1]));
+        const dataArrayMerged = [].concat(...dataArray);
+        const product = dataArrayMerged.find(entry => entry.ID === id);
+        this.#inputForm.forEach((field) => {
+          if (field.type === "radio" && !field?.checked) return;
+          productObject[field.name] = field.value;
+        })
+
+        const isUpdated = false;
+        Object.keys(productObject).forEach(key => {
+          if (productObject[key] === product[key]) return;
+          product[key] = "CUCKO";
+          isUpdated = true;
+        });
+
+        if (isUpdated) {
+          const response = await fetch('/updateProduct', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(product)
+          });
+
+          if (!response.ok) {
+            throw new Error('Failed to update product');
+          }
+
+          console.log('Product updated successfully');
+        }
+      });
+
+    } catch (e) {
+      console.error(e.message);
+    }
   }
 }
 
