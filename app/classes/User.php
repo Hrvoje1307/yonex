@@ -64,6 +64,7 @@ class User {
     }
 
     public function submitAddressCheckout() {
+        $_SESSION["addressData"] = [];
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["submitAddressCheckout"])) {
                 $addressData = [
@@ -82,10 +83,14 @@ class User {
                 }
                 if($addressData["saveAddress"]) {
                     $user_id = $_SESSION["user_id"];
-                    $sql = "UPDATE users SET address = ? AND "
+                    $sql = "UPDATE users SET address = ?, postcode = ?, town = ? WHERE user_id = ?";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->bind_param("ssss", $addressData["address"], $addressData["postcode"], $addressData["town"], $user_id);
+                    $stmt->execute();
                 }
-                return ["fullName" => $addressData["fullName"], "phoneNumber" => $addressData["phoneNumber"],
-                 "address" => $addressData["address"], "postcode" => $addressData["postcode"], "town" => $addressData["town"]];
+                $_SESSION["addressData"] = ["fullName" => $addressData["fullName"], "phoneNumber" => $addressData["phoneNumber"],
+                "address" => $addressData["address"], "postcode" => $addressData["postcode"], "town" => $addressData["town"]];
+                header("Location: index.php");
             }
         }
     }
