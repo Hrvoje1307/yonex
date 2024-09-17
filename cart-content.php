@@ -1,5 +1,6 @@
 <div class="container my-5 height__container">
-  <form method="post">
+  <?php $user->selectProductsFromCart(); ?>
+  <form method="post" action="">
       <div class="d-flex justify-content-between align-items-center">
         <h1 class="fs-1 fw-bold text-dark">Košarica</h1>
         <button name="remove_all_cart" class="btn btn-transparent text-danger text-decoration-underline fw-bold fs-5">Izbriši sve</button>
@@ -17,7 +18,7 @@
           </div>
           <p class="total fs-1 fw-bold mb-0"><span class="total__price"></span>€</p>
         </div>
-        <button class="btn btn-lg btn-dark mt-3">Provijera</button>
+        <input type="submit" name="submitCheckout" class="btn btn-lg btn-dark mt-3" value="Provjera">
       </div>
     </form>
 </div>

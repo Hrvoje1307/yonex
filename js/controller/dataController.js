@@ -9,7 +9,6 @@ const init = function () {
   dataView.printCrotianClothing();
   dataView.printCrotianCords();
   dataView.printCrotianShoes();
-  dataView.updateJsonProduct();
 };
 
 init();

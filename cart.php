@@ -6,6 +6,7 @@
   if($user->is_logged()) {
     require_once("php/inc/header.php");
     $user->updateCart();
+    $user->submitCheckout();
     require_once("cart-content.php");
 
     require_once("php/inc/footer.php");

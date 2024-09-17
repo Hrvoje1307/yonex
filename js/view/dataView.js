@@ -49,6 +49,7 @@ class Data {
       const min = this.#pageNum * PRODUCTS_PER_PAGE - PRODUCTS_PER_PAGE;
       const max = this.#pageNum * PRODUCTS_PER_PAGE - 1;
       this.#totalProducts += products.length;
+      table.innerHTML = "";
       products.forEach((product, key) => {
         if (key >= min && key <= max) {
           // prettier-ignore
@@ -181,52 +182,6 @@ class Data {
     this.#closeBtn.addEventListener("click", () => history.back());
   }
 
-  async updateJsonProduct() {
-    try {
-      if (!this.#submitBtn) return;
-      this.#submitBtn.addEventListener("click", async (e) => {
-        // e.preventDefault();
-        const productObject = {};
-        const urlParams = window.location.search;
-        const id = urlParams.slice(4);
-        const data = await this.getJson("app/config/prijevod.json");
-        const dataArray = [];
-        Object.entries(data).map(entry => dataArray.push(entry[1]));
-        const dataArrayMerged = [].concat(...dataArray);
-        const product = dataArrayMerged.find(entry => entry.ID === id);
-        this.#inputForm.forEach((field) => {
-          if (field.type === "radio" && !field?.checked) return;
-          productObject[field.name] = field.value;
-        })
-
-        const isUpdated = false;
-        Object.keys(productObject).forEach(key => {
-          if (productObject[key] === product[key]) return;
-          product[key] = "CUCKO";
-          isUpdated = true;
-        });
-
-        if (isUpdated) {
-          const response = await fetch('/updateProduct', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(product)
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to update product');
-          }
-
-          console.log('Product updated successfully');
-        }
-      });
-
-    } catch (e) {
-      console.error(e.message);
-    }
-  }
 }
 
 export default new Data();

@@ -17,6 +17,100 @@ class User {
         $this->dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
         $this->dotenv->load();
     }
+    
+    public function checkout() {
+        \Stripe\Stripe::setApiKey($_ENV["STRIPE_KEY"]);
+        $checkout_session = \Stripe\Checkout\Session::create([
+            "mode" => "payment",
+            "success_url" => "http://localhost/yonex/successPage.php",
+            "line_items" => $this->selectProductsFromCart()["cartArray"],
+        ]);
+        header("Location:" . $checkout_session->url);
+    }
+
+    public function selectProductsFromCart() {
+        $data = $this->getCartData()[0];
+        $cartArray = array();
+        $orderData = ["id" => array(), "quantity" => array()];
+
+        foreach ($data as $key => $product) {
+            $productData = $this->getDataFromEachProduct($product["product_id"]);
+            array_push($cartArray, [
+                "quantity" => $product["quantity"],
+                "price_data" => [
+                    "currency" => "eur",
+                    "unit_amount"=> $productData["price"]*100,
+                    "product_data"=> [
+                        "name"=>$productData["name"]
+                    ]
+                ]
+            ]);
+
+            array_push($orderData["id"],$product["product_id"]);
+            array_push($orderData["quantity"],$product["quantity"]);
+        }
+
+        return ["cartArray"=>$cartArray,"orderData"=>$orderData];
+    }
+
+    public function submitCheckout() {
+        $data = $this->getCartData()[1];
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            if(isset($_POST["submitCheckout"]) && $data >= 1) {
+                header("Location: checkoutAddress.php");
+                // $this->checkout();
+            }
+        }
+    }
+
+    public function submitAddressCheckout() {
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            if(isset($_POST["submitAddressCheckout"])) {
+                $addressData = [
+                    "fullName"=> $fullName = isset($_POST["fullName"]) ? $_POST["fullName"] : NULL ,
+                    "phoneNumber"=> $phoneNumber = isset($_POST["phoneNumber"]) ?  $_POST["phoneNumber"] : NULL,
+                    "address" => $address = isset($_POST["address"]) ? $_POST["address"] : NULL,
+                    "postcode" => $postcode = isset($_POST["postcode"]) ? $_POST["postcode"] : NULL,
+                    "town" => $town = isset($_POST["town"]) ? $_POST["town"] : NULL,
+                    "saveAddress" => $saveAddress =isset($_POST["saveAddress"]) ? $_POST["saveAddress"] : NULL];
+                foreach ($addressData as $key => $data) {
+                    if(!$data && $key !== "saveAddress") {
+                        $_SESSION["message"]["type"] = "danger";
+                        $_SESSION["message"]["text"] = "Molimo unesite sva polja";
+                        return;
+                    }
+                }
+                if($addressData["saveAddress"]) {
+                    $user_id = $_SESSION["user_id"];
+                    $sql = "UPDATE users SET address = ? AND "
+                }
+                return ["fullName" => $addressData["fullName"], "phoneNumber" => $addressData["phoneNumber"],
+                 "address" => $addressData["address"], "postcode" => $addressData["postcode"], "town" => $addressData["town"]];
+            }
+        }
+    }
+    
+    public function afterSuccessfulCheckout() {
+        $productIDs = $this->selectProductsFromCart()["orderData"]["id"];
+        $productQuantities = $this->selectProductsFromCart()["orderData"]["quantity"];
+        $sql = "SELECT MAX(order_id) AS max_order_id FROM orders";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $orderID = $result->fetch_assoc()['max_order_id']+1;
+        $isSent = 0;
+        foreach($productIDs as $key => $productID) {
+            $sql = "INSERT INTO orders (order_id, product_id, user_id,quantity, isSent) VALUES (?,?,?,?,?)";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("sssss", $orderID, $productID, $_SESSION["user_id"],$productQuantities[$key],$isSent);
+            $stmt->execute();
+        }
+        
+        $sql = "DELETE FROM cart WHERE user_id = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $_SESSION["user_id"]);
+        $stmt->execute();  
+    }
 
     // registracija
     public function create($name, $surname, $email, $number, $password) {
@@ -244,7 +338,8 @@ class User {
 
     public function relocate() {
         $is_admin = $this->is_admin($_SESSION["user_id"]);
-        if($is_admin) return false;
+        $is_logged = $this->is_logged();
+        if($is_admin && $is_logged) return false;
         header("Location: index.php");
         exit();
     }
@@ -754,28 +849,26 @@ class User {
     private function printCartCard($data,$quantity) {
         $code = "";
         $code = "
-            <form method='post'>
-                <div class='row card__products border border-1 rounded shadow-sm mb-5'>
-                    <input type='hidden' name='product_id' value='".$data["id"]."' />
-                    <div class='col-12 col-lg-3 d-flex justify-content-center'>
-                         <img class='img-thumbnail border-0' src='".$data['img_url']."' alt='".$data['description']."'>
-                    </div>
-                    <div class='col-12 col-lg-4 my-5 ps-xl-0 ps-3'>
-                        <h1 class='fs-4 fw-bold'>".$data["name"]."</h1>
-                        <p class='fs-6 fw-semibold text-success m-0'>Dostupno</p>
-                    </div>
-                    <div class='col-12 col-lg-3 d-flex align-items-center justify-content-center gap-5'>
-                        <button type='submit' name='increaseQuantity' class='change__quantity-btn btn btn-lightgrey fs-5 fw-bold'>+</button>
-                        <input name='quantity' class='mb-0 text-center border border-0 quantity__product' max='".$data["quantity"]."' value='".$quantity."'>
-                        <button type='submit' name='decreaseQuantity' class='change__quantity-btn btn btn-lightgrey fs-5 px-3 fw-bold'>-</button>
-                    </div>
-                    <div class='col-12 col-lg-2 mt-5 d-flex flex-column align-items-lg-end align-items-start'>
-                        <p class=' fs-3 fw-semibold m-0'><span class='real__price'>".$data["price"]."</span>€</p>
-                        <p class='fs-5 m-0'><span>".$data["priceNOTAX"]."</span>€</p>
-                        <button name='remove_from_cart' type='submit' class='btn btn-transparent text-danger text-decoration-underline px-0'>Izbriši</button>
-                    </div>
+            <div class='row card__products border border-1 rounded shadow-sm mb-5'>
+                <input type='hidden' name='product_id' value='".$data["id"]."' />
+                <div class='col-12 col-lg-3 d-flex justify-content-center'>
+                        <img class='img-thumbnail border-0' src='".$data['img_url']."' alt='".$data['description']."'>
                 </div>
-            </form>
+                <div class='col-12 col-lg-4 my-5 ps-xl-0 ps-3'>
+                    <h1 class='fs-4 fw-bold'>".$data["name"]."</h1>
+                    <p class='fs-6 fw-semibold text-success m-0'>Dostupno</p>
+                </div>
+                <div class='col-12 col-lg-3 d-flex align-items-center justify-content-center gap-5'>
+                    <button name='increaseQuantity' class='change__quantity-btn btn btn-lightgrey fs-5 fw-bold'>+</button>
+                    <input name='quantity' class='mb-0 text-center border border-0 quantity__product' min='1' max='".$data["quantity"]."' value='".$quantity."'>
+                    <button name='decreaseQuantity' class='change__quantity-btn btn btn-lightgrey fs-5 px-3 fw-bold'>-</button>
+                </div>
+                <div class='col-12 col-lg-2 mt-5 d-flex flex-column align-items-lg-end align-items-start'>
+                    <p class=' fs-3 fw-semibold m-0'><span class='real__price'>".$data["price"]."</span>€</p>
+                    <p class='fs-5 m-0'><span>".$data["priceNOTAX"]."</span>€</p>
+                    <button name='remove_from_cart' class='btn btn-transparent text-danger text-decoration-underline px-0'>Izbriši</button>
+                </div>
+            </div>
         ";
 
         echo $code;
@@ -839,7 +932,8 @@ class User {
     }
 
     public function changeChangeQuantity() {
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
+        $productNumber = $this->getCartData()[1];
+        if($_SERVER["REQUEST_METHOD"] == "POST" && $productNumber >= 1) {
             $quantity = +$_POST["quantity"];
             $product_id = $_POST["product_id"];
             $data = $this->getDataFromEachProduct($product_id);
@@ -851,9 +945,9 @@ class User {
                 }
             }else if(isset($_POST["decreaseQuantity"])) {
                 $quantity = $quantity-1;
-                if($quantity < 0)
+                if($quantity < 1)
                 {
-                    $quantity = 0;
+                    $quantity = 1;
                 }
             }
             if($quantity > $data["quantity"])
@@ -879,8 +973,8 @@ class User {
 
     public function updateCart() {
         if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $product_id = $_POST["product_id"];
-            $availableQuantity = $this->getDataFromEachProduct($product_id)["quantity"];
+            $product_id = isset($_POST["product_id"]) ? $_POST["product_id"] : NULL;
+            $availableQuantity = isset($product_id) ? $this->getDataFromEachProduct($product_id)["quantity"] : NULL;
             if($_SESSION["user_id"]) {
                 if(isset($_POST["add_to_cart"])) {
                     $quantity = isset($_POST["product_quantity"]) ? $_POST["product_quantity"] : 1;
@@ -1561,6 +1655,57 @@ class User {
                 <p class='text-danger fs-2'>Nismo pronašli ništa!</p>
             </div>
             ";
+        }
+    }
+
+    public function printUsersOrders($userId) {
+        $sql = "SELECT * FROM orders WHERE user_id=?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s",$userId);
+        $stmt->execute();
+        $results = $stmt->get_result();
+
+        if($results->num_rows < 1) {
+            echo "<p class='d-flex justify-content-center align-items-center'>Trenutno nemate niti jednu narudžbu</p>";
+            return;
+        }
+
+        $data= array();
+        while($row= $results->fetch_assoc()) {
+            $productData = $this->getDataFromEachProduct($row["product_id"]);
+            $orderId = $row['order_id'];
+            if(!isset($data[$orderId])) {
+                $data[$orderId] = ["product_id" => [],"names" => [], "quantity" => []];
+            }
+            $data[$orderId]["names"][] = $productData["name"];
+            $data[$orderId]["product_id"][] = $row["product_id"];
+            $data[$orderId]["quantity"][] = $row["quantity"];
+        }
+        
+        $orderNum = 1;
+        foreach ($data as $orderId => $order) {
+            $productDetails = [];
+            $totalPrice = 0;
+            foreach ($order["names"] as $index => $name) {
+                $productData = $this->getDataFromEachProduct($order["product_id"][$index]);
+                $quantity = $order["quantity"][$index];
+                $productDetails[] = $name. " (" . $quantity . ")";
+                $totalPrice += (+$quantity* $productData["price"]);
+            }
+            echo "
+             <a href='#' class='card w-100 mb-3 my-3 shadow-sm'>
+                <div class='card-body d-flex justify-content-between'>
+                    <div>
+                        <h5 class='card-title'>Narudžba ".$orderNum."</h5>
+                        <p class='card-text'>".$this->truncString(implode(", ",$productDetails),50)."</p>
+                    </div>
+                    <div>
+                        <h4>Total price: $totalPrice €</h4>
+                    </div>
+                </div>
+            </a>
+            ";
+            $orderNum++;
         }
     }
 }

@@ -14,8 +14,6 @@ class Inc {
     document.querySelectorAll(".quantity__product")
   );
   #totalPrice = document.querySelector(".total__price");
-  #totalPriceInput = document.querySelector(".total_price_input");
-  #changeQuantityBtn = document.querySelectorAll(".change__quantity-btn");
 
   //Products
   #productContainer = document.querySelectorAll("#productContainer");
@@ -47,29 +45,23 @@ class Inc {
     });
     totalPrice = totalPrice.toFixed(2);
     this.#totalPrice.innerHTML = totalPrice.toString();
-    this.#totalPriceInput.value = totalPrice.toString();
-  }
-
-  test() {
-    this.#test.innerHTML = PRODUCTS_PER_PAGE;
   }
 
   productCards() {
-    if (this.#productContainer) {
-      let page = null;
-      const url = window.location.search;
-      const urlParts = new URLSearchParams(url);
-      urlParts.forEach((element, key) => {
-        if (key === "page") {
-          page = +element;
-        }
-      });
-      if (
-        this.#productCards.length < PRODUCTS_PER_PAGE &&
-        (page === 1 || page === null)
-      ) {
-        this.#pagesBtns.style = "display:none";
+    if (!this.#productContainer) return;
+    let page = null;
+    const url = window.location.search;
+    const urlParts = new URLSearchParams(url);
+    urlParts.forEach((element, key) => {
+      if (key === "page") {
+        page = +element;
       }
+    });
+    if (
+      this.#productCards.length < PRODUCTS_PER_PAGE &&
+      (page === 1 || page === null)
+    ) {
+      this.#pagesBtns.style = "display:none";
     }
   }
 }

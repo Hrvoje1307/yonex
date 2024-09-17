@@ -1171,6 +1171,7 @@
       $code.= "
         <h3 class='mt-5'>Osnovni podatci</h3>
         <hr>
+        <img style='width:20rem' src='".$productData["img_url"]."' class='img-thumbnail my-3' alt='Product image'>
         <div class='mb-3'>
           <label for='productId' class='form-label'>ID proizvoda</label>
           <input type='text' name='ID' class='form-control product-input__field' id='productId' value='".htmlspecialchars(trim($productData["id"]))."' readonly='true'>
@@ -1279,31 +1280,43 @@
       if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["submitChanges"])) {
           $counter = 0;
-          $id = isset($_POST["ID"]) ? ["value" => +$_POST["ID"], "databaseKey" => "id"] : null;
-          $name = isset($_POST["name"]) ? ["value" => $_POST["name"], "databaseKey" => "name"] : null;
-          $url = isset($_POST["img_url"]) ? ["value" => $_POST["img_url"], "databaseKey" => "img_url"] : null;
-          $price = isset($_POST["price"]) ? ["value" => $_POST["price"], "databaseKey" => "price"] : null;
-          $priceNoTax = isset($_POST["priceNoTax"]) ? ["value" => $_POST["priceNoTax"], "databaseKey" => "priceNOTAX"] : null;
-          $description = isset($_POST["description"]) ? ["value" => $_POST["description"], "databaseKey" => "description"] : null;
-          $category = isset($_POST["category"]) ? ["value" => $_POST["category"], "databaseKey" => "category"] : null;
-          $quantity = isset($_POST["quantity"]) ? ["value" => +$_POST["quantity"], "databaseKey" => "quantity"] : null;
-          $racketType = isset($_POST["racketType"]) ? ["value" => $_POST["racketType"], "databaseKey" => "racketType"] : null;
-          $racketWeight = isset($_POST["racketWeight"]) ? ["value" => $_POST["racketWeight"], "databaseKey" => "racketWeight"] : null;
-          $handlerSize = isset($_POST["handlerSize"]) ? ["value" => $_POST["handlerSize"], "databaseKey" => "handlerSize"] : null;
-          $bagSize = isset($_POST["bagSize"]) ? ["value" => $_POST["bagSize"], "databaseKey" => "size"] : null;
-          $bagType = isset($_POST["bagType"]) ? ["value" => $_POST["bagType"], "databaseKey" => "type"] : null;
-          $cordThickness = isset($_POST["cordThickness"]) ? ["value" => $_POST["cordThickness"], "databaseKey" => "thicknesses"] : null;
-          $cordLength = isset($_POST["cordLength"]) ? ["value" => $_POST["cordLength"], "databaseKey" => "length"] : null;
-          $clothingSize = isset($_POST["clothingSize"]) ? ["value" => $_POST["clothingSize"], "databaseKey" => "size"] : null;
-          $clothingGender = isset($_POST["clothingSex"]) ? ["value" => $_POST["clothingSex"], "databaseKey" => "sex"] : null;
-          $shoesSize = isset($_POST["shoesSize"]) ? ["value" => $_POST["shoesSize"], "databaseKey" => "shoes_num"] : null;
-          $shoesGender = isset($_POST["shoesSex"]) ? ["value" => $_POST["shoesSex"], "databaseKey" => "sex"] : null;
-          $ballType = isset($_POST["ballType"]) ? ["value" => $_POST["ballType"], "databaseKey" => "type"] : null;
-          $ballSpeed = isset($_POST["ballSpeed"]) ? ["value" => $_POST["ballSpeed"], "databaseKey" => "speed"] : null;
+          $id = isset($_POST["ID"]) ? ["value" => +$_POST["ID"], "databaseKey" => "id", "jsonKey" => "ID"] : null;
+          $name = isset($_POST["name"]) ? ["value" => $_POST["name"], "databaseKey" => "name", "jsonKey" => "name"] : null;
+          $url = isset($_POST["img_url"]) ? ["value" => $_POST["img_url"], "databaseKey" => "img_url", "jsonKey" => "img_url"] : null;
+          $price = isset($_POST["price"]) ? ["value" => $_POST["price"], "databaseKey" => "price", "jsonKey" => "price"] : null;
+          $priceNoTax = isset($_POST["priceNoTax"]) ? ["value" => $_POST["priceNoTax"], "databaseKey" => "priceNOTAX", "jsonKey" => "priceNOTAX"] : null;
+          $description = isset($_POST["description"]) ? ["value" => $_POST["description"], "databaseKey" => "description", "jsonKey" => "description"] : null;
+          $category = isset($_POST["category"]) ? ["value" => $_POST["category"], "databaseKey" => "category", "jsonKey" => "category"] : null;
+          $quantity = isset($_POST["quantity"]) ? ["value" => +$_POST["quantity"], "databaseKey" => "quantity", "jsonKey" => "quantity"] : null;
+          $racketType = isset($_POST["racketType"]) ? ["value" => $_POST["racketType"], "databaseKey" => "racketType", "jsonKey" => "racketType"] : null;
+          $racketWeight = isset($_POST["racketWeight"]) ? ["value" => $_POST["racketWeight"], "databaseKey" => "racketWeight", "jsonKey" => "racketWeight"] : null;
+          $handlerSize = isset($_POST["handlerSize"]) ? ["value" => $_POST["handlerSize"], "databaseKey" => "handlerSize", "jsonKey" => "handlerSize"] : null;
+          $bagSize = isset($_POST["bagSize"]) ? ["value" => $_POST["bagSize"], "databaseKey" => "size", "jsonKey" => "bagSize"] : null;
+          $bagType = isset($_POST["bagType"]) ? ["value" => $_POST["bagType"], "databaseKey" => "type", "jsonKey" => "bagType"] : null;
+          $cordThickness = isset($_POST["cordThickness"]) ? ["value" => $_POST["cordThickness"], "databaseKey" => "thicknesses", "jsonKey" => "cordThickness"] : null;
+          $cordLength = isset($_POST["cordLength"]) ? ["value" => $_POST["cordLength"], "databaseKey" => "length", "jsonKey" => "cordLength"] : null;
+          $clothingSize = isset($_POST["clothingSize"]) ? ["value" => $_POST["clothingSize"], "databaseKey" => "size", "jsonKey" => "clothingSize"] : null;
+          $clothingGender = isset($_POST["clothingSex"]) ? ["value" => $_POST["clothingSex"], "databaseKey" => "sex", "jsonKey" => "clothingSex"] : null;
+          $shoesSize = isset($_POST["shoesSize"]) ? ["value" => $_POST["shoesSize"], "databaseKey" => "shoes_num", "jsonKey" => "shoeSize"] : null;
+          $shoesGender = isset($_POST["shoesSex"]) ? ["value" => $_POST["shoesSex"], "databaseKey" => "sex", "jsonKey" => "shoesSex"] : null;
+          $ballType = isset($_POST["ballType"]) ? ["value" => $_POST["ballType"], "databaseKey" => "type", "jsonKey" => "ballType"] : null;
+          $ballSpeed = isset($_POST["ballSpeed"]) ? ["value" => $_POST["ballSpeed"], "databaseKey" => "speed", "jsonKey" => "ballSpeed"] : null;
           $productCurrentData = $this->getDataFromEachProduct($id["value"]);
           $toChange = [$name,$url,$price,$priceNoTax,$description,$category,$quantity,$racketType,$racketWeight,$handlerSize,$bagSize,$bagType,$cordThickness,$cordLength,$clothingSize,
                         $clothingGender,$shoesSize,$shoesGender,$ballType,$ballSpeed];
+
+          $jsonData = $this->getJson("./app/config/prijevod.json");
           
+          $product = null;
+          $category = null;
+          foreach ($jsonData as $category => $eachArray) {
+            foreach ($eachArray as $index => $value) {
+              if($id["value"] === +$value["ID"]) {
+                $product = &$jsonData[$category][$index];
+              }
+            }
+          }
+
           foreach ($toChange as $key => $value) {
             if($value !== null && ($productCurrentData[$value["databaseKey"]] !== $value["value"])) {
               $table = $this->getProductTable($id["value"]);
@@ -1311,9 +1324,12 @@
               $stmt = $this->conn->prepare($sql);
               $stmt->bind_param("ss", $value["value"] , $id["value"]);
               $stmt->execute();
+              $product[$value["jsonKey"]] = $value["value"];
               $counter++;
             }
           }
+
+          file_put_contents("./app/config/prijevod.json", json_encode($jsonData, JSON_PRETTY_PRINT));
 
           if($counter) {
             $_SESSION["message"]["type"] = "success";

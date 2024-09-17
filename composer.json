@@ -2,6 +2,7 @@
     "require": {
         "vlucas/phpdotenv": "^5.6",
         "phpmailer/phpmailer": "^6.9",
-        "orhanerday/open-ai": "^5.2"
+        "orhanerday/open-ai": "^5.2",
+        "stripe/stripe-php": "^15.6"
     }
 }

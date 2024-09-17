@@ -55,7 +55,7 @@
   </form>
   <hr class="my-5">
   <h1>Narudžbe</h1>
-  <div class="row ">
-    <p class="d-flex justify-content-center align-items-center">Trenutno nemate niti jednu narudžbu</p>
+  <div class="row justify-content-center">
+    <?php $user->printUsersOrders($id);?>
   </div>
 </div>
