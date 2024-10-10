@@ -10,6 +10,7 @@ if($user->is_logged()) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    $email = $_POST['email'];
+   var_dump($_POST["password"]);
    $password = $_POST['password'];
    
 
@@ -68,7 +69,10 @@ require_once("php/inc/header.php") ?>
                      </div>
                      <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input name="password" type="password" class="form-control" id="exampleInputPassword1">
+                        <div class="input-group">
+                           <input name="password" type="password" class="form-control password__form" aria-label="Input group example" aria-describedby="btnGroupAddon">
+                           <div class="input-group-text btn__password" id="btnGroupAddon"><i class="bi bi-eye-fill"></i></div>
+                        </div>
                      </div>
                      <div class="mb-3">
                         <a href="forgotten-password.php" class="fw-bolder text-secondary text-decoration-none">Zaboravili ste lozinku?</a>

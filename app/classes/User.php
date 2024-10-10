@@ -69,6 +69,7 @@ class User {
             if(isset($_POST["submitAddressCheckout"])) {
                 $addressData = [
                     "fullName"=> $fullName = isset($_POST["fullName"]) ? $_POST["fullName"] : NULL ,
+                    "email"=> $fullName = isset($_POST["email"]) ? $_POST["email"] : NULL ,
                     "phoneNumber"=> $phoneNumber = isset($_POST["phoneNumber"]) ?  $_POST["phoneNumber"] : NULL,
                     "address" => $address = isset($_POST["address"]) ? $_POST["address"] : NULL,
                     "postcode" => $postcode = isset($_POST["postcode"]) ? $_POST["postcode"] : NULL,
@@ -88,9 +89,9 @@ class User {
                     $stmt->bind_param("ssss", $addressData["address"], $addressData["postcode"], $addressData["town"], $user_id);
                     $stmt->execute();
                 }
-                $_SESSION["addressData"] = ["fullName" => $addressData["fullName"], "phoneNumber" => $addressData["phoneNumber"],
+                $_SESSION["addressData"] = ["fullName" => $addressData["fullName"],"email" => $addressData["email"], "phoneNumber" => $addressData["phoneNumber"],
                 "address" => $addressData["address"], "postcode" => $addressData["postcode"], "town" => $addressData["town"]];
-                header("Location: index.php");
+                $this->checkout();
             }
         }
     }
@@ -98,6 +99,12 @@ class User {
     public function afterSuccessfulCheckout() {
         $productIDs = $this->selectProductsFromCart()["orderData"]["id"];
         $productQuantities = $this->selectProductsFromCart()["orderData"]["quantity"];
+        $fullName = $_SESSION["addressData"]["fullName"];
+        $email = $_SESSION["addressData"]["email"];
+        $phoneNumber = $_SESSION["addressData"]["phoneNumber"];
+        $address = $_SESSION["addressData"]["address"];
+        $postcode = $_SESSION["addressData"]["postcode"];
+        $town = $_SESSION["addressData"]["town"];
         $sql = "SELECT MAX(order_id) AS max_order_id FROM orders";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
@@ -105,9 +112,9 @@ class User {
         $orderID = $result->fetch_assoc()['max_order_id']+1;
         $isSent = 0;
         foreach($productIDs as $key => $productID) {
-            $sql = "INSERT INTO orders (order_id, product_id, user_id,quantity, isSent) VALUES (?,?,?,?,?)";
+            $sql = "INSERT INTO orders (order_id, product_id, user_id,quantity,fullName,email,phoneNumber,address,postcode,city, isSent) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
             $stmt = $this->conn->prepare($sql);
-            $stmt->bind_param("sssss", $orderID, $productID, $_SESSION["user_id"],$productQuantities[$key],$isSent);
+            $stmt->bind_param("sssssssssss", $orderID, $productID, $_SESSION["user_id"],$productQuantities[$key],$fullName,$email, $phoneNumber, $address, $postcode,$town, $isSent);
             $stmt->execute();
         }
         
@@ -1705,11 +1712,89 @@ class User {
                         <p class='card-text'>".$this->truncString(implode(", ",$productDetails),50)."</p>
                     </div>
                     <div>
-                        <h4>Total price: $totalPrice €</h4>
+                        <h4>Ukupna cijena: $totalPrice €</h4>
                     </div>
                 </div>
             </a>
             ";
+            $orderNum++;
+        }
+    }
+
+    public function printAllOrders() {
+        $sql = "SELECT * FROM orders";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->get_result();
+
+        if($results->num_rows < 1) {
+            echo "<p class='d-flex justify-content-center align-items-center'>Trenutno nemate niti jednu narudžbu</p>";
+            return;
+        }
+
+        $data = array();
+        while($row = $results->fetch_assoc()) {
+            $productData = $this->getDataFromEachProduct($row["product_id"]);
+            $orderId = $row['order_id'];
+            if(!isset($data[$orderId])) {
+                $data[$orderId] = ["product_id"=> [], "names" => [], "quantity" => [],"fullName" => [], "email" => [], "phoneNumber" => [], "address" => [], "postcode" => [], "city" => [], "isSent"=> 0];
+            }
+
+            $data[$orderId]["product_id"][] = $row["product_id"];
+            $data[$orderId]["names"][] = $productData["name"];
+            $data[$orderId]["quantity"][] = $row["quantity"];
+            $data[$orderId]["fullName"] = $row["fullName"];	
+            $data[$orderId]["email"] = $row["email"];	
+            $data[$orderId]["phoneNumber"] = $row["phoneNumber"];	
+            $data[$orderId]["address"] = $row["address"];	
+            $data[$orderId]["postcode"] = $row["postcode"];	
+            $data[$orderId]["city"] = $row["city"];	
+            $data[$orderId]["isSent"] = $row["isSent"];	
+        }
+        
+        $orderNum = 1;
+
+        foreach($data as $orderId => $order) {
+            $productDetails = [];
+            $totalPrice = 0;
+            foreach ($order["names"] as $index => $name) {
+                $productData = $this->getDataFromEachProduct($order["product_id"][$index]);
+                $quantity = $order["quantity"][$index];
+                $productDetails[] = $name. " (" . $quantity . ")";
+                $totalPrice += (+$quantity* $productData["price"]);
+            }
+            if(!$order["isSent"]) {
+                echo "
+                <div class='alert alert-danger' role='alert'>
+                    <a href='#' class='d-flex justify-content-between'>
+                        <div>
+                            <h5>Narudžba ".$orderNum."</h5>
+                            <p >".$this->truncString(implode(", ",$productDetails),50)."</p>
+                        </div>
+                        <div>
+                            <h4>Ukupna cijena: ".$totalPrice." €</h4>
+                            <p><b>Korisnik</b>: ".$order["fullName"]."</p>
+                        </div>
+                    </a>
+                </div>
+                ";
+            }else {
+                echo "
+                <div class='alert alert-success' role='alert'>
+                    <a href='#' class='d-flex justify-content-between'>
+                        <div>
+                            <h5 >Narudžba ".$orderNum."</h5>
+                            <p >".$this->truncString(implode(", ",$productDetails),50)."</p>
+                        </div>
+                        <div>
+                            <h4>Ukupna cijena: ".$totalPrice." €</h4>
+                            <p><b>Korisnik</b>: ".$order["fullName"]."</p>
+                        </div>
+                    </a>
+                </div>
+                ";
+            }
+
             $orderNum++;
         }
     }

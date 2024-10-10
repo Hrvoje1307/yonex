@@ -77,6 +77,9 @@ class Data {
 
   async printCrotianClassicFilters() {
     if (!this.#tableBodyClassicFilters) return;
+    const json = await this.getJson("app/config/prijevod.json");
+    const products = json["classicFilters"];
+    console.log(products);
     await this.printCrotian("classicFilters", this.#tableBodyClassicFilters);
     const totalProducts = this.#totalProducts;
     this.printBtnsPages(totalProducts);
@@ -179,7 +182,7 @@ class Data {
 
   closeUser() {
     if (!this.#closeBtn) return;
-    this.#closeBtn.addEventListener("click", () => history.back());
+    this.#closeBtn.addEventListener("click", () => window.location.href = "http://localhost/yonex/userDisplay.php ");
   }
 
 }

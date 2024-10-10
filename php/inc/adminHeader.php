@@ -65,6 +65,9 @@ $user = new User();
                <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="callFunction.php">Podatci</a>
                </li>
+               <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="orderDisplay.php">Narudžbe</a>
+               </li>
                <div class="dropdown mb-0 d-flex ms-3">
                   <button class="btn p-0 dropdown-toggle d-flex gap-2 align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                      <?php if($user->is_logged()) : ?>

@@ -40,15 +40,24 @@ if($_SESSION["name"]) {
         </div>
         <div class="mb-3">
             <label for="exampleFormControlInput5" class="form-label">Stara lozinka <span class="text-danger">*</span></label>
-            <input required type="password" class="form-control" name="old-password" id="exampleFormControlInput5" placeholder="*******">
+            <div class="input-group">
+               <input required type="password" name="old-password" id="exampleFormControlInput5" class="form-control password__form" placeholder="**********" aria-label="Input group example" aria-describedby="btnGroupAddon">
+               <div class="input-group-text btn__password" id="btnGroupAddon"><i class="bi bi-eye-fill"></i></div>
+            </div>
         </div>
         <div class="mb-3">
             <label for="exampleFormControlInput6" class="form-label">Nova lozinka</label>
-            <input type="password" class="form-control" name="new-password" id="exampleFormControlInput6" placeholder="******">
+            <div class="input-group">
+               <input type="password" name="new-password" id="exampleFormControlInput6" class="form-control password__form" placeholder="**********" aria-label="Input group example" aria-describedby="btnGroupAddon">
+               <div class="input-group-text btn__password" id="btnGroupAddon"><i class="bi bi-eye-fill"></i></div>
+            </div>
         </div>
         <div class="mb-3">
             <label for="exampleFormControlInput7" class="form-label">Nova lozinka ponovoljena</label>
-            <input type="password" class="form-control" name="new-password-repeted" id="exampleFormControlInput7" placeholder="******">
+            <div class="input-group">
+               <input required type="password" name="new-password-repeted" id="exampleFormControlInput5" class="form-control password__form" placeholder="**********" aria-label="Input group example" aria-describedby="btnGroupAddon">
+               <div class="input-group-text btn__password" id="btnGroupAddon"><i class="bi bi-eye-fill"></i></div>
+            </div>
         </div>
         <button class="btn btn-dark">Submit</button>
     </form>

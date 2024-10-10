@@ -171,3 +171,11 @@ a:visited {
   position: sticky;
   top: 0px;
 }
+
+.danger__shadow {
+  box-shadow: 0 .125rem .25rem  rgba(240, 62, 62,0.75);
+}
+
+.success__shadow {
+  box-shadow: 0 .125rem .25rem  rgba(12, 166, 120,0.75);
+}

@@ -67,7 +67,7 @@ require_once("php/inc/header.php") ?>
 
    <div class="container-md py-5 height__container">
       <h2 class="text-dark fw-bolder fs-1">Registracija</h2>
-      <a href="login.php" class="text-dark text-decoration-none">Imate račun? Prijavite se</a>
+      <a href="login.php" class="text-dark text-decoration-none">Imate račun? <u>Prijavite se</u></a>
       <?php
          if(isset($_SESSION["message"]["type"]) && $_SESSION["message"]["type"] == "danger") {
             echo "
@@ -103,11 +103,18 @@ require_once("php/inc/header.php") ?>
          <hr class="line__footer bg-dark m-0">
          <div class="my-3 ms-sm-5 ms-0 d-flex align-items-center justify-content-between gap-3">
             <label for="password" class="form-label form__label m-0 fw-semibold"><span class="text-danger">*</span>Lozinka</label>
-            <input name="password" type="password" class="form-control" id="password" placeholder="**********">
+            <div class="input-group">
+               <input type="password" name="password" class="form-control password__form" placeholder="**********" aria-label="Input group example" aria-describedby="btnGroupAddon">
+               <div class="input-group-text btn__password" id="btnGroupAddon"><i class="bi bi-eye-fill"></i></div>
+
+            </div>
          </div>
          <div class="my-3 ms-sm-5 ms-0 d-flex align-items-center justify-content-between gap-3">
             <label for="password_repeat" class="form-label form__label m-0 fw-semibold"><span class="text-danger">*</span>Potvrdi lozinku</label>
-            <input name="r_password" type="password" class="form-control" id="password_repeat" placeholder="*********">
+            <div class="input-group">
+               <input type="password" name="r_password" class="form-control password__form" placeholder="**********" aria-label="Input group example" aria-describedby="btnGroupAddon">
+               <div class="input-group-text btn__password" id="btnGroupAddon"><i class="bi bi-eye-fill"></i></div>
+            </div>
          </div>
          <div class="d-flex justify-content-end align-items-center gap-3 mt-5">
             <p class="text-secondary m-0 d-flex align-items-center gap-1">

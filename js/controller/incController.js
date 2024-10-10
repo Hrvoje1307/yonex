@@ -6,7 +6,7 @@ const inc = function () {
   incView.showQuantityWishlist();
   incView.totalPrice();
   incView.productCards();
-  incView.test();
+  incView.togglePasswordVisibility();
 };
 
 inc();

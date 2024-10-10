@@ -2,7 +2,11 @@ import { COMPANY, AUTHORS, PRODUCTS_PER_PAGE } from "../../js/config.js";
 
 class Inc {
   #footerConntainer = document.querySelector(".footer__info");
-  #test = document.querySelector(".test");
+
+  #btnPassword = document.querySelectorAll(".btn__password");
+  #btnShow = document.querySelector(".btn__show");
+  #btnHide = document.querySelector(".btn__hide");
+  #passwordForm = document.querySelectorAll(".password__form");
 
   //---------Products------
   //Wishlist
@@ -57,12 +61,29 @@ class Inc {
         page = +element;
       }
     });
-    if (
-      this.#productCards.length < PRODUCTS_PER_PAGE &&
-      (page === 1 || page === null)
-    ) {
+    if (this.#productCards.length < PRODUCTS_PER_PAGE && (page === 1 || page === null) && this.#pagesBtns) {
       this.#pagesBtns.style = "display:none";
     }
+  }
+
+  togglePasswordVisibility() {
+    console.log("RADI");
+
+    this.#btnPassword.forEach((button, i) => {
+      let passwordVisibility = false;
+      button.addEventListener("click", () => {
+        passwordVisibility = !passwordVisibility;
+        console.log(passwordVisibility);
+        if (passwordVisibility) {
+          this.#btnPassword[i].innerHTML = "<i class='bi bi-eye-slash-fill'></i>";
+          this.#passwordForm[i].type = "text";
+        } else {
+          this.#btnPassword[i].innerHTML = "<i class='bi bi-eye-fill'></i>";
+          this.#passwordForm[i].type = "password";
+        }
+      });
+    });
+
   }
 }
 
