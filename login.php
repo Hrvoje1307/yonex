@@ -10,7 +10,6 @@ if($user->is_logged()) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    $email = $_POST['email'];
-   var_dump($_POST["password"]);
    $password = $_POST['password'];
    
 
