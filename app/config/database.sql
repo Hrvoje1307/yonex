@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 17, 2024 at 05:48 PM
+-- Generation Time: Oct 14, 2024 at 03:52 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -163,13 +163,6 @@ CREATE TABLE `cart` (
   `user_id` int(11) NOT NULL,
   `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `cart`
---
-
-INSERT INTO `cart` (`id`, `product_id`, `user_id`, `quantity`) VALUES
-(92, 106032, 18, 4);
 
 -- --------------------------------------------------------
 
@@ -2285,8 +2278,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`user_id`, `name`, `surname`, `email`, `number`, `password`, `is_admin`, `address`, `postcode`, `town`, `created_at`, `reset_token_hash`, `reset_token_expires_at`) VALUES
 (18, 'Hrvoje', 'Čučković', 'cuckovichrvoje@gmail.com', '0957056320', '$2y$10$oGxga3iLlShPb90zn.U7Iui2cq51ZhzcEHdsQoWzDX1SD6txMWGAK', 1, 'Vilima Korajca 10', 10090, 'Zagreb', '2024-02-26', '9f4e3b02f30c79c8a9a206952e4ccfcf82876e3146b6c2d5170eee8570957973', '2024-05-24 18:36:43'),
-(27, 'Drazen', 'Cuckovic', 'drazencuckovic6@gmail.com', '0992574744', '$2y$10$JCAESQEQKrRsptFV6Z9ra.as7VSkynxnYhP3.QiXr7/4G9aernCzi', 1, '', NULL, '', '2024-06-11', NULL, NULL),
-(28, 'Mir', 'Mikic', 'mirmikic@gmail.com', '09898759756', '$2y$10$qUo9kNx.LGclxa5IzhZT2O6fnbHmBLz4j1xml07hdmBvQ/dJFqjje', 0, '', NULL, '', '2024-08-20', NULL, NULL);
+(27, 'Drazen', 'Cuckovic', 'drazencuckovic6@gmail.com', '0992574744', '$2y$10$JCAESQEQKrRsptFV6Z9ra.as7VSkynxnYhP3.QiXr7/4G9aernCzi', 1, '', NULL, '', '2024-06-11', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2402,7 +2394,7 @@ ALTER TABLE `basicinfo`
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT for table `checkboxfilters`
@@ -2414,7 +2406,7 @@ ALTER TABLE `checkboxfilters`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `wishlist`
