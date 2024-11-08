@@ -32,7 +32,7 @@ Use the following steps to set up the project locally:
 
 3. Import the MySQL database file provided (`app/config/database.sql`) into your MySQL database.
    
-5. Import provided .env file into (`app/clacces/`)
+5. Import provided .env file into (`app/classes/`)
 
 6. Update the database connection settings in the PHP files (`app/classes/.env`) with your database credentials.
 
