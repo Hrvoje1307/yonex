@@ -31,10 +31,12 @@ Use the following steps to set up the project locally:
 2. Start your local server (e.g., using XAMPP, WAMP, or MAMP).
 
 3. Import the MySQL database file provided (`app/config/database.sql`) into your MySQL database.
+   
+5. Import provided .env file into (`app/clacces/.env`)
 
-4. Update the database connection settings in the PHP files (`app/classes/.env`) with your database credentials.
+6. Update the database connection settings in the PHP files (`app/classes/.env`) with your database credentials.
 
-5. Open your web browser and navigate to the project directory.
+7. Open your web browser and navigate to the project directory.
 
 ## Usage
 
