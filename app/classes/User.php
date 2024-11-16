@@ -17,6 +17,22 @@ class User {
         $this->dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
         $this->dotenv->load();
     }
+
+    public function getDataWithoutCondition($table) {
+        $sql = "SELECT * FROM ".$table;
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->get_result();
+
+        $data = array();
+
+        while($row = $results->fetch_assoc()) {
+            $data[] =$row;
+        }
+
+        return $data;
+    }
+
     
     public function checkout() {
         \Stripe\Stripe::setApiKey($_ENV["STRIPE_KEY"]);
@@ -1737,9 +1753,10 @@ class User {
             $productData = $this->getDataFromEachProduct($row["product_id"]);
             $orderId = $row['order_id'];
             if(!isset($data[$orderId])) {
-                $data[$orderId] = ["product_id"=> [], "names" => [], "quantity" => [],"fullName" => [], "email" => [], "phoneNumber" => [], "address" => [], "postcode" => [], "city" => [], "isSent"=> 0];
+                $data[$orderId] = ["order_id" => 0,"product_id"=> [], "names" => [], "quantity" => [],"fullName" => [], "email" => [], "phoneNumber" => [], "address" => [], "postcode" => [], "city" => [], "isSent"=> 0];
             }
 
+            $data[$orderId]["order_id"] = $row["order_id"];
             $data[$orderId]["product_id"][] = $row["product_id"];
             $data[$orderId]["names"][] = $productData["name"];
             $data[$orderId]["quantity"][] = $row["quantity"];
@@ -1755,18 +1772,19 @@ class User {
         $orderNum = 1;
 
         foreach($data as $orderId => $order) {
-            $productDetails = [];
+            $productDetails = ["description" => [], "id" => []];
             $totalPrice = 0;
             foreach ($order["names"] as $index => $name) {
                 $productData = $this->getDataFromEachProduct($order["product_id"][$index]);
                 $quantity = $order["quantity"][$index];
-                $productDetails[] = $name. " (" . $quantity . ")";
+                $productDetails["description"] = $name. " (" . $quantity . ")";
+                $productDetails["id"] = $productData["id"]; 
                 $totalPrice += (+$quantity* $productData["price"]);
             }
             if(!$order["isSent"]) {
                 echo "
-                <div class='alert alert-danger' role='alert'>
-                    <a href='#' class='d-flex justify-content-between'>
+                <a href='singleOrder.php?id=".$order["order_id"]."&orderNum=".$orderNum."'>
+                    <div class='alert alert-danger d-flex justify-content-between' role='alert'>
                         <div>
                             <h5>Narudžba ".$orderNum."</h5>
                             <p >".$this->truncString(implode(", ",$productDetails),50)."</p>
@@ -1775,13 +1793,13 @@ class User {
                             <h4>Ukupna cijena: ".$totalPrice." €</h4>
                             <p><b>Korisnik</b>: ".$order["fullName"]."</p>
                         </div>
-                    </a>
-                </div>
+                    </div>
+                </a>
                 ";
             }else {
                 echo "
-                <div class='alert alert-success' role='alert'>
-                    <a href='#' class='d-flex justify-content-between'>
+                <a href='singleOrder.php?id=".$order["order_id"]."&orderNum=".$orderNum."'>
+                    <div class='alert alert-success d-flex justify-content-between' role='alert'>
                         <div>
                             <h5 >Narudžba ".$orderNum."</h5>
                             <p >".$this->truncString(implode(", ",$productDetails),50)."</p>
@@ -1790,12 +1808,19 @@ class User {
                             <h4>Ukupna cijena: ".$totalPrice." €</h4>
                             <p><b>Korisnik</b>: ".$order["fullName"]."</p>
                         </div>
-                    </a>
-                </div>
+                    </div>
+                </a>
                 ";
             }
 
             $orderNum++;
+        }
+    }
+
+    public function getDataAboutOrder($targetId) {
+        $arrayWithAllOrders = $this->getDataWithoutCondition("orders");
+        foreach ($arrayWithAllOrders as $key => $order) {
+            if($order["order_id"] == $targetId) return $order; 
         }
     }
 }
