@@ -8,7 +8,6 @@ class Data {
   //ADDITIONAL SELECTORS
   #inputForm = document.querySelectorAll(".product-input__field");
 
-
   //TABLES
   #tableBodyClassicFilters = document.querySelector(
     ".table__body__classicfilters"
@@ -140,24 +139,28 @@ class Data {
     if (this.#pageNum === 1) {
       this.#pagesBtnContainer.innerHTML = `
         <div class="d-flex justify-content-end">
-          <button class="btn btn-secondary next__page">Sljedeća ${this.#pageNum + 1
-        }</button>
+          <button class="btn btn-secondary next__page">Sljedeća ${
+            this.#pageNum + 1
+          }</button>
         </div>
       `;
     } else if (this.#pageNum === lastPage) {
       this.#pagesBtnContainer.innerHTML = `
         <div class="d-flex justify-content-start">
-          <button class="btn btn-secondary previous__page">Prethodna ${this.#pageNum - 1
-        }</button>
+          <button class="btn btn-secondary previous__page">Prethodna ${
+            this.#pageNum - 1
+          }</button>
         </div>
       `;
     } else {
       this.#pagesBtnContainer.innerHTML = `
         <div class="d-flex justify-content-between">
-          <button class="btn btn-secondary previous__page">Prethodna ${this.#pageNum - 1
-        }</button>
-          <button class="btn btn-secondary next__page">Sljedeća ${this.#pageNum + 1
-        }</button>
+          <button class="btn btn-secondary previous__page">Prethodna ${
+            this.#pageNum - 1
+          }</button>
+          <button class="btn btn-secondary next__page">Sljedeća ${
+            this.#pageNum + 1
+          }</button>
         </div>
       `;
     }
@@ -182,9 +185,11 @@ class Data {
 
   closeUser() {
     if (!this.#closeBtn) return;
-    this.#closeBtn.addEventListener("click", () => window.location.href = "http://localhost/yonex/userDisplay.php ");
+    this.#closeBtn.addEventListener(
+      "click",
+      () => (window.location.href = "http://localhost/yonex/userDisplay.php ")
+    );
   }
-
 }
 
 export default new Data();

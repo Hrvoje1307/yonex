@@ -58,24 +58,28 @@
 
     //GETTING JSON FROM SLOVENIA
     public function getProducts() {
-      $obj = $this->getJson("./app/config/products.json");
-      $data = $obj["podjetje"]["izdelki"]["izdelek"];
+      $xmlContent = [];
+      $xmlFilePath = __DIR__ . '/../config/products.xml';
       $products = array();
-      foreach ($data as $key => $product) {
-        array_push($products, [
-          "position" => $key, 
-          "id" => $product["izdelekID"],
-          "name" => $product["izdelekIme"],
-          "img" => isset($product["slikaVelika"]) ? $product["slikaVelika"] : null,
-          "imgSmall" => isset($product["slikaMala"]) ? $product["slikaMala"] : null,
-          "price" => $product["PPC"],
-          "priceNOTAX" => $product["nabavnaCena"],
-          "description" => $product["opis"],
-          "category" => $product["kategorija"]["__cdata"],
-          "quantity" => $product["tocnaZaloga"],
-        ]);
-      } 
 
+      $dom = new DOMDocument();
+      $dom->load($xmlFilePath);
+      $productsXML = $dom->getElementsByTagName("izdelek");
+      
+      foreach ($productsXML as $key => $product) {
+        array_push($products, [
+        "position" => $key, 
+        "id" => $product->getElementsByTagName("izdelekID")->item(0)->nodeValue,
+        "name" => $product->getElementsByTagName("izdelekIme")->item(0)->nodeValue,
+        "img" => isset($product->getElementsByTagName("slikaVelika")->item(0)->nodeValue) ? $product->getElementsByTagName("slikaVelika")->item(0)->nodeValue : null,
+        "imgSmall" => isset($product->getElementsByTagName("slikaMala")->item(0)->nodeValue) ? $product->getElementsByTagName("slikaMala")->item(0)->nodeValue : null,
+        "price" => $product->getElementsByTagName("PPC")->item(0)->nodeValue,
+        "priceNOTAX" => $product->getElementsByTagName("nabavnaCena")->item(0)->nodeValue,
+        "description" => $product->getElementsByTagName("opis")->item(0)->nodeValue,
+        "category" => $product->getElementsByTagName("podkategorija")->item(0)->nodeValue,
+        "quantity" => $product->getElementsByTagName("tocnaZaloga")->item(0)->nodeValue,
+      ]);
+      }
       return $products;
     }
 
@@ -176,7 +180,6 @@
     
     public function getDataFunctions() {
       $dataArray = array();
-
       $counter = json_decode(file_get_contents("./app/config/counter.json"),true);
       $categories = ["classicFilters", "bags", "balls", "clothing", "cords", "rackets", "shoes"];
 
