@@ -67,18 +67,69 @@
       $productsXML = $dom->getElementsByTagName("izdelek");
       
       foreach ($productsXML as $key => $product) {
-        array_push($products, [
-        "position" => $key, 
-        "id" => $product->getElementsByTagName("izdelekID")->item(0)->nodeValue,
-        "name" => $product->getElementsByTagName("izdelekIme")->item(0)->nodeValue,
-        "img" => isset($product->getElementsByTagName("slikaVelika")->item(0)->nodeValue) ? $product->getElementsByTagName("slikaVelika")->item(0)->nodeValue : null,
-        "imgSmall" => isset($product->getElementsByTagName("slikaMala")->item(0)->nodeValue) ? $product->getElementsByTagName("slikaMala")->item(0)->nodeValue : null,
-        "price" => $product->getElementsByTagName("PPC")->item(0)->nodeValue,
-        "priceNOTAX" => $product->getElementsByTagName("nabavnaCena")->item(0)->nodeValue,
-        "description" => $product->getElementsByTagName("opis")->item(0)->nodeValue,
-        "category" => $product->getElementsByTagName("podkategorija")->item(0)->nodeValue,
-        "quantity" => $product->getElementsByTagName("tocnaZaloga")->item(0)->nodeValue,
-      ]);
+        $productID = $product->getElementsByTagName("izdelekID")->item(0)->nodeValue ?? null; 
+        $productName = $product->getElementsByTagName("izdelekIme")->item(0)->nodeValue ?? null; 
+        $productImg = $product->getElementsByTagName("slikaVelika")->item(0)->nodeValue ?? null; 
+        $productImgSmall = $product->getElementsByTagName("slikaMala")->item(0)->nodeValue ?? null; 
+        $productPrice = $product->getElementsByTagName("PPC")->item(0)->nodeValue ?? null; 
+        $productPriceNoTAX = $product->getElementsByTagName("nabavnaCena")->item(0)->nodeValue ?? null; 
+        $productDescription = $product->getElementsByTagName("opis")->item(0)->nodeValue ?? null; 
+        $productCategory = $product->getElementsByTagName("podkategorija")->item(0)->nodeValue ?? null; 
+        $productQuantity = $product->getElementsByTagName("tocnaZaloga")->item(0)->nodeValue ?? null; 
+        $productEAN = $product->getElementsByTagName("EAN")->item(0)->nodeValue ?? null; 
+
+        $productInfo = [];
+
+        $productInfo = [
+          "position" => $key, 
+          "id" => $productID,
+          "name" => $productName,
+          "img" => $productImg,
+          "imgSmall" => $productImgSmall,
+          "price" => $productPrice,
+          "priceNOTAX" => $productPriceNoTAX,
+          "description" => $productDescription,
+          "category" => $productCategory,
+          "quantity" => $productQuantity,
+          "EAN" => $productEAN,
+        ];
+
+        if($productCategory == "Loparji") {
+          $racketType = $product->getElementsByTagName("specifikacije")->item(0)->getElementsByTagName("vrednost")->item(0)?->nodeValue ?? null;
+          $handlerSize = $product->getElementsByTagName("specifikacije")->item(0)->getElementsByTagName("vrednost")->item(1)?->nodeValue ?? null;
+          $racketWeight = $product->getElementsByTagName("specifikacije")->item(0)->getElementsByTagName("vrednost")->item(2)?->nodeValue ?? null;
+          $productInfo["racketType"] = $racketType;
+          $productInfo["handlerSize"] = $handlerSize;
+          $productInfo["racketWeight"] = $racketWeight;
+        }
+        
+        if($productCategory === "Nahrbtniki" || $productCategory === "Torbe") {
+          $bagType = $product->getElementsByTagName("specifikacije")->item(0)->getElementsByTagName("vrednost")->item(0)?->nodeValue ?? null;
+          $bagSize = $product->getElementsByTagName("specifikacije")->item(0)->getElementsByTagName("vrednost")->item(1)?->nodeValue ?? null;
+          
+          $productInfo["bagType"] = $bagType;
+          $productInfo["bagSize"] = $bagSize;
+        }
+        
+        if($productCategory === "Žogice") {
+          $ballType = $product->getElementsByTagName("specifikacije")->item(0)->getElementsByTagName("vrednost")->item(0)?->nodeValue ?? null;
+          $bagSpeed = $product->getElementsByTagName("specifikacije")->item(0)->getElementsByTagName("vrednost")->item(1)?->nodeValue ?? null;
+          
+          $productInfo["ballType"] = $ballType;
+          $productInfo["bagSpeed"] = $bagSpeed;
+        }
+        
+        if($productCategory === "Nogavice" || $productCategory === "Kratke hlače" || $productCategory === "Majice" || 
+        $productCategory === "Trenirke" || $productCategory === "Obleke" || $productCategory === "Ostalo-odijeća") {
+          $gender = $product->getElementsByTagName("specifikacije")->item(0)->getElementsByTagName("vrednost")->item(0)?->nodeValue ?? null;
+          $size = $product->getElementsByTagName("specifikacije")->item(0)->getElementsByTagName("vrednost")->item(1)?->nodeValue ?? null;
+          
+          $productInfo["gender"] = $gender;
+          $productInfo["size"] = $size;
+          
+        }
+
+        array_push($products, $productInfo);
       }
       return $products;
     }

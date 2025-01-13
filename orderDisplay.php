@@ -4,7 +4,7 @@
 
   $data = new Model($user);
   $user->relocate();
-  var_dump($data->getProducts());
+  var_dump($data->getProducts()[64]);
 ?>
 
 <div class="container my-5">
