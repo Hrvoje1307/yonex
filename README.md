@@ -31,12 +31,11 @@ Use the following steps to set up the project locally:
 2. Start your local server (e.g., using XAMPP, WAMP, or MAMP).
 
 3. Import the MySQL database file provided (`app/config/database.sql`) into your MySQL database.
-   
-5. Import provided .env file into (`app/classes/`)
+4. Import provided .env file into (`app/classes/`)
 
-6. Update the database connection settings in the PHP files (`app/classes/.env`) with your database credentials.
+5. Update the database connection settings in the PHP files (`app/classes/.env`) with your database credentials.
 
-7. Open your web browser and navigate to the project directory.
+6. Open your web browser and navigate to the project directory.
 
 ## Usage
 
@@ -45,6 +44,7 @@ Follow these steps to use the website:
 1. Browse and search for badminton and tennis equipment.
 2. Add your products to favorite one
 3. Try to change quantity in cart
+4. And purchase something if you want 😊
 
 ## Contact
 
