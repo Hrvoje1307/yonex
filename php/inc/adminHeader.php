@@ -41,9 +41,6 @@ $user = new User();
          </button>
          <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-               <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="dataDisplay.php?page=1">Proizvodi Slo</a>
-               </li>
                <div class="dropdown mb-0 d-flex ms-3">
                   <button class="btn p-0 dropdown-toggle d-flex gap-2 align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                      <p class="my-0 d-none d-md-block text-dark">Proizvodi Hr</p>

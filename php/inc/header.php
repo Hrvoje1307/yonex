@@ -28,7 +28,7 @@ $user -> searchResults();
 <?php if(isset($_SESSION["user_id"]) && $user->is_admin($_SESSION["user_id"])) : ?>
    <div class="container-fluid bg-primary sticky-top">
       <div class="d-flex justify-content-center p-2">
-         <form action="dataDisplay.php" method="post">
+         <form action="userDisplay.php" method="post">
             <button type="submit" class="btn btn-primary border border-rounded">Admin</button>
          </form>
       </div>

@@ -1771,13 +1771,15 @@ class User {
         
         $orderNum = 1;
 
+        // var_dump($data[3]);
+
         foreach($data as $orderId => $order) {
             $productDetails = ["description" => [], "id" => []];
             $totalPrice = 0;
             foreach ($order["names"] as $index => $name) {
                 $productData = $this->getDataFromEachProduct($order["product_id"][$index]);
                 $quantity = $order["quantity"][$index];
-                $productDetails["description"] = $name. " (" . $quantity . ")";
+                array_push($productDetails["description"],$name. " (" . $quantity . ")");
                 $productDetails["id"] = $productData["id"]; 
                 $totalPrice += (+$quantity* $productData["price"]);
             }
@@ -1787,7 +1789,7 @@ class User {
                     <div class='alert alert-danger d-flex justify-content-between' role='alert'>
                         <div>
                             <h5>Narudžba ".$orderNum."</h5>
-                            <p >".$this->truncString(implode(", ",$productDetails),50)."</p>
+                            <p >".$this->truncString(implode(", ",$productDetails["description"]),50)."</p>
                         </div>
                         <div>
                             <h4>Ukupna cijena: ".$totalPrice." €</h4>
@@ -1802,7 +1804,7 @@ class User {
                     <div class='alert alert-success d-flex justify-content-between' role='alert'>
                         <div>
                             <h5 >Narudžba ".$orderNum."</h5>
-                            <p >".$this->truncString(implode(", ",$productDetails),50)."</p>
+                            <p >".$this->truncString(implode(", ",$productDetails["description"]),50)."</p>
                         </div>
                         <div>
                             <h4>Ukupna cijena: ".$totalPrice." €</h4>
@@ -1818,9 +1820,148 @@ class User {
     }
 
     public function getDataAboutOrder($targetId) {
-        $arrayWithAllOrders = $this->getDataWithoutCondition("orders");
+        $sql = "SELECT * FROM orders WHERE order_id = ".$targetId;
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->get_result();
+
+        $arrayWithAllOrders = array();
+
+        while($row = $results->fetch_assoc()) {
+            $arrayWithAllOrders[] =$row;
+        }
+
+        $myOrderArray = ["id" => null , "order_id" => null, "user_id" => null , "product_id" => [],"quantity" => [], "fullName" => null ,
+        "email" => null, "phoneNumber" => null,  "address" => null, "postcode" => null , "city" => null , "isSent" =>null];
+
+        
         foreach ($arrayWithAllOrders as $key => $order) {
-            if($order["order_id"] == $targetId) return $order; 
+            foreach ($order as $key => $field) {
+                if($key === "product_id" || $key === "quantity") {
+                    array_push($myOrderArray[$key], $field);
+                }else {
+                    $myOrderArray[$key] = $field;
+                }
+            }
+        }
+        return $myOrderArray;
+    }
+
+    public function printOrderProductCards($targetId) {
+        $products = $this->getDataAboutOrder($targetId)["product_id"];
+        $quantities = $this->getDataAboutOrder($targetId)["quantity"];
+
+        foreach ($products as $key => $product_id) {
+            $productData = $this->getDataFromEachProduct($product_id);
+            // var_dump($productData);
+            echo "
+                <form method='post'>
+                    <div class='card' style='width: 18rem;'>
+                        <img src='".$productData["img_url"]."' class='card-img-top' alt='...'>
+
+                        <div class='card-body align-items-end'>
+                            <input type='hidden' name='productId' value='".$product_id."'>
+                            <h5 class='card-title'>".$productData["name"]."</h5>
+                            <p class='card-text'>".$this->truncString($productData["description"],200)."</p>
+                            <div class='d-flex justify-content-between'>
+                                <div>
+                                    <h4 class='card-text'>Cijena: ".$productData["price"]."€</h4>
+                                    <p class='card-title'>Količina (".$quantities[$key].")</p>
+                                </div>
+                                <button type='submit' name='deleteProduct' class='align-self-end border border-0 rounded-3 px-3 py-2 bg-danger text-light'><i class='bi bi-trash'></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            ";
+            // var_dump($product_id);
+        }
+    }
+
+    public function deleteProductFromOrder($orderId) {
+        if($_SERVER["REQUEST_METHOD"]== "POST") {
+            if(isset($_POST["deleteProduct"])) {
+                $sql = "DELETE FROM orders WHERE product_id = ? AND order_id = ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("ss", $_POST["productId"], $orderId);
+                $stmt->execute();
+            }
+        }
+    }
+
+    public function printAllProductsFromCart() {
+        $is_sent = 0 || 1;
+        $sql = "SELECT* FROM orders WHERE isSent = ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $is_sent);
+        $stmt->execute();
+        $results = $stmt->get_result();
+        $order_ids = array();
+        
+        if($results->num_rows > 0) {
+           while($row = $results->fetch_assoc()) {
+                $sql = "SELECT count(*) FROM orders WHERE order_id =?";
+                $stmt= $this->conn->prepare($sql);
+                $stmt->bind_param("s",$row["order_id"]);
+                $stmt->execute();   
+                $counterResult = $stmt->get_result();
+                $count = $counterResult->fetch_array()[0];
+
+                if($count === 1) {
+                    echo "
+                        <tr>
+                            <td>".$row["order_id"]."</td>
+                            <td>".$row["product_id"]."</td>
+                            <td>".$row["quantity"]."</td>
+                            <td>".$row["fullName"]."</td>
+                            <td>".$row["email"]."</td>
+                            <td>".$row["phoneNumber"]."</td>
+                            <td>".$row["address"]."</td>
+                            <td>".$row["postcode"]."</td>
+                            <td>".$row["city"]."</td>
+                            <td class='bg-danger'>".$row["isSent"]."</td>
+                        </tr>
+                    ";
+                    array_push($order_ids,$row["order_id"]);
+                }else if($count !== 1 && !in_array($row["order_id"],$order_ids)) {
+                    echo "
+                        <tr>
+                            <td rowspan=".$count.">".$row["order_id"]."</td>
+                            <td >".$row["product_id"]."</td>
+                            <td >".$row["quantity"]."</td>
+                            <td rowspan=".$count.">".$row["fullName"]."</td>
+                            <td rowspan=".$count.">".$row["email"]."</td>
+                            <td rowspan=".$count.">".$row["phoneNumber"]."</td>
+                            <td rowspan=".$count.">".$row["address"]."</td>
+                            <td rowspan=".$count.">".$row["postcode"]."</td>
+                            <td rowspan=".$count.">".$row["city"]."</td>
+                            <td rowspan=".$count." class='bg-danger'>".$row["isSent"]."</td>
+                        </tr>
+                    ";
+                    array_push($order_ids,$row["order_id"]);
+                }else {
+                    echo "
+                        <tr>
+                            <td >".$row["product_id"]."</td>
+                            <td >".$row["quantity"]."</td>
+                        </tr>
+                    ";
+                }
+           }
+
+        }
+    }
+
+    public function exportToExcel() {
+        if($_SERVER["REQUEST_METHOD"]=="POST") {
+            if(isset($_POST["exportExcel"])) {
+                header("Content-Type: application/vnd.ms-excel");
+                header("Content-Disposition: attachment; filename=orders.xls");
+
+                $sql = "UPDATE orders SET isSent = 1 WHERE isSent = 0";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->execute();
+            }
         }
     }
 }

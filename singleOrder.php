@@ -8,7 +8,8 @@
   $order_id = isset($_GET["id"]) ? $_GET["id"] : null;
   $orderNum = isset($_GET["orderNum"]) ? $_GET["orderNum"] : null;
 
-  var_dump($user->getDataAboutOrder($order_id));
+  $user->getDataAboutOrder($order_id);
+  $user->deleteProductFromOrder($order_id);
 ?>
 
 <div class="container my-5">
@@ -41,4 +42,10 @@
     </div>
     <input type="submit" name="submitOrders" value="Promijeni" class="btn btn-primary">
   </form>
+
+  <h1 class="mt-5">Proizvodi u narudžbi</h1>
+  <hr>
+  <div class="d-flex gap-5">
+    <?php $user->printOrderProductCards($order_id);?>
+  </div>
 </div>
