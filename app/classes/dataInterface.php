@@ -45,6 +45,7 @@
         $productCategory = $product->getElementsByTagName("podkategorija")->item(0)->nodeValue ?? null; 
         $productQuantity = $product->getElementsByTagName("tocnaZaloga")->item(0)->nodeValue ?? null; 
         $productEAN = $product->getElementsByTagName("EAN")->item(0)->nodeValue ?? null; 
+        $productMainCategory = $product->getElementsByTagName("kategorija")->item(0)->nodeValue ?? null; 
 
         $productInfo = [];
 
@@ -60,6 +61,7 @@
           "category" => $productCategory,
           "quantity" => $productQuantity,
           "EAN" => $productEAN,
+          "mainCategory" => $productMainCategory
         ];
 
         if($productCategory === "Loparji") {
@@ -88,7 +90,7 @@
         }
         
         if($productCategory === "Obutev" || $productCategory === "Nogavice" || $productCategory === "Kratke hlače" || $productCategory === "Majice" || 
-        $productCategory === "Trenirke" || $productCategory === "Obleke" || $productCategory === "Ostalo-odijeća") {
+        $productCategory === "Trenirke" || $productCategory === "Obleke" || ($productCategory === "Ostalo" && $productMainCategory === "Oblačila")) {
           $gender = $product->getElementsByTagName("specifikacije")->item(0)->getElementsByTagName("vrednost")->item(0)?->nodeValue ?? null;
           $size = $product->getElementsByTagName("specifikacije")->item(0)->getElementsByTagName("vrednost")->item(1)?->nodeValue ?? null;
           
@@ -136,7 +138,7 @@
             "handlerSize" => $product["handlerSize"],
             "racketWeight" => $product["racketWeight"]
           ]);
-        }else if(in_array($product["category"], $classicFilters)) {
+        }else if(in_array($product["category"], $classicFilters) && $product["mainCategory"] !== "Oblačila") {
           array_push($json["classicFilters"], [
             "ID" => $product['id'],
             "name" => $product['name'],
@@ -208,7 +210,7 @@
             "gender" => $product["gender"],
             "size" => $product["size"]
           ]);
-        }else if(in_array($product["category"], $clothing)) {
+        }else if(in_array($product["category"], $clothing) && $product["mainCategory"] === "Oblačila") {
           array_push($json["clothing"], [
             "ID" => $product['id'],
             "name" => $product['name'],
@@ -274,16 +276,18 @@
         if($key >= $start && $key < $end) {
           $newName = $this->translateName($product["name"]);
           $newDescription = $this->translateDescription($product["description"]);
-          $category = $this->getCategory($newName, $newDescription,$allowedCategories, "restAccessories");
+          $category = $this->getCategory($newName, $newDescription,$allowedCategories, "gums");
           $croatianItem = [
             "ID" => $product["ID"],
             "name" => $newName,
             "img_url" => $product["img_url"],
+            "img_small" => $product["img_small"],
             "price" => $product["price"],
             "priceNOTAX" => $product["priceNOTAX"],
             "description" => $newDescription,
             "quantity" => $product["quantity"],
-            "category" => $category
+            "category" => $category,
+            "EAN" => $product["EAN"]
           ];
 
           $itemExists = false;
@@ -340,9 +344,9 @@
             $allowedHandlerSizes = $allowedHandlerSizeBadminton;
           }
 
-        $racketType = $this->getRacketType($newName, $newDescription, $allowedRacketTypes, $allowedRacketTypes[0]);
-        $racketWeight = $this->getRacketWeight($newName, $newDescription, $allowedRacketWeights, $allowedRacketWeights[0]);
-        $handlerSize = $this->getHandlerSize($newName, $newDescription, $allowedHandlerSizes, $allowedHandlerSizes[0]);
+        $racketType = $this->getRacketType($newName, $newDescription,$product["racketType"], $allowedRacketTypes, $allowedRacketTypes[0]);
+        $racketWeight = $this->getRacketWeight($newName, $newDescription,$product["racketWeight"], $allowedRacketWeights, $allowedRacketWeights[0]);
+        $handlerSize = $this->getHandlerSize($newName, $newDescription,$product["handlerSize"], $allowedHandlerSizes, $allowedHandlerSizes[0]);
 
           $croatianItem = [
             "ID" => $product["ID"],
@@ -350,12 +354,14 @@
             "price" => $product["price"],
             "priceNOTAX" => $product["priceNOTAX"],
             "img_url" => $product["img_url"],
+            "img_small" => $product["img_small"],
             "racketType" => $racketType,
             "racketWeight" => $racketWeight,
             "handlerSize" => $handlerSize,
             "quantity" => $product["quantity"],
             "category" => $category,
             "description" => $newDescription,
+            "EAN" => $product["EAN"]
           ];
 
           $itemExists = false;
@@ -408,8 +414,8 @@
             $allowedBagType = $allowedBagTypeBag;
           }
 
-          $bagSize = $this->getBagSize($newName, $newDescription, $allowedBagSize, $allowedBagSize[0]);
-          $bagType = $this->getProductType($newName, $newDescription, $allowedBagType, $allowedBagType[0]);
+          $bagSize = $this->getBagSize($newName, $newDescription, $product["bagSize"], $allowedBagSize, $allowedBagSize[0]);
+          $bagType = $this->getProductType($newName, $newDescription,$product["bagType"], $allowedBagType, $allowedBagType[0]);
 
           $croatianItem = [
             "ID" => $product["ID"],
@@ -417,11 +423,13 @@
             "price" => $product["price"],
             "priceNOTAX" => $product["priceNOTAX"],
             "img_url" => $product["img_url"],
+            "img_small" => $product["img_small"],
             "bagSize" => $bagSize,
             "bagType" => $bagType,
             "quantity" => $product["quantity"],
             "category" => $category,
             "description" => $newDescription,
+            "EAN" => $product["EAN"]
           ];
 
           $itemExists = false;
@@ -449,7 +457,7 @@
     public function balls() {
       $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
       $counter = (int)$counterJson["balls"];
-      $batchSize = 5;
+      $batchSize = 10;
       $start = $counter;
       $end = $counter + $batchSize;
       $dataCroatian = $this->getJson("./app/config/prijevod.json");
@@ -474,8 +482,8 @@
             $allowedBallSpeed = $allowedBallSpeedTennis;
           }
 
-          $ballType = $this->getProductType($newName, $newDescription, $allowedBallType, $allowedBallType[0]);
-          $ballSpeed = $this->getBallSpeed($newName, $newDescription, $allowedBallSpeed, $allowedBallSpeed[0]);
+          $ballType = $this->getProductType($newName, $newDescription, $product["ballType"], $allowedBallType, $allowedBallType[0]);
+          $ballSpeed = $this->getBallSpeed($newName, $newDescription,$product["bagSpeed"], $allowedBallSpeed, $allowedBallSpeed[0]);
 
           $croatianItem = [
             "ID" => $product["ID"],
@@ -483,11 +491,13 @@
             "price" => $product["price"],
             "priceNOTAX" => $product["priceNOTAX"],
             "img_url" => $product["img_url"],
+            "img_small" => $product["img_small"], 
             "ballType" => $ballType,
             "ballSpeed" => $ballSpeed,
             "quantity" => $product["quantity"],
             "category" => $category,
             "description" => $newDescription,
+            "EAN" => $product["EAN"]
           ];
 
           $itemExists = false;
@@ -541,7 +551,7 @@
           }
 
           $cordThickness = $this->getThicknesses($newName, $newDescription, $allowedThicknesses, $allowedThicknesses[0]);
-          $cordLength = $this->getLength($newName, $newDescription, $allowedLength, $allowedLength[0]);
+          $cordLength = $this->getLength($newName, $newDescription, $product["length"], $allowedLength, $allowedLength[0]);
 
           $croatianItem = [
             "ID" => $product["ID"],
@@ -549,11 +559,13 @@
             "price" => $product["price"],
             "priceNOTAX" => $product["priceNOTAX"],
             "img_url" => $product["img_url"],
+            "img_small" => $product["img_small"],
             "cordThickness" => $cordThickness,
             "cordLength" => $cordLength,
             "quantity" => $product["quantity"],
             "category" => $category,
             "description" => $newDescription,
+            "EAN" => $product["EAN"]
           ];
 
           $itemExists = false;
@@ -581,7 +593,7 @@
     public function shoes() {
       $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
       $counter = (int)$counterJson["shoes"];
-      $batchSize = 5;
+      $batchSize = 10;
       $start = $counter;
       $end = $counter + $batchSize;
       $dataCroatian = $this->getJson("./app/config/prijevod.json");
@@ -596,8 +608,9 @@
           $newName = $this->translateName($product["name"]);
           $newDescription = $this->translateDescription($product["description"]);
           $category = $this->getCategory($newName, $newDescription,$allowedCategories, $allowedCategories[0]);
-          $shoeSize = $this->getProductSize($newName, $newDescription, $allowedShoesSize, $allowedShoesSize[8]);
-          $shoeSex = $this->getProductSex($newName, $newDescription, $allowedShoesSex, $allowedShoesSex[0]);
+          
+          $shoeSize = $this->getProductSize($newName, $newDescription, $product["size"], $allowedShoesSize, $allowedShoesSize[8]);
+          $shoeSex = $this->getProductSex($newName, $newDescription, $product["gender"], $allowedShoesSex, $allowedShoesSex[0]);
           
           $croatianItem = [
             "ID" => $product["ID"],
@@ -605,11 +618,13 @@
             "price" => $product["price"],
             "priceNOTAX" => $product["priceNOTAX"],
             "img_url" => $product["img_url"],
+            "img_small" => $product["img_small"],
             "shoeSize" => $shoeSize,
             "shoeSex" => $shoeSex,
             "quantity" => $product["quantity"],
             "category" => $category,
             "description" => $newDescription,
+            "EAN" => $product["EAN"]
           ];
 
           $itemExists = false;
@@ -653,8 +668,9 @@
           $newName = $this->translateName($product["name"]);
           $newDescription = $this->translateDescription($product["description"]);
           $category = $this->getCategoryClothing($newName, $newDescription, $slovenianCategory, $allowedCategories, $allowedCategories[0]);
-          $clothingSize = $this->getProductSize($newName, $newDescription, $allowedSizes, $allowedSizes[0]);
-          $clothingSex = $this->getProductSex($newName, $newDescription, $allowedClothingSex, $allowedClothingSex[0]);
+          
+          $clothingSize = $this->getProductSize($newName, $newDescription, $product["size"], $allowedSizes, $allowedSizes[0]);
+          $clothingSex = $this->getProductSex($newName, $newDescription, $product["gender"],$allowedClothingSex, $allowedClothingSex[0]);
           
           $croatianItem = [
             "ID" => $product["ID"],
@@ -662,11 +678,13 @@
             "price" => $product["price"],
             "priceNOTAX" => $product["priceNOTAX"],
             "img_url" => $product["img_url"],
+            "img_small" => $product["img_small"],
             "clothingSize" => $clothingSize,
             "clothingSex" => $clothingSex,
             "quantity" => $product["quantity"],
             "category" => $category,
             "description" => $newDescription,
+            "EAN" => $product["EAN"],
           ];
 
           $itemExists = false;
@@ -755,89 +773,89 @@
       return $category;
     }
 
-    public function getRacketType($newName, $newDescription, $allowedRacketTypes, $alternativeRacketType) {
-      $message ="Determine the racket type for this product based on its name and description. The racket type must be one of the following: ".implode(", ",$allowedRacketTypes).". 
+    public function getRacketType($newName, $newDescription, $racketType, $allowedRacketTypes, $alternativeRacketType) {
+      $message ="Determine the racket type for this product based on its name, decription and racketType. The racket type must be one of the following: ".implode(", ",$allowedRacketTypes).". 
                 Only provide the racket type, nothing else. Example input: Name: 'Yonex Nanoray 20'. Description: 'Lightweight badminton racket with high repulsion power'. 
-                Example output: 'Voltric'.Input Name: '".$newName."'. Input Description: '".$newDescription."'.";
-      $racketType = $this->aiTranslation($message);
-      if (!in_array($racketType, $allowedRacketTypes)) {
-        $racketType = $alternativeRacketType;
+                Example output: 'Voltric'.Input Name: '".$newName."'. Input Description: '".$newDescription."'.  Input Type: '".$racketType."'.";
+      $newRacketType = $this->aiTranslation($message);
+      if (!in_array($newRacketType, $allowedRacketTypes)) {
+        $newRacketType = $alternativeRacketType;
       }
-      return $racketType;
+      return $newRacketType;
     }
 
-    public function getRacketWeight($newName, $newDescription, $allowedRacketWeights, $alternativeRacketWeight) {
-      $message = "Determine the racket weight for this product based on its name and description. The racket weight must be one of the following: ".implode(", ",$allowedRacketWeights).". 
+    public function getRacketWeight($newName, $newDescription, $racketWeight, $allowedRacketWeights, $alternativeRacketWeight) {
+      $message = "Determine the racket weight for this product based on its name, description and racketWeight. The racket weight must be one of the following: ".implode(", ",$allowedRacketWeights).". 
                 Only provide the racket weight, nothing else. Example input: Name: 'Yonex Nanoray 20'. Description: 'Lightweight badminton racket with high repulsion power, 3U = 95-89.9g'. 
                 Example output: '3U = 95-89.9g'.Example input: Name: 'Yonex Nanoray 20'. Description: 'Lightweight badminton racket with high repulsion power, 280g'. 
                 Example output: '280g'Input Name: '".$newName."'. 
-                Input Description: '".$newDescription."'.";
-      $racketWeight = $this->aiTranslation($message);
-      if(!in_array($racketWeight, $allowedRacketWeights)) {
-        $racketWeight = $alternativeRacketWeight;
+                Input Description: '".$newDescription."'. Input Weight: '".$racketWeight."'.";
+      $newRacketWeight = $this->aiTranslation($message);
+      if(!in_array($newRacketWeight, $allowedRacketWeights)) {
+        $newRacketWeight = $alternativeRacketWeight;
       }
 
-      return $racketWeight;
+      return $newRacketWeight;
     }
 
-    public function getHandlerSize($newName, $newDescription, $allowedHandlerSizes, $alternativeHandlerSize) {
-      $message = "Determine the handler size for this product based on its name and description. The handler size must be one of the following: ".implode(", ", $allowedHandlerSizes).". 
+    public function getHandlerSize($newName, $newDescription, $handlerSize, $allowedHandlerSizes, $alternativeHandlerSize) {
+      $message = "Determine the handler size for this product based on its name, description and handler size. The handler size must be one of the following: ".implode(", ", $allowedHandlerSizes).". 
                   Only provide the handler size, nothing else. Example input: Name: 'Yonex Nanoray 20'. Description: 'Lightweight badminton racket with high repulsion power, comes with a G4 handle'. 
                   Example output: 'G4'.Input Name: '".$newName."'. 
-                  Input Description: '".$newDescription."'.";
+                  Input Description: '".$newDescription."'. Input handler size: '".$handlerSize."'.";
           
-      $handlerSize = $this->aiTranslation($message);
-      if(!in_array($handlerSize, $allowedHandlerSizes)) {
-        $handlerSize = $alternativeHandlerSize;
+      $newHandlerSize = $this->aiTranslation($message);
+      if(!in_array($newHandlerSize, $allowedHandlerSizes)) {
+        $newHandlerSize = $alternativeHandlerSize;
       }
 
-      return $handlerSize;
+      return $newHandlerSize;
     }
 
-    public function getBagSize($newName, $newDescription, $allowedBagSizes, $alternativeBagSize) {
-      $message = "Determine the bag size for this product based on its name and description. The bag size must be one of the following: ".implode(", ", $allowedBagSizes).". 
+    public function getBagSize($newName, $newDescription, $bagSize, $allowedBagSizes, $alternativeBagSize) {
+      $message = "Determine the bag size for this product based on its name, description and bag size. The bag size must be one of the following: ".implode(", ", $allowedBagSizes).". 
                   Only provide the bag size, nothing else.
                   Example input: Name: 'Yonex Pro Tournament Bag'. Description: 'Velika teniska torba koja može držati do 6 reketa'. Example output: '6 reketa'.
                   Input Name: '".$newName."'. 
-                  Input Description: '".$newDescription."'.";
+                  Input Description: '".$newDescription."'. Input bag size: '".$bagSize."'.";
 
-      $bagSize = $this->aiTranslation($message);
-      if(!in_array($bagSize,$allowedBagSizes)) {
-        $bagSize = $alternativeBagSize;
+      $newBagSize = $this->aiTranslation($message);
+      if(!in_array($newBagSize,$allowedBagSizes)) {
+        $newBagSize = $alternativeBagSize;
       }
 
-      return $bagSize;
+      return $newBagSize;
     }
 
-    public function getProductType($newName, $newDescription, $allowedProductTypes, $alternativeProductType) {
-      $message = "Determine the bag type for this product based on its name and description. The bag type must be one of the following: ".implode(", ", $allowedProductTypes).". 
-                  Only provide the bag type, nothing else.
+    public function getProductType($newName, $newDescription, $productType, $allowedProductTypes, $alternativeProductType) {
+      $message = "Determine the product type for this product based on its name, description and product type. The product type must be one of the following: ".implode(", ", $allowedProductTypes).". 
+                  Only provide the product type, nothing else.
                   Example input: Name: 'Yonex Pro Tournament Bag'. Description: 'Profesionalna torba za turnire'. Example output: 'Pro serija'.
                   Example input: Name: 'Lopte za badminton MAVIS 350 1/6, bijele, brze'. Description: 'Po letu i osjećaju lopta je najsličnija lopti 
                   od perja. Tvrdoća krila - pernatog dijela najlonske lopte - mijenja se s temperaturom.'. Example output: 'Perje'.
                   Input Name: '".$newName."'. 
-                  Input Description: '".$newDescription."'.";
+                  Input Description: '".$newDescription."'. Input product type: ' ".$productType."'.";
 
-      $productType = $this->aiTranslation($message);
-      if(!in_array($productType,$allowedProductTypes)) {
-        $productType = $alternativeProductType;
+      $newProductType = $this->aiTranslation($message);
+      if(!in_array($newProductType,$allowedProductTypes)) {
+        $newProductType = $alternativeProductType;
       }
 
-      return $productType;
+      return $newProductType;
     }
 
-    public function getBallSpeed($newName, $newDescription, $allowedBallSpeeds, $alternativeBallSpeed) {
-      $message = "Determine the ball speed for this product based on its name and description. The ball speed must be one of the following: ".implode(", ", $allowedBallSpeeds).". 
+    public function getBallSpeed($newName, $newDescription, $ballSpeed, $allowedBallSpeeds, $alternativeBallSpeed) {
+      $message = "Determine the ball speed for this product based on its name, description and speed. The ball speed must be one of the following: ".implode(", ", $allowedBallSpeeds).". 
                   Only provide the ball speed, nothing else.Example input: Name: 'Yonex Aerosensa 30'. Description: 'Brzi badminton loptice za turnire'. Example output: 'Brze'.
                   Input Name: '".$newName."'. 
-                  Input Description: '".$newDescription."'.";
+                  Input Description: '".$newDescription."'. Input Speed: '".$ballSpeed."'.";
 
-      $ballSpeed = $this->aiTranslation($message);
-      if(!in_array($ballSpeed,$allowedBallSpeeds)) {
-        $ballSpeed = $alternativeBallSpeed;
+      $newBallSpeed = $this->aiTranslation($message);
+      if(!in_array($newBallSpeed,$allowedBallSpeeds)) {
+        $newBallSpeed = $alternativeBallSpeed;
       }
 
-      return $ballSpeed;
+      return $newBallSpeed;
     }
 
     public function getThicknesses($newName, $newDescription, $allowedThicknesses, $alternativeThicknesses) {
@@ -855,48 +873,48 @@
       return $cordThicknesses;
     }
 
-    public function getLength($newName, $newDescription, $allowedCordLengths, $alternativeCordLength) {
-      $message = "Determine the cord length for this product based on its name and description. The cord length must be one of the following: ".implode(", ", $allowedCordLengths).". 
+    public function getLength($newName, $newDescription, $cordLength, $allowedCordLengths, $alternativeCordLength) {
+      $message = "Determine the cord length for this product based on its name, description and cord length. The cord length must be one of the following: ".implode(", ", $allowedCordLengths).". 
                   Only provide the cord length, nothing else.
                   Example input: Name: 'Yonex BG65'. Description: 'Visokokvalitetna badmintonska žica duljine 10m za dugotrajnost'. Example output: '10m'.
                   Input Name: '".$newName."'. 
-                  Input Description: '".$newDescription."'.";
+                  Input Description: '".$newDescription."'. Input cord length: '".$cordLength."'.";
 
-      $cordLength = $this->aiTranslation($message);
-      if(!in_array($cordLength, $allowedCordLengths)) {
-        $cordLength = $alternativeCordLength;
+      $newCordLength = $this->aiTranslation($message);
+      if(!in_array($newCordLength, $allowedCordLengths)) {
+        $newCordLength = $alternativeCordLength;
       }
 
-      return $cordLength;
+      return $newCordLength;
     }
 
-    public function getProductSize($newName, $newDescription, $allowedProductSize, $alternativeProductSize) {
-      $message = "Determine the shoe size for this product based on its name and description. The shoe size must be one of the following: ".implode(", ", $allowedProductSize).". Only provide the shoe size, nothing else. 
+    public function getProductSize($newName, $newDescription, $productSize, $allowedProductSize, $alternativeProductSize) {
+      $message = "Determine the shoe size for this product based on its name, description and product size. The shoe size must be one of the following: ".implode(", ", $allowedProductSize).". Only provide the shoe size, nothing else. 
                   Example input: Name: 'Yonex Power Cushion 65'. Description: 'Profesionalne badmintonske tenisice veličine 42'. Example output: '42'.
                   Example input: Name: 'Yonex Tournament Shirt'. Description: 'Profesionalna badmintonska majica veličine L'. Example output: 'L'.
                   Input Name: '".$newName."'. 
-                  Input Description: '".$newDescription."'.";
+                  Input Description: '".$newDescription."'. Input Product Size: '".$productSize."'.";
 
-      $productSize = $this->aiTranslation($message);
-      if(!in_array($productSize, $allowedProductSize)) {
-        $productSize = $alternativeProductSize;
+      $newProductSize = $this->aiTranslation($message);
+      if(!in_array($newProductSize, $allowedProductSize)) {
+        $newProductSize = $alternativeProductSize;
       }
 
-      return $productSize;
+      return $newProductSize;
     }
 
-    public function getProductSex($newName, $newDescription, $allowedProductSex, $alternativeProductSex) {
-      $message = "Determine the shoe sex for this product based on its name and description. The shoe sex must be one of the following: ".implode(", ", $allowedProductSex).". Only provide the shoe sex, nothing else. 
+    public function getProductSex($newName, $newDescription, $productGender, $allowedProductSex, $alternativeProductSex) {
+      $message = "Determine the shoe sex for this product based on its name, description and gender. The shoe sex must be one of the following: ".implode(", ", $allowedProductSex).". Only provide the shoe sex, nothing else. 
                   Example input: Name: 'Yonex Power Cushion 65'. Description: 'Profesionalne badmintonske tenisice za muškarce'. Example output: 'Muški'.
                   Input Name: '".$newName."'. 
-                  Input Description: '".$newDescription."'.";
+                  Input Description: '".$newDescription."'. Input gender: '".$productGender."'.";
 
-      $productSex = $this->aiTranslation($message);
-      if(!in_array($productSex, $allowedProductSex)) {
-        $productSex = $alternativeProductSex;
+      $newProductSex = $this->aiTranslation($message);
+      if(!in_array($newProductSex, $allowedProductSex)) {
+        $newProductSex = $alternativeProductSex;
       }
 
-      return $productSex;
+      return $newProductSex;
     }
 
     public function productsTranslatedClassicFilters() {
@@ -905,14 +923,16 @@
           $productId = $product["ID"];
           $productName = $product["name"];
           $productImg = $product["img_url"];
+          $productImgSmall = $product["img_small"];
           $productPrice = $product["price"];
           $productPriceNoTax = $product["priceNOTAX"];
           $productDescription = $product["description"];
           $productQuantity = $product["quantity"];
           $productCategory = $product["category"];
-          $sql = "INSERT INTO classicfilters (id, name, price, priceNOTAX, img_url, quantity, category, description) VALUES (?,?,?,?,?,?,?,?)";
+          $EAN = $product["EAN"];
+          $sql = "INSERT INTO classicfilters (id, name, price, priceNOTAX, img_url,img_small, quantity, category, description, EAN) VALUES (?,?,?,?,?,?,?,?,?,?)";
           $stmt = $this->conn->prepare($sql);
-          $stmt->bind_param("ssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productQuantity,$productCategory,$productDescription);
+          $stmt->bind_param("ssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productImgSmall,$productQuantity,$productCategory,$productDescription, $EAN);
           $stmt->execute();
       }
     }
@@ -923,6 +943,7 @@
         $productId = $product["ID"];
         $productName = $product["name"];
         $productImg = $product["img_url"];
+        $productImgSmall = $product["img_small"];
         $productPrice = $product["price"];
         $productPriceNoTax = $product["priceNOTAX"];
         $productDescription = $product["description"];
@@ -931,9 +952,10 @@
         $productRacketType = $product["racketType"];
         $productRacketWeight = $product["racketWeight"];
         $productHandlerSize = $product["handlerSize"];
-        $sql = "INSERT INTO rackets (id, name, price, priceNOTAX, img_url, quantity, category, description, racketType, racketWeight, handlerSize) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        $EAN = $product["EAN"];
+        $sql = "INSERT INTO rackets (id, name, price, priceNOTAX, img_url,img_small, quantity, category, description, racketType, racketWeight, handlerSize, EAN) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("sssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productQuantity,$productCategory,$productDescription, $productRacketType, $productRacketWeight, $productHandlerSize);
+        $stmt->bind_param("sssssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productImgSmall, $productQuantity,$productCategory,$productDescription, $productRacketType, $productRacketWeight, $productHandlerSize, $EAN);
         $stmt->execute();
       }
     }
@@ -944,6 +966,7 @@
         $productId = $product["ID"];
         $productName = $product["name"];
         $productImg = $product["img_url"];
+        $productImgSmall = $product["img_small"];
         $productPrice = $product["price"];
         $productPriceNoTax = $product["priceNOTAX"];
         $productDescription = $product["description"];
@@ -951,9 +974,10 @@
         $productCategory = $product["category"];
         $productBagSize = $product["bagSize"];
         $productBagType = $product["bagType"];
-        $sql = "INSERT INTO bags (id, name, price, priceNOTAX, img_url, quantity, category, description, size, type) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $EAN = $product["EAN"];
+        $sql = "INSERT INTO bags (id, name, price, priceNOTAX, img_url,img_small, quantity, category, description, size, type, EAN) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productQuantity,$productCategory,$productDescription, $productBagSize, $productBagType);
+        $stmt->bind_param("ssssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg, $productImgSmall,$productQuantity,$productCategory,$productDescription, $productBagSize, $productBagType, $EAN);
         $stmt->execute();
       }
     }
@@ -964,6 +988,7 @@
         $productId = $product["ID"];
         $productName = $product["name"];
         $productImg = $product["img_url"];
+        $productImgSmall = $product["img_small"];
         $productPrice = $product["price"];
         $productPriceNoTax = $product["priceNOTAX"];
         $productDescription = $product["description"];
@@ -971,9 +996,10 @@
         $productCategory = $product["category"];
         $productBallType = $product["ballType"];
         $productBallSpeed = $product["ballSpeed"];
-        $sql = "INSERT INTO balls (id, name, price, priceNOTAX, img_url, quantity, category, description, speed, type) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $EAN = $product["EAN"];
+        $sql = "INSERT INTO balls (id, name, price, priceNOTAX, img_url, img_small, quantity, category, description, speed, type, EAN) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productQuantity,$productCategory,$productDescription, $productBallSpeed, $productBallType);
+        $stmt->bind_param("ssssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productImgSmall,$productQuantity,$productCategory,$productDescription, $productBallSpeed, $productBallType, $EAN);
         $stmt->execute();
       }
     }
@@ -984,6 +1010,7 @@
         $productId = $product["ID"];
         $productName = $product["name"];
         $productImg = $product["img_url"];
+        $productImgSmall = $product["img_small"];
         $productPrice = $product["price"];
         $productPriceNoTax = $product["priceNOTAX"];
         $productDescription = $product["description"];
@@ -991,9 +1018,10 @@
         $productCategory = $product["category"];
         $productThickness = $product["cordThickness"];
         $productLength = $product["cordLength"];
-        $sql = "INSERT INTO cords (id, name, price, priceNOTAX, img_url, quantity, category, description, thicknesses, length) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $EAN = $product["EAN"];
+        $sql = "INSERT INTO cords (id, name, price, priceNOTAX, img_url, img_small, quantity, category, description, thicknesses, length, EAN) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productQuantity,$productCategory,$productDescription, $productThickness, $productLength);
+        $stmt->bind_param("ssssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productImgSmall,$productQuantity,$productCategory,$productDescription, $productThickness, $productLength, $EAN);
         $stmt->execute();
       }
     }
@@ -1004,6 +1032,7 @@
         $productId = $product["ID"];
         $productName = $product["name"];
         $productImg = $product["img_url"];
+        $productImgSmall = $product["img_small"];
         $productPrice = $product["price"];
         $productPriceNoTax = $product["priceNOTAX"];
         $productDescription = $product["description"];
@@ -1011,9 +1040,10 @@
         $productCategory = $product["category"];
         $productShoesSize = $product["shoeSize"];
         $productShoesSex = $product["shoeSex"];
-        $sql = "INSERT INTO shoes (id, name, price, priceNOTAX, img_url, quantity, category, description, shoes_num, sex) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $EAN = $product["EAN"];
+        $sql = "INSERT INTO shoes (id, name, price, priceNOTAX, img_url, img_small, quantity, category, description, shoes_num, sex, EAN) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productQuantity,$productCategory,$productDescription, $productShoesSize, $productShoesSex);
+        $stmt->bind_param("ssssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productImgSmall,$productQuantity,$productCategory,$productDescription, $productShoesSize, $productShoesSex, $EAN);
         $stmt->execute();
       }
     }
@@ -1024,6 +1054,7 @@
         $productId = $product["ID"];
         $productName = $product["name"];
         $productImg = $product["img_url"];
+        $productImgSmall = $product["img_small"];
         $productPrice = $product["price"];
         $productPriceNoTax = $product["priceNOTAX"];
         $productDescription = $product["description"];
@@ -1031,9 +1062,10 @@
         $productCategory = $product["category"];
         $productClothingSize = $product["clothingSize"];
         $productClothingsSex = $product["clothingSex"];
-        $sql = "INSERT INTO clothing (id, name, price, priceNOTAX, img_url, quantity, category, description, size, sex) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        $EAN = $product["EAN"];
+        $sql = "INSERT INTO clothing (id, name, price, priceNOTAX, img_url, img_small, quantity, category, description, size, sex, EAN) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("ssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productQuantity,$productCategory,$productDescription, $productClothingSize, $productClothingsSex);
+        $stmt->bind_param("ssssssssssss",$productId,$productName,$productPrice,$productPriceNoTax,$productImg,$productImgSmall,$productQuantity,$productCategory,$productDescription, $productClothingSize, $productClothingsSex, $EAN);
         $stmt->execute();
       }
     }

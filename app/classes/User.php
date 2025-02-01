@@ -1738,7 +1738,7 @@ class User {
     }
 
     public function printAllOrders() {
-        $sql = "SELECT * FROM orders";
+        $sql = "SELECT * FROM orders ORDER BY id DESC ";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         $results = $stmt->get_result();
@@ -1768,10 +1768,10 @@ class User {
             $data[$orderId]["city"] = $row["city"];	
             $data[$orderId]["isSent"] = $row["isSent"];	
         }
-        
-        $orderNum = 1;
 
-        // var_dump($data[3]);
+        
+        
+        $orderNum = count($data);
 
         foreach($data as $orderId => $order) {
             $productDetails = ["description" => [], "id" => []];
@@ -1815,7 +1815,7 @@ class User {
                 ";
             }
 
-            $orderNum++;
+            $orderNum--;
         }
     }
 
@@ -1857,7 +1857,9 @@ class User {
             echo "
                 <form method='post'>
                     <div class='card' style='width: 18rem;'>
-                        <img src='".$productData["img_url"]."' class='card-img-top' alt='...'>
+                        <div class='imgSingleOrder'> 
+                            <img src='".$productData["img_url"]."' class='card-img-top'>
+                        </div>
 
                         <div class='card-body align-items-end'>
                             <input type='hidden' name='productId' value='".$product_id."'>

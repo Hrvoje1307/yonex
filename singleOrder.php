@@ -45,7 +45,7 @@
 
   <h1 class="mt-5">Proizvodi u narudžbi</h1>
   <hr>
-  <div class="d-flex gap-5">
+  <div class="d-flex flex-wrap gap-5">
     <?php $user->printOrderProductCards($order_id);?>
   </div>
 </div>

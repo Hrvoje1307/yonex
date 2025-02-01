@@ -4,7 +4,6 @@
 
   $data = new Model($user);
   $user->relocate();
-  $data->changePageNumber();
 ?>
 
 <div class="container my-5">

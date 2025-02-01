@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    $isLogged = $user->login($email, $password);
 
    if($isLogged === "admin") {
-      header("Location: dataDisplay.php?page=1");
+      header("Location: userDisplay.php");
       exit();
    } else if($isLogged) {
       header("Location: index.php");

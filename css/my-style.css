@@ -187,3 +187,7 @@ tr {
   vertical-align: middle;
   text-align: center;
 }
+
+.imgSingleOrder {
+  height: 500px;
+}
