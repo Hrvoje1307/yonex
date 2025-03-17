@@ -25,10 +25,10 @@
     }
 
     //GETTING JSON FROM SLOVENIA
-    public function getProducts() {
-      $xmlContent = [];
-      $xmlFilePath = __DIR__ . '/../config/products.xml';
+    public function getProducts($url =__DIR__ . '/../config/products.xml') {
+      $xmlFilePath = $url;
       $products = array();
+      $productsIDs = array();
 
       $dom = new DOMDocument();
       $dom->load($xmlFilePath);
@@ -106,8 +106,9 @@
         }
 
         array_push($products, $productInfo);
+        array_push($productsIDs, $productID);
       }
-      return $products;
+      return ["IDs"=>$productsIDs, "all" => $products];
     }
 
     //MAKING MY OWN JSON TO TRANSLATE TO CROATIAN
@@ -120,7 +121,7 @@
       $shoes = ["Obutev"];
       $clothing = ["Nogavice", "Kratke hlače", "Majice", "Jakne", "Trenirke", "Obleke", "Ostalo-odijeća"];
       $json = ["classicFilters"=> array(), "rackets"=>array(), "bags"=>array(), "balls"=>array(), "cords"=>array(), "shoes"=>array(), "clothing"=>array()];
-      $products = $this->getProducts();
+      $products = $this->getProducts(__DIR__ . '/../config/products.xml')["all"];
       foreach ($products as $key => $product) {
         if(in_array($product["category"], $rackets)) { 
           array_push($json["rackets"], [
@@ -1096,7 +1097,7 @@
       $pageNum = $this->getInfoProducts()["pageNum"];
       $min = ($pageNum * $_ENV["PRODUCTS_PER_PAGE"]) - $_ENV["PRODUCTS_PER_PAGE"];
       $max = ($pageNum * $_ENV["PRODUCTS_PER_PAGE"]) -1;
-      $products = $this->getProducts();
+      $products = $this->getProducts(__DIR__ . '/../config/products.xml')["all"];
       foreach ($products as $key => $product) {
         if($key >= $min && $key <= $max) {
           $product["position"] = strval(((int)$product["position"]) + 1);
@@ -1423,6 +1424,112 @@
           }
         }
       }
+    }
+
+    public function addProducts() {
+      $productsIdsMain = $this->getProducts(__DIR__ . '/../config/products.xml')["IDs"];
+      $productsIdsTemporary = $this->getProducts(__DIR__ . '/../config/productsTemporary.xml')["IDs"];
+      $productsTemporary = $this->getProducts(__DIR__ . '/../config/productsTemporary.xml')["all"];
+      
+      $productsAdd = array_diff($productsIdsTemporary, $productsIdsMain);
+
+      if(empty($productsAdd)) {
+        echo "
+          <div class='container d-flex justify-content-center'>
+            <p>Nema niti jedan proizvod za dodati</p>
+          </div>
+        ";
+        return;
+      }
+      
+      foreach ($productsTemporary as $key => $product) {
+        if(!in_array($product["id"], $productsAdd)) continue;
+        foreach ($product as $key => $value) {
+          echo "<li>".$key." : ".$value."</li>";
+        }
+      }
+    }
+
+    public function removeProducts() {
+      $productsIdsMain = $this->getProducts(__DIR__ . '/../config/products.xml')["IDs"];
+      $productsIdsTemporary = $this->getProducts(__DIR__ . '/../config/productsTemporary.xml')["IDs"];
+      // $productsMain = $this->getProducts(__DIR__ . '/../config/products.xml')["all"];
+      
+      $producsRemove = array_diff($productsIdsMain, $productsIdsTemporary);
+
+      if(empty($producsRemove)) {
+        echo "
+          <div class='container d-flex justify-content-center'>
+            <p>Nema niti jedan proizvod za izbrisati</p>
+          </div>
+        ";
+        return;
+      }
+
+      foreach ($producsRemove as $key => $productId) {
+        echo "<li> Id proizvoda: ".$productId."</li>";
+      }
+      
+      // foreach ($productsMain as $key => $product) {
+      //   if(!in_array($product["id"], $producsRemove)) continue;
+      //   foreach ($product as $key => $value) {
+      //     echo "<li>".$key." : ".$value."</li>";
+      //   }
+      // }
+    }
+
+    public function compareProducts() {
+      $productsMain = $this->getProducts(__DIR__ . '/../config/products.xml')["all"];
+      $productsTemporary = $this->getProducts(__DIR__ . '/../config/productsTemporary.xml')["all"];
+
+      $arrayOfChange = array();
+      
+      foreach ($productsMain as $key => $productMain) {
+        foreach ($productsTemporary as $key => $productTemporary) {
+          if($productMain["id"] === $productTemporary["id"]) {
+
+            foreach ($productMain as $name => $value) {
+              if($productMain[$name] !== $productTemporary[$name]) {
+                $exist = false;
+                $index = null;
+
+                foreach ($arrayOfChange as $i => $change) {
+                  if($change["nameOfProduct"] === $productMain["name"]){
+                    $exist = true;
+                    $index = $i;
+                    break;
+                  }
+                }
+
+                if($exist) {
+                  $arrayOfChange[$index]["keyOfProduct"][] = $name;
+                  $arrayOfChange[$index]["changeFrom"][] = $productMain[$name];
+                  $arrayOfChange[$index]["changeTo"][] = $productTemporary[$name];
+                  
+                }else {
+                  array_push($arrayOfChange,[
+                    "nameOfProduct" => $productMain["name"],
+                    "id" => $productMain["id"],
+                    "keyOfProduct" => [$name],
+                    "changeFrom" => [$productMain[$name]],
+                    "changeTo" => [$productTemporary[$name]],
+                  ]);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      foreach ($arrayOfChange as $key => $change) {
+        echo "<h5>".$change["nameOfProduct"]."</h5>";
+        // foreach ($change as $key => $value) {
+          foreach ($change["keyOfProduct"] as $key => $value) {
+            echo "<li>".$value." : ".$change["changeFrom"][$key]. " ➡ ".$change["changeTo"][$key]."</li>";
+          }
+        // }
+      }
+
     }
   }
 ?>

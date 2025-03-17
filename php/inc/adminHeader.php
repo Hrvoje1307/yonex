@@ -60,6 +60,9 @@ $user = new User();
                   <a class="nav-link active" aria-current="page" href="userDisplay.php">Korisnici</a>
                </li>
                <li class="nav-item">
+                  <a class="nav-link active" aria-current="page" href="dataSide.php">Izmjene</a>
+               </li>
+               <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="callFunction.php">Podatci</a>
                </li>
                <li class="nav-item">

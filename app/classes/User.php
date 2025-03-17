@@ -18,6 +18,28 @@ class User {
         $this->dotenv->load();
     }
 
+    public function findTableAndQuantityOfProduct($id) {
+        $tables = ["bags","balls","classicfilters","clothing","cords","rackets","shoes"];
+        
+        foreach ($tables as $key => $table) {
+            $sql = "SELECT quantity from $table WHERE id = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("s", $id);
+            $stmt->execute();
+
+            $data = array();
+
+            $result = $stmt->get_result();
+            if($result->num_rows > 0) {
+                while( $row = $result->fetch_assoc()) {
+                    $data[] = $row;
+                }
+                return ["table" => $table, "quantity" => $data[0]["quantity"]];
+            }
+
+         }
+    }
+
     public function getDataWithoutCondition($table) {
         $sql = "SELECT * FROM ".$table;
         $stmt = $this->conn->prepare($sql);
@@ -127,11 +149,20 @@ class User {
         $result = $stmt->get_result();
         $orderID = $result->fetch_assoc()['max_order_id']+1;
         $isSent = 0;
+
         foreach($productIDs as $key => $productID) {
             $sql = "INSERT INTO orders (order_id, product_id, user_id,quantity,fullName,email,phoneNumber,address,postcode,city, isSent) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("sssssssssss", $orderID, $productID, $_SESSION["user_id"],$productQuantities[$key],$fullName,$email, $phoneNumber, $address, $postcode,$town, $isSent);
             $stmt->execute();
+
+            $productInfo = $this->findTableAndQuantityOfProduct($productID);
+            $newQuantity = $productInfo["quantity"] - $productQuantities[$key];
+            $sql = "UPDATE ". $productInfo["table"] ." SET quantity = ? WHERE id=?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ss", $newQuantity, $productID);
+            $stmt->execute(); 
+            
         }
         
         $sql = "DELETE FROM cart WHERE user_id = ?";
@@ -877,26 +908,26 @@ class User {
     private function printCartCard($data,$quantity) {
         $code = "";
         $code = "
-            <div class='row card__products border border-1 rounded shadow-sm mb-5'>
-                <input type='hidden' name='product_id' value='".$data["id"]."' />
-                <div class='col-12 col-lg-3 d-flex justify-content-center'>
-                        <img class='img-thumbnail border-0' src='".$data['img_url']."' alt='".$data['description']."'>
+                <div class='row card__products border border-1 rounded shadow-sm mb-5'>
+                    <input type='hidden' name='product_id' value='".$data["id"]."' />
+                    <div class='col-12 col-lg-3 d-flex justify-content-center'>
+                            <img class='img-thumbnail border-0' src='".$data['img_url']."' alt='".$data['description']."'>
+                    </div>
+                    <div class='col-12 col-lg-4 my-5 ps-xl-0 ps-3'>
+                        <h1 class='fs-4 fw-bold'>".$data["name"]."</h1>
+                        <p class='fs-6 fw-semibold text-success m-0'>Dostupno</p>
+                    </div>
+                    <div class='col-12 col-lg-3 d-flex align-items-center justify-content-center gap-5'>
+                        <button name='increaseQuantity' class='change__quantity-btn btn btn-lightgrey fs-5 fw-bold'>+</button>
+                        <input name='quantity' class='mb-0 text-center border border-0 quantity__product' min='1' max='".$data["quantity"]."' value='".$quantity."'>
+                        <button name='decreaseQuantity' class='change__quantity-btn btn btn-lightgrey fs-5 px-3 fw-bold'>-</button>
+                    </div>
+                    <div class='col-12 col-lg-2 mt-5 d-flex flex-column align-items-lg-end align-items-start'>
+                        <p class=' fs-3 fw-semibold m-0'><span class='real__price'>".$data["price"]."</span>€</p>
+                        <p class='fs-5 m-0'><span>".$data["priceNOTAX"]."</span>€</p>
+                        <button type='submit' value='".$data["id"]."' name='remove_from_cart' class='btn btn-transparent text-danger text-decoration-underline px-0'>Izbriši</button>
+                    </div>
                 </div>
-                <div class='col-12 col-lg-4 my-5 ps-xl-0 ps-3'>
-                    <h1 class='fs-4 fw-bold'>".$data["name"]."</h1>
-                    <p class='fs-6 fw-semibold text-success m-0'>Dostupno</p>
-                </div>
-                <div class='col-12 col-lg-3 d-flex align-items-center justify-content-center gap-5'>
-                    <button name='increaseQuantity' class='change__quantity-btn btn btn-lightgrey fs-5 fw-bold'>+</button>
-                    <input name='quantity' class='mb-0 text-center border border-0 quantity__product' min='1' max='".$data["quantity"]."' value='".$quantity."'>
-                    <button name='decreaseQuantity' class='change__quantity-btn btn btn-lightgrey fs-5 px-3 fw-bold'>-</button>
-                </div>
-                <div class='col-12 col-lg-2 mt-5 d-flex flex-column align-items-lg-end align-items-start'>
-                    <p class=' fs-3 fw-semibold m-0'><span class='real__price'>".$data["price"]."</span>€</p>
-                    <p class='fs-5 m-0'><span>".$data["priceNOTAX"]."</span>€</p>
-                    <button name='remove_from_cart' class='btn btn-transparent text-danger text-decoration-underline px-0'>Izbriši</button>
-                </div>
-            </div>
         ";
 
         echo $code;
@@ -1008,8 +1039,6 @@ class User {
                     $quantity = isset($_POST["product_quantity"]) ? $_POST["product_quantity"] : 1;
                     if(isset($quantity) && isset($product_id)) {
                         if(!$this->isProductAlreadyAdded($product_id,"cart")) {
-                            var_dump($availableQuantity);
-                            var_dump($quantity);
                             if($quantity <= $availableQuantity) {
                                 $sql = "INSERT INTO cart (product_id,user_id,quantity) VALUES(?, ?, ?)";
                                 $stmt = $this->conn->prepare($sql);
@@ -1039,9 +1068,10 @@ class User {
         
                     }
                 }if(isset($_POST["remove_from_cart"])) {
+                    $removeProductId = isset($_POST["remove_from_cart"]) ? $_POST["remove_from_cart"] : NULL;
                     $sql = "DELETE FROM cart WHERE product_id = ? AND user_id =?";
                     $stmt = $this->conn->prepare($sql);
-                    $stmt->bind_param("ss",$product_id,$_SESSION["user_id"]);
+                    $stmt->bind_param("ss",$removeProductId,$_SESSION["user_id"]);
                     $stmt->execute();
                 }if(isset($_POST["remove_all_cart"])) {
                     $sql = "DELETE FROM cart WHERE user_id =?";
@@ -1853,7 +1883,6 @@ class User {
 
         foreach ($products as $key => $product_id) {
             $productData = $this->getDataFromEachProduct($product_id);
-            // var_dump($productData);
             echo "
                 <form method='post'>
                     <div class='card' style='width: 18rem;'>
@@ -1876,7 +1905,6 @@ class User {
                     </div>
                 </form>
             ";
-            // var_dump($product_id);
         }
     }
 

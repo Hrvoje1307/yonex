@@ -1,6 +1,6 @@
 <div class="container my-5 height__container">
   <?php $user->selectProductsFromCart(); ?>
-  <form method="post" action="">
+  <form method="post">
       <div class="d-flex justify-content-between align-items-center">
         <h1 class="fs-1 fw-bold text-dark">Košarica</h1>
         <button name="remove_all_cart" class="btn btn-transparent text-danger text-decoration-underline fw-bold fs-5">Izbriši sve</button>

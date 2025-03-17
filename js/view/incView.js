@@ -61,21 +61,24 @@ class Inc {
         page = +element;
       }
     });
-    if (this.#productCards.length < PRODUCTS_PER_PAGE && (page === 1 || page === null) && this.#pagesBtns) {
+    if (
+      this.#productCards.length < PRODUCTS_PER_PAGE &&
+      (page === 1 || page === null) &&
+      this.#pagesBtns
+    ) {
       this.#pagesBtns.style = "display:none";
     }
   }
 
   togglePasswordVisibility() {
-    console.log("RADI");
-
     this.#btnPassword.forEach((button, i) => {
       let passwordVisibility = false;
       button.addEventListener("click", () => {
         passwordVisibility = !passwordVisibility;
         console.log(passwordVisibility);
         if (passwordVisibility) {
-          this.#btnPassword[i].innerHTML = "<i class='bi bi-eye-slash-fill'></i>";
+          this.#btnPassword[i].innerHTML =
+            "<i class='bi bi-eye-slash-fill'></i>";
           this.#passwordForm[i].type = "text";
         } else {
           this.#btnPassword[i].innerHTML = "<i class='bi bi-eye-fill'></i>";
@@ -83,7 +86,6 @@ class Inc {
         }
       });
     });
-
   }
 }
 
