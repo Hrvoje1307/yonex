@@ -1430,8 +1430,30 @@
       $productsIdsMain = $this->getProducts(__DIR__ . '/../config/products.xml')["IDs"];
       $productsIdsTemporary = $this->getProducts(__DIR__ . '/../config/productsTemporary.xml')["IDs"];
       $productsTemporary = $this->getProducts(__DIR__ . '/../config/productsTemporary.xml')["all"];
+
       
-      $productsAdd = array_diff($productsIdsTemporary, $productsIdsMain);
+      $productsToAdd = array_diff($productsIdsTemporary, $productsIdsMain);
+
+      $productAdd = array();
+      foreach ($productsTemporary as $key => $product) {
+        if(!in_array($product["id"], $productsToAdd)) continue;
+        $i = null;
+        array_push($productAdd, ["position" => null, "id" => $product["id"],"name" => null, "img" => null, "imgSmall" => null, 
+        "price" => null, "priceNOTAX" => null, "desciption" => null, "category" => null, "quanitity" => null, "EAN" => null, "mainCategory" => null, "gender" => null, "size" => null]);
+        foreach ($productAdd as $index => $value) {
+          if($value["id"] === $product["id"]) $i = $index;
+        }
+        foreach ($product as $key => $value) {
+          $productAdd[$i][$key] = $value;
+        }
+      }
+
+      return $productAdd;
+    }
+
+    public function printAddProducts() {
+      $productsTemporary = $this->getProducts(__DIR__ . '/../config/productsTemporary.xml')["all"];
+      $productsAdd = $this->addProducts();
 
       if(empty($productsAdd)) {
         echo "
@@ -1442,22 +1464,29 @@
         return;
       }
       
-      foreach ($productsTemporary as $key => $product) {
-        if(!in_array($product["id"], $productsAdd)) continue;
-        foreach ($product as $key => $value) {
-          echo "<li>".$key." : ".$value."</li>";
+      // foreach ($productsTemporary as $key => $product) {
+      //   if(!in_array($product["id"], $productsAdd)) continue;
+        foreach ($productsAdd as $key => $product) {
+          var_dump($product); 
+          // echo "<li>".$key." : ".$product."</li>";
         }
-      }
+    //   }
     }
 
     public function removeProducts() {
       $productsIdsMain = $this->getProducts(__DIR__ . '/../config/products.xml')["IDs"];
       $productsIdsTemporary = $this->getProducts(__DIR__ . '/../config/productsTemporary.xml')["IDs"];
-      // $productsMain = $this->getProducts(__DIR__ . '/../config/products.xml')["all"];
       
-      $producsRemove = array_diff($productsIdsMain, $productsIdsTemporary);
+      $productsRemove = array_diff($productsIdsMain, $productsIdsTemporary);
 
-      if(empty($producsRemove)) {
+      
+      return $productsRemove;
+    }
+    
+    public function printRemovedProducts() {
+      $productsRemove = $this->removeProducts();
+
+      if(empty($productsRemove)) {
         echo "
           <div class='container d-flex justify-content-center'>
             <p>Nema niti jedan proizvod za izbrisati</p>
@@ -1466,16 +1495,9 @@
         return;
       }
 
-      foreach ($producsRemove as $key => $productId) {
+      foreach ($productsRemove as $key => $productId) {
         echo "<li> Id proizvoda: ".$productId."</li>";
       }
-      
-      // foreach ($productsMain as $key => $product) {
-      //   if(!in_array($product["id"], $producsRemove)) continue;
-      //   foreach ($product as $key => $value) {
-      //     echo "<li>".$key." : ".$value."</li>";
-      //   }
-      // }
     }
 
     public function compareProducts() {
@@ -1521,15 +1543,48 @@
         }
       }
 
+      return $arrayOfChange;
+
+      
+    }
+    
+    public function printComparedProducts() {
+      $arrayOfChange = $this->compareProducts();
       foreach ($arrayOfChange as $key => $change) {
         echo "<h5>".$change["nameOfProduct"]."</h5>";
-        // foreach ($change as $key => $value) {
-          foreach ($change["keyOfProduct"] as $key => $value) {
-            echo "<li>".$value." : ".$change["changeFrom"][$key]. " ➡ ".$change["changeTo"][$key]."</li>";
-          }
-        // }
+        foreach ($change["keyOfProduct"] as $key => $value) {
+          echo "<li>".$value." : ".$change["changeFrom"][$key]. " ➡ ".$change["changeTo"][$key]."</li>";
+        }
       }
+      
+    }
 
+    public function makeChangesXML($url = __DIR__ . '/../config/products.xml') {
+      $xmlPath = $url;
+      $dom = new DOMDocument();
+      $dom->load($xmlPath);
+
+      $addProducts = $this->addProducts();
+      var_dump($addProducts);
+      $removeProducts = $this->removeProducts();
+      $compareProducts = $this->compareProducts();
+
+      $products = $dom->getElementsByTagName("izdelek");
+      if($_SERVER["REQUEST_METHOD"] == "POST") {
+        if(isset($_POST["submitXMLChanges"])) {
+          foreach ($products as $key => $product) {
+            //adding products
+            
+
+            //removing products
+            $productId = $product->getElementsByTagName("izdelekID")->item(0)->nodeValue;
+            if(in_array($productId, $removeProducts)) $product->parentNode->removeChild($product);
+
+          }
+
+        }
+      }
+      $dom->save($xmlPath);
     }
   }
 ?>
