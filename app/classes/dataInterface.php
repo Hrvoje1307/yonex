@@ -1463,14 +1463,18 @@
         ";
         return;
       }
-      
-      // foreach ($productsTemporary as $key => $product) {
-      //   if(!in_array($product["id"], $productsAdd)) continue;
-        foreach ($productsAdd as $key => $product) {
-          var_dump($product); 
-          // echo "<li>".$key." : ".$product."</li>";
+
+      foreach ($productsAdd as $key => $product) {
+        $productLength = count($product);
+        $i = 0;
+        foreach ($product as $key => $value) {
+          echo "<li>".$key." : ".$value."</li>";
+          $i++;
+          if($i == $productLength) {
+            echo"---------------------------------------------------------------------<br>";
+          }
         }
-    //   }
+      }
     }
 
     public function removeProducts() {
@@ -1565,7 +1569,7 @@
       $dom->load($xmlPath);
 
       $addProducts = $this->addProducts();
-      var_dump($addProducts);
+      // var_dump($addProducts);
       $removeProducts = $this->removeProducts();
       $compareProducts = $this->compareProducts();
 
