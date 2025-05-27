@@ -40,6 +40,7 @@ class User {
          }
     }
 
+
     public function getDataWithoutCondition($table) {
         $sql = "SELECT * FROM ".$table;
         $stmt = $this->conn->prepare($sql);
@@ -70,19 +71,35 @@ class User {
         $data = $this->getCartData()[0];
         $cartArray = array();
         $orderData = ["id" => array(), "quantity" => array()];
+        $isCheaper = isset($_SESSION["discount"]);
+        $discount = ($_SESSION["discount"])/100 ?? null;
 
         foreach ($data as $key => $product) {
             $productData = $this->getDataFromEachProduct($product["product_id"]);
-            array_push($cartArray, [
-                "quantity" => $product["quantity"],
-                "price_data" => [
-                    "currency" => "eur",
-                    "unit_amount"=> $productData["price"]*100,
-                    "product_data"=> [
-                        "name"=>$productData["name"]
+            if(!$isCheaper) {
+                array_push($cartArray, [
+                    "quantity" => $product["quantity"],
+                    "price_data" => [
+                        "currency" => "eur",
+                        "unit_amount"=> $productData["price"]*100,
+                        "product_data"=> [
+                            "name"=>$productData["name"]
+                        ]
                     ]
-                ]
-            ]);
+                ]);
+            }else {
+                array_push($cartArray, [
+                    "quantity" => $product["quantity"],
+                    "price_data" => [
+                        "currency" => "eur",
+                        "unit_amount"=> round(($productData["price"]*100)*(1-$discount),2),
+                        "product_data"=> [
+                            "name"=>$productData["name"]
+                        ]
+                    ]
+                ]);
+
+            }
 
             array_push($orderData["id"],$product["product_id"]);
             array_push($orderData["quantity"],$product["quantity"]);
@@ -95,6 +112,7 @@ class User {
         $data = $this->getCartData()[1];
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["submitCheckout"]) && $data >= 1) {
+                var_dump("UČITASVA");   
                 header("Location: checkoutAddress.php");
                 // $this->checkout();
             }
@@ -906,8 +924,10 @@ class User {
     }
 
     private function printCartCard($data,$quantity) {
+        $isCheaper = $this->applyCuponCart()["isCheaper"] ?? [];
+        $discount = ($this->applyCuponCart()["discountAmount"] ?? null)/100;
         $code = "";
-        $code = "
+        $code .= "
                 <div class='row card__products border border-1 rounded shadow-sm mb-5'>
                     <input type='hidden' name='product_id' value='".$data["id"]."' />
                     <div class='col-12 col-lg-3 d-flex justify-content-center'>
@@ -922,9 +942,19 @@ class User {
                         <input name='quantity' class='mb-0 text-center border border-0 quantity__product' min='1' max='".$data["quantity"]."' value='".$quantity."'>
                         <button name='decreaseQuantity' class='change__quantity-btn btn btn-lightgrey fs-5 px-3 fw-bold'>-</button>
                     </div>
-                    <div class='col-12 col-lg-2 mt-5 d-flex flex-column align-items-lg-end align-items-start'>
-                        <p class=' fs-3 fw-semibold m-0'><span class='real__price'>".$data["price"]."</span>€</p>
-                        <p class='fs-5 m-0'><span>".$data["priceNOTAX"]."</span>€</p>
+                    <div class='col-12 col-lg-2 mt-5 d-flex flex-column align-items-lg-end align-items-start'>";
+        if(!$isCheaper){
+            $code .= "
+                            <p class=' fs-3 fw-semibold m-0'><span class='real__price'>".$data["price"]."</span>€</p>
+                            <p class='fs-5 m-0'><span>".$data["priceNOTAX"]."</span>€</p>
+            ";
+        }else {
+            $code .= "
+                            <p class=' fs-3 fw-semibold m-0'><s>".$data["price"]."</s>€</p>
+                            <p class=' fs-3 fw-semibold m-0'><span class='real__price'>".round($data["price"]*(1-$discount),2)."</span>€</p>
+            ";
+        } 
+        $code.="
                         <button type='submit' value='".$data["id"]."' name='remove_from_cart' class='btn btn-transparent text-danger text-decoration-underline px-0'>Izbriši</button>
                     </div>
                 </div>
@@ -1994,4 +2024,48 @@ class User {
             }
         }
     }
+
+    public function applyCuponCart() {
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $code= "";
+            if(isset($_POST["apply_cupon"])) {
+                $cuponName = strtoupper($_POST["cupon_name"]);
+                $sql = "SELECT * FROM cupons WHERE cuponName = ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("s", $cuponName);
+
+                $stmt->execute();
+
+                $result = $stmt->get_result();
+                if($result->num_rows == 1) {
+                    $cupon = $result->fetch_assoc();
+
+                    $_SESSION["discount"] = $cupon["cuponDiscount"];
+                    $_SESSION["cuponName"] = $cupon["cuponName"];
+                    $code .= "
+                        <div class='discount__code'>
+                            <p class='mb-0'>".$cupon["cuponName"]."</p>
+                            <button name='close_cupon' class='btn close__btn-x'><i class='bi bi-x'></i></button>
+                        </div>
+                    ";
+
+                    return ["discountAmount" => $cupon["cuponDiscount"], "isCheaper" => true, "code" => $code];
+                }else {
+                    unset($_SESSION["discount"], $_SESSION["cuponName"]);
+                    $code .= '<script type="text/javascript">
+                        window.onload = function () { alert("Nažalost taj kupon ne postoji."); } 
+                    </script>';
+
+                    return ["isCheaper" => false, "code" => $code];
+                }
+            }
+            
+            if(isset($_POST["close_cupon"])) {
+                $code = "";
+                return ["isCheaper" => false, "code" => $code];
+            }
+        }
+        return ["isCheaper" => isset($_SESSION["discount"]), "discountAmount" => $_SESSION["discount"] ?? null, "code" => ""];
+    }
+
 }

@@ -9,6 +9,13 @@
         <?php $user->changeChangeQuantity();?>
         <?php $user->displayProductsInCart();?>
       </div>
+      <div class="d-flex my-5 justify-content-between align-items-center">
+          <div class="input-group" style="width:30%">
+            <input type="text" name="cupon_name" class="form-control" placeholder="Vaš kupon" aria-label="Recipient's username" aria-describedby="basic-addon2">
+            <button type="submit" name="apply_cupon" class="input-group-text btn btn-success" id="basic-addon2">Dodaj kupon</button>
+          </div>
+          <?php echo $user->applyCuponCart()["code"];?>
+      </div>
       <div class="d-flex flex-column align-items-end">
         <div class="line__cart bg-secondary"></div>
         <div class="d-flex gap-5 align-items-start">

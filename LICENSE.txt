@@ -1,0 +1,15 @@
+Copyright (c) 2025 Hrvoje Čučković
+
+All rights reserved.
+
+This software is provided for **personal or educational use only**. 
+You may use, modify, and test the code for your own projects. 
+However, you are **not allowed** to:
+
+- Redistribute this code (free or paid)
+- Sell or sublicense this project
+- Claim ownership or authorship
+
+For commercial licensing, please contact: cuckovichrvoje@gmail.com
+
+Unauthorized commercial use may result in legal action.

@@ -1,51 +1,98 @@
-# Sports Equipment E-commerce Website
+# 🏸 Sports Equipment E-commerce Website
 
-## Overview
+A modern and responsive e-commerce platform for selling **badminton and tennis equipment**. Designed to provide users with a smooth and secure online shopping experience.
 
-This is a web-based platform for selling badminton and tennis equipment. The website aims to provide users with an easy and efficient way to purchase sports gear online.
+---
 
-## Features
+## ✨ Features
 
-- User-friendly interface
-- Detailed product descriptions
-- Secure payment gateway
-- Responsive design for mobile and desktop users
-- Easy navigation and search functionality
+- ✅ Clean and user-friendly interface
+- 🛍️ Product listing with images and detailed descriptions
+- 🔐 Login, registration, and secure session management
+- 📱 Responsive design (mobile, tablet, desktop)
+- 🔎 Search functionality and category filtering
+- 🛒 Shopping cart with quantity adjustment
+- ❤️ Wishlist (favorites) system
+- 👨‍💼 Admin dashboard for managing users and orders
 
-## Technologies Used
+---
 
-- Frontend: HTML, CSS, Bootstrap, JavaScript
-- Backend: PHP
-- Database: MySQL
+## 🛠️ Technologies Used
 
-## Installation
+- **Frontend:** HTML, CSS, Bootstrap, JavaScript
+- **Backend:** PHP (Object-Oriented Programming)
+- **Database:** MySQL
 
-Use the following steps to set up the project locally:
+---
 
-1. Clone the repository:
+## ⚙️ Installation
+
+1. **Clone the repository**:
 
    ```bash
    git clone https://github.com/Hrvoje1307/yonex
    ```
 
-2. Start your local server (e.g., using XAMPP, WAMP, or MAMP).
+2. **Start your local server** (XAMPP, WAMP, MAMP, etc.)
 
-3. Import the MySQL database file provided (`app/config/database.sql`) into your MySQL database.
-4. Import provided .env file into (`app/classes/`)
+3. **Import the database**:
 
-5. Update the database connection settings in the PHP files (`app/classes/.env`) with your database credentials.
+   - Locate `app/config/database.sql`
+   - Import it into your MySQL server via phpMyAdmin or CLI
 
-6. Open your web browser and navigate to the project directory.
+4. **Add environment config**:
 
-## Usage
+   - Place the `.env` file in `app/classes/`
+   - Inside `.env`, add your database credentials:
+     ```
+     DB_HOST=localhost
+     DB_NAME=your_db_name
+     DB_USER=your_username
+     DB_PASS=your_password
+     ```
 
-Follow these steps to use the website:
+5. **Access the site**:
+   - Open your browser and go to `http://localhost/yonex` (or the corresponding folder)
 
-1. Browse and search for badminton and tennis equipment.
-2. Add your products to favorite one
-3. Try to change quantity in cart
-4. And purchase something if you want 😊
+---
 
-## Contact
+## 🚀 Usage
 
-For more information or inquiries, feel free to contact me via email at cuckovichrvoje@gmail.com or through my LinkedIn profile [Hrvoje Čučković](https://www.linkedin.com/in/hrvoje-%C4%8Du%C4%8Dkovi%C4%87-061a1b211/).
+- Browse and search for badminton or tennis equipment
+- Add products to your favorites
+- Modify product quantities in the cart
+- Proceed to checkout (payment gateway ready for integration)
+
+---
+
+## 📂 File Structure Overview
+
+```
+/app
+  /classes          → PHP classes (DB connection, User, Product...)
+  /config           → DB SQL dump and config files
+/assets             → Images, CSS, JS
+/public             → Main entry (index.php, cart, product pages...)
+/README.md
+/LICENSE.txt
+```
+
+---
+
+## 📩 Contact
+
+For questions, feedback or licensing inquiries:
+
+- 📧 Email: [cuckovichrvoje@gmail.com](mailto:cuckovichrvoje@gmail.com)
+- 💼 LinkedIn: [Hrvoje Čučković](https://www.linkedin.com/in/hrvoje-%C4%8Du%C4%8Dkovi%C4%87-061a1b211/)
+
+---
+
+## 🛡️ License & Usage
+
+This project is licensed for **personal or educational use only**.  
+Commercial use, resale, or redistribution is **strictly prohibited**  
+without written permission from the author.
+
+To request commercial licensing, please contact:  
+📧 [cuckovichrvoje@gmail.com](mailto:cuckovichrvoje@gmail.com)

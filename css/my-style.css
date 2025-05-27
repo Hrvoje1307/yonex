@@ -5,6 +5,10 @@
   --black: #000;
   --yonex-blue: #0b50a1;
   --yonex-green: #1d9533;
+  --button-light-green: #8ace84bf;
+  --button-text-light-green: #14340f;
+  --danger-shadow: #f03e3ebf;
+  --success-shadow: #0ca678bf;
 }
 
 a:link,
@@ -173,11 +177,11 @@ a:visited {
 }
 
 .danger__shadow {
-  box-shadow: 0 0.125rem 0.25rem rgba(240, 62, 62, 0.75);
+  box-shadow: 0 0.125rem 0.25rem var(--danger-shadow);
 }
 
 .success__shadow {
-  box-shadow: 0 0.125rem 0.25rem rgba(12, 166, 120, 0.75);
+  box-shadow: 0 0.125rem 0.25rem var(--success-shadow);
 }
 
 table,
@@ -190,4 +194,29 @@ tr {
 
 .imgSingleOrder {
   height: 500px;
+}
+
+.discount__code {
+  background-color: var(--button-light-green);
+  padding: 0.3rem 0.6rem;
+  border-radius: 9px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--button-text-light-green);
+  font-weight: bold;
+}
+
+.discount__code p {
+  padding: 0;
+}
+
+.close__btn-x {
+  padding: 0;
+}
+
+.close__btn-x i {
+  font-size: 20px;
+  color: var(--button-text-light-green);
 }
