@@ -2029,9 +2029,6 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`user_id`, `name`, `surname`, `email`, `number`, `password`, `is_admin`, `address`, `postcode`, `town`, `created_at`, `reset_token_hash`, `reset_token_expires_at`) VALUES
-(18, 'Hrvoje', 'Čučković', 'cuckovichrvoje@gmail.com', '0957056320', '$2y$10$oGxga3iLlShPb90zn.U7Iui2cq51ZhzcEHdsQoWzDX1SD6txMWGAK', 1, 'Vilima Korajca 10', 10090, 'Zagreb', '2024-02-26', '9f4e3b02f30c79c8a9a206952e4ccfcf82876e3146b6c2d5170eee8570957973', '2024-05-24 18:36:43'),
-(27, 'Drazen', 'Cuckovic', 'drazencuckovic6@gmail.com', '0992574744', '$2y$10$JCAESQEQKrRsptFV6Z9ra.as7VSkynxnYhP3.QiXr7/4G9aernCzi', 1, '', NULL, '', '2024-06-11', NULL, NULL);
 
 -- --------------------------------------------------------
 
