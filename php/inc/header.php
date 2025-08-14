@@ -29,7 +29,7 @@ $user -> searchResults();
    <div class="container-fluid bg-primary sticky-top">
       <div class="d-flex justify-content-center p-2">
          <form action="userDisplay.php" method="post">
-            <button type="submit" class="btn btn-primary border border-rounded">Admin</button>
+            <button type="submit" class="btn btn-primary border border-rounded">Admin sucelje</button>
          </form>
       </div>
    </div>
