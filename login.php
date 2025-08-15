@@ -11,9 +11,9 @@ if($user->is_logged()) {
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    $email = $_POST['email'];
    $password = $_POST['password'];
-   
+   $remebered = isset($_POST["rememberMe"]);
 
-   $isLogged = $user->login($email, $password);
+   $isLogged = $user->login($email, $password, $remebered);
 
    if($isLogged === "admin") {
       header("Location: userDisplay.php");
@@ -73,8 +73,12 @@ require_once("php/inc/header.php") ?>
                            <div class="input-group-text btn__password" id="btnGroupAddon"><i class="bi bi-eye-fill"></i></div>
                         </div>
                      </div>
-                     <div class="mb-3">
+                     <div class="mb-3 d-flex justify-content-between">
                         <a href="forgotten-password.php" class="fw-bolder text-secondary text-decoration-none">Zaboravili ste lozinku?</a>
+                        <div class="remeber--me d-flex justify-content-center gap-1">
+                           <label for="rememberMe" class="fw-bolder text-secondary">Zapamti me</label>
+                           <input type="checkbox" name="rememberMe" id="rememberMe">
+                        </div>
                      </div>
                      <button type="submit" class="btn btn-dark">Nataviti</button>
                   </form>  

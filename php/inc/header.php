@@ -6,6 +6,7 @@ require_once("app/classes/User.php");
 $user = new User();
 
 $user -> searchResults();
+$user->autoLogin();
 ?>
 
 <!DOCTYPE html>

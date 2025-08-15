@@ -210,7 +210,7 @@ class User {
     }
 
     // prijava
-    public function login($email, $password) {
+    public function login($email, $password, $remebered) {
         $sql = "SELECT user_id, password,name, is_admin FROM users WHERE email = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $email);
@@ -224,6 +224,16 @@ class User {
             if (password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION["name"] = $user["name"];
+
+                if($remebered) {
+                    $token = bin2hex(random_bytes(16));
+                    $sql = "UPDATE users SET remember_token = ? WHERE user_id = ?";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->bind_param("si", $token, $user['user_id']);
+                    $stmt->execute();
+
+                    setcookie("remember_token", $token, time() + (86400 * 30), "/", "", false, true);
+                }
                 if($user["is_admin"] == "1") {
                     return "admin";
                 }else {
@@ -233,6 +243,24 @@ class User {
         }
 
         return false;
+    }
+
+    public function autoLogin() {
+        if(!isset($_SESSION["user_id"]) && isset($_COOKIE["remember_token"])) {
+            $token = $_COOKIE["remember_token"];
+
+            $sql = "SELECT user_id, name FROM users WHERE remember_token = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("s", $token);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($result->num_rows === 1) {
+                $user = $result->fetch_assoc();
+                $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['name'] = $user['name'];
+            }
+        }
     }
 
     public function fillData($userId) {
@@ -423,6 +451,11 @@ class User {
 
     // odjava
     public function logout() {
+        setcookie("remember_token", "", time() - 3600, "/");
+        $sql="UPDATE users SET remember_token = NULL WHERE user_id=?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("s", $_SESSION["user_id"]);
+        $stmt->execute();
         unset($_SESSION['user_id']);
     }
 
