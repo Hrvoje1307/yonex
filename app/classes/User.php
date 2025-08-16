@@ -456,7 +456,7 @@ class User {
     // odjava
     public function logout() {
         setcookie("remember_token", "", time() - 3600, "/");
-        $sql="DELETE tokens WHERE user_id=? AND remember_token=?";
+        $sql="DELETE FROM tokens WHERE user_id=? AND remembered_token=?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("ss", $_SESSION["user_id"], $_SESSION["current_token"]);
         $stmt->execute();
