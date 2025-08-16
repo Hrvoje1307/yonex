@@ -227,9 +227,10 @@ class User {
 
                 if($remebered) {
                     $token = bin2hex(random_bytes(16));
+                    $_SESSION["current_token"] = $token;
                     $sql = "INSERT tokens (user_id, remembered_token) VALUES (?,?)";
                     $stmt = $this->conn->prepare($sql);
-                    $stmt->bind_param("si", $user['user_id'],$token);
+                    $stmt->bind_param("is", $user['user_id'],$token);
                     $stmt->execute();
 
                     setcookie("remember_token", $token, time() + (86400 * 30), "/", "", false, true);
@@ -455,11 +456,12 @@ class User {
     // odjava
     public function logout() {
         setcookie("remember_token", "", time() - 3600, "/");
-        $sql="UPDATE users SET remember_token = NULL WHERE user_id=?";
+        $sql="DELETE tokens WHERE user_id=? AND remember_token=?";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bind_param("s", $_SESSION["user_id"]);
+        $stmt->bind_param("ss", $_SESSION["user_id"], $_SESSION["current_token"]);
         $stmt->execute();
         unset($_SESSION['user_id']);
+        unset($_SESSION['current_token']);
     }
 
     // provjera postojanosti maila
