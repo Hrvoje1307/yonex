@@ -1569,7 +1569,6 @@
       $dom->load($xmlPath);
 
       $addProducts = $this->addProducts();
-      // var_dump($addProducts);
       $removeProducts = $this->removeProducts();
       $compareProducts = $this->compareProducts();
 

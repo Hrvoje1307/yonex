@@ -14,7 +14,9 @@
             <input type="text" name="cupon_name" class="form-control" placeholder="Vaš kupon" aria-label="Recipient's username" aria-describedby="basic-addon2">
             <button type="submit" name="apply_cupon" class="input-group-text btn btn-success" id="basic-addon2">Dodaj kupon</button>
           </div>
-          <?php echo $user->applyCuponCart()["code"];?>
+          <?php 
+          if(isset($_SESSION["cuponName"])) echo $user->printCuponCard($_SESSION["cuponName"]);
+?>
       </div>
       <div class="d-flex flex-column align-items-end">
         <div class="line__cart bg-secondary"></div>

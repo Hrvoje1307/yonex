@@ -8,8 +8,6 @@
   $userId = $_SESSION["user_id"];
 
   $user->submitAddressCheckout();
-
-  var_dump($user->selectProductsFromCart());
 ?>
 
 <div class="container my-5">

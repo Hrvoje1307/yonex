@@ -92,7 +92,7 @@ class User {
                     "quantity" => $product["quantity"],
                     "price_data" => [
                         "currency" => "eur",
-                        "unit_amount"=> round(($productData["price"]*100)*(1-$discount),2),
+                        "unit_amount"=> intval(round(($productData["price"]*100)*(1-$discount))),
                         "product_data"=> [
                             "name"=>$productData["name"]
                         ]
@@ -112,7 +112,6 @@ class User {
         $data = $this->getCartData()[1];
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["submitCheckout"]) && $data >= 1) {
-                var_dump("UČITASVA");   
                 header("Location: checkoutAddress.php");
                 // $this->checkout();
             }
@@ -2063,6 +2062,15 @@ class User {
         }
     }
 
+    public function printCuponCard($name) {
+        return "
+           <div class='discount__code'>
+                            <p class='mb-0'>".$name."</p>
+                            <button name='close_cupon' class='btn close__btn-x'><i class='bi bi-x'></i></button>
+                        </div>
+        ";
+    }
+
     public function applyCuponCart() {
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $code= "";
@@ -2080,14 +2088,9 @@ class User {
 
                     $_SESSION["discount"] = $cupon["cuponDiscount"];
                     $_SESSION["cuponName"] = $cupon["cuponName"];
-                    $code .= "
-                        <div class='discount__code'>
-                            <p class='mb-0'>".$cupon["cuponName"]."</p>
-                            <button name='close_cupon' class='btn close__btn-x'><i class='bi bi-x'></i></button>
-                        </div>
-                    ";
+                    // $code .= $this->printCuponCard($cupon["cuponName"]);
 
-                    return ["discountAmount" => $cupon["cuponDiscount"], "isCheaper" => true, "code" => $code];
+                    return ["discountAmount" => $cupon["cuponDiscount"], "isCheaper" => true];
                 }else {
                     unset($_SESSION["discount"], $_SESSION["cuponName"]);
                     $code .= '<script type="text/javascript">
@@ -2099,7 +2102,8 @@ class User {
             }
             
             if(isset($_POST["close_cupon"])) {
-                $code = "";
+                unset($_SESSION["cuponName"]);
+                $code .= "";
                 return ["isCheaper" => false, "code" => $code];
             }
         }
