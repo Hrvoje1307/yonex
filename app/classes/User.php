@@ -227,9 +227,9 @@ class User {
 
                 if($remebered) {
                     $token = bin2hex(random_bytes(16));
-                    $sql = "UPDATE users SET remember_token = ? WHERE user_id = ?";
+                    $sql = "INSERT tokens (user_id, remembered_token) VALUES (?,?)";
                     $stmt = $this->conn->prepare($sql);
-                    $stmt->bind_param("si", $token, $user['user_id']);
+                    $stmt->bind_param("si", $user['user_id'],$token);
                     $stmt->execute();
 
                     setcookie("remember_token", $token, time() + (86400 * 30), "/", "", false, true);
@@ -249,7 +249,10 @@ class User {
         if(!isset($_SESSION["user_id"]) && isset($_COOKIE["remember_token"])) {
             $token = $_COOKIE["remember_token"];
 
-            $sql = "SELECT user_id, name FROM users WHERE remember_token = ?";
+            $sql = "SELECT u.user_id, u.name 
+                FROM users u 
+                JOIN tokens t ON u.user_id = t.user_id
+                WHERE t.remembered_token = ?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("s", $token);
             $stmt->execute();
