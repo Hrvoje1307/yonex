@@ -2063,12 +2063,17 @@ class User {
     }
 
     public function printCuponCard($name) {
-        return "
-           <div class='discount__code'>
-                            <p class='mb-0'>".$name."</p>
-                            <button name='close_cupon' class='btn close__btn-x'><i class='bi bi-x'></i></button>
-                        </div>
-        ";
+           return "
+            <form method='POST' style='display:inline;'>
+                <div class='discount__code'>
+                        <p class='mb-0'>".$name."</p>
+                        <input type='hidden' name='cuponName' value='".$name."'>
+                        <button type='submit' name='close_cupon' class='btn close__btn-x'>
+                            <i class='bi bi-x'></i>
+                        </button>
+                </div>
+            </form>
+            ";
     }
 
     public function applyCuponCart() {
@@ -2108,6 +2113,56 @@ class User {
             }
         }
         return ["isCheaper" => isset($_SESSION["discount"]), "discountAmount" => $_SESSION["discount"] ?? null, "code" => ""];
+    }
+
+    public function printAvailableCupons() {
+        $sql = "SELECT * from cupons";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute();
+
+        $results = $stmt->get_result();
+
+        $data = array();
+        while($row = $results->fetch_assoc()) {
+            $data[] = $row["cuponName"];
+        }
+
+        foreach ($data as $key => $name) {
+            echo $this->printCuponCard($name);
+        }
+    }
+
+    public function manageCupons() {
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            if(isset($_POST["addNewCupon"])) {
+                $cuponName = isset($_POST["cuponName"]) ? strtoupper($_POST["cuponName"]) : null;
+                $cuponValue = isset($_POST["cuponValue"]) ? $_POST["cuponValue"] : null;
+
+                $sql ="Select * from cupons WHERE cuponName = ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("s", $cuponName);
+                $stmt->execute();
+
+                $results = $stmt->get_result();
+
+                if($results->num_rows < 1 && $cuponName && $cuponValue) {
+                    $sql = "INSERT into cupons (cuponName, cuponDiscount) VALUES (?,?)";
+                    $stmt = $this->conn->prepare($sql);
+                    $stmt->bind_param("ss", $cuponName, $cuponValue);
+                    $stmt->execute();
+                }else {
+                    echo "Vec postoji kupon s tim imenom";
+                }
+                
+            }
+             if(isset($_POST["close_cupon"])) {
+                $cuponName = $_POST["cuponName"];
+                $sql = "DELETE from cupons WHERE cuponName=?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("s", $cuponName);
+                $stmt->execute();
+            }
+        }
     }
 
 }
