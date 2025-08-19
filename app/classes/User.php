@@ -368,7 +368,7 @@ class User {
                     $_SESSION["message"]["text"]="Poruku nije moguće poslati jer {$mail->ErrorInfo}";
                 }
                 $_SESSION["message"]["type"]="success";
-                $_SESSION["message"]["text"]="Poveznica je uspijesno poslana {$mail->ErrorInfo}";
+                $_SESSION["message"]["text"]="Poveznica je uspijesno poslana";
             }
         }
     }
@@ -376,7 +376,7 @@ class User {
     private function smtpServer() {
         $mail = new PHPMailer(true);
     
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
         $mail->isSMTP();
         $mail->SMTPAuth = true;
     
@@ -386,8 +386,8 @@ class User {
         $mail->Username=$_ENV["MAIL_USERNAME"];
         $mail->Password=$_ENV["MAIL_PASSWORD"];
 
-        $mail->SMTPDebug = 2;
-        $mail->Debugoutput = 'html';
+        // $mail->SMTPDebug = 2;
+        // $mail->Debugoutput = 'html';
 
         return $mail;
     }
