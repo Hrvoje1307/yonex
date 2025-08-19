@@ -353,14 +353,14 @@ class User {
                $mail->addReplyTo("noreply@hdmshop.eu", "HDM Shop");
                $mail->addAddress($email);
                $mail->Subject = "Resetiranje lozinke";
-            //    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' 
-            //             || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-            //     $domain = $_SERVER['HTTP_HOST'];
-            //     $baseUrl = $protocol . $domain . "/yonex";
+               $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' 
+                        || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+                $domain = $_SERVER['HTTP_HOST'];
+                $baseUrl = $protocol . $domain . "/yonex";
 
-            //     $link = $baseUrl . "/reset-password.php?token=$token";
-            //     $mail->Body = "Kliknite na sljedeću poveznicu za resetiranje lozinke: $link";
-                $mail->Body = "Ovo je doslo";
+                $link = $baseUrl . "/reset-password.php?token=$token";
+                $mail->Body = "Kliknite na sljedeću poveznicu za resetiranje lozinke: $link";
+                // $mail->Body = "Ovo je doslo";
                 try{
                     $mail->send();
                 }catch(Exception $e) {
@@ -376,7 +376,7 @@ class User {
     private function smtpServer() {
         $mail = new PHPMailer(true);
     
-        $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
         $mail->isSMTP();
         $mail->SMTPAuth = true;
     
@@ -386,8 +386,8 @@ class User {
         $mail->Username=$_ENV["MAIL_USERNAME"];
         $mail->Password=$_ENV["MAIL_PASSWORD"];
 
-        $mail->SMTPDebug = 2;
-        $mail->Debugoutput = 'html';
+        // $mail->SMTPDebug = 2;
+        // $mail->Debugoutput = 'html';
 
         return $mail;
     }
