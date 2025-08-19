@@ -349,32 +349,34 @@ class User {
 
             if($this->conn->affected_rows) {
                $mail = $this->smtpServer();
-               $mail->setFrom("noreplay@hdmshop.eu");
+               $mail->setFrom("noreply@hdmshop.eu", "HDM Shop");
+               $mail->addReplyTo("noreply@hdmshop.eu", "HDM Shop");
                $mail->addAddress($email);
                $mail->Subject = "Resetiranje lozinke";
-               $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' 
-                        || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-                $domain = $_SERVER['HTTP_HOST'];
-                $baseUrl = $protocol . $domain . "/yonex";
+            //    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' 
+            //             || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+            //     $domain = $_SERVER['HTTP_HOST'];
+            //     $baseUrl = $protocol . $domain . "/yonex";
 
-                $link = $baseUrl . "/reset-password.php?token=$token";
-                $mail->Body = "Kliknite na sljedeću poveznicu za resetiranje lozinke: $link";
-               try{
-                $mail->send();
-               }catch(Exception $e) {
+            //     $link = $baseUrl . "/reset-password.php?token=$token";
+            //     $mail->Body = "Kliknite na sljedeću poveznicu za resetiranje lozinke: $link";
+                $mail->Body = "Ovo je doslo";
+                try{
+                    $mail->send();
+                }catch(Exception $e) {
                     $_SESSION["message"]["type"]="danger";
                     $_SESSION["message"]["text"]="Poruku nije moguće poslati jer {$mail->ErrorInfo}";
-               }
+                }
+                $_SESSION["message"]["type"]="success";
+                $_SESSION["message"]["text"]="Poveznica je uspijesno poslana {$mail->ErrorInfo}";
             }
-            $_SESSION["message"]["type"]="success";
-            $_SESSION["message"]["text"]="Poveznica je uspijesno poslana";
         }
     }
 
     private function smtpServer() {
         $mail = new PHPMailer(true);
     
-        // $mail->SMTPDebug = SMTP::DEBUG_SERVER;
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER;
         $mail->isSMTP();
         $mail->SMTPAuth = true;
     
@@ -383,6 +385,10 @@ class User {
         $mail->Port = $_ENV["MAIL_PORT"];
         $mail->Username=$_ENV["MAIL_USERNAME"];
         $mail->Password=$_ENV["MAIL_PASSWORD"];
+
+        $mail->SMTPDebug = 2;
+        $mail->Debugoutput = 'html';
+
         return $mail;
     }
 
