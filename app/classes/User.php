@@ -381,7 +381,7 @@ class User {
         $mail->SMTPAuth = true;
     
         $mail->Host = $_ENV["MAIL_HOST"];
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port = $_ENV["MAIL_PORT"];
         $mail->Username=$_ENV["MAIL_USERNAME"];
         $mail->Password=$_ENV["MAIL_PASSWORD"];
