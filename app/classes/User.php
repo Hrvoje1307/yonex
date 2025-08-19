@@ -113,7 +113,6 @@ class User {
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["submitCheckout"]) && $data >= 1) {
                 header("Location: checkoutAddress.php");
-                // $this->checkout();
             }
         }
     }
@@ -350,10 +349,16 @@ class User {
 
             if($this->conn->affected_rows) {
                $mail = $this->smtpServer();
-               $mail->setFrom("noreplay@gmail.com");
+               $mail->setFrom("noreplay@hdmshop.eu");
                $mail->addAddress($email);
                $mail->Subject = "Resetiranje lozinke";
-               $mail->Body ="Kliknite http://localhost/yonex/reset-password.php?token=$token za resetiranje lozinke";
+               $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' 
+                        || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+                $domain = $_SERVER['HTTP_HOST'];
+                $baseUrl = $protocol . $domain . "/yonex";
+
+                $link = $baseUrl . "/reset-password.php?token=$token";
+                $mail->Body = "Kliknite na sljedeću poveznicu za resetiranje lozinke: $link";
                try{
                 $mail->send();
                }catch(Exception $e) {
@@ -374,7 +379,7 @@ class User {
         $mail->SMTPAuth = true;
     
         $mail->Host = $_ENV["MAIL_HOST"];
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
         $mail->Port = $_ENV["MAIL_PORT"];
         $mail->Username=$_ENV["MAIL_USERNAME"];
         $mail->Password=$_ENV["MAIL_PASSWORD"];
