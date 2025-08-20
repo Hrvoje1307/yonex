@@ -8,7 +8,6 @@
     $user->updateCart();
     $user->submitCheckout();
     require_once("cart-content.php");
-    var_dump($_SESSION);
     
     require_once("php/inc/footer.php");
     ob_end_flush();

@@ -72,7 +72,7 @@ class User {
         $cartArray = array();
         $orderData = ["id" => array(), "quantity" => array()];
         $isCheaper = isset($_SESSION["discount"]);
-        $discount = ($_SESSION["discount"])/100 ?? null;
+        $discount = isset($_SESSION["discount"]) ? ($_SESSION["discount"])/100 : null;
 
         foreach ($data as $key => $product) {
             $productData = $this->getDataFromEachProduct($product["product_id"]);
@@ -112,6 +112,7 @@ class User {
         $data = $this->getCartData()[1];
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             if(isset($_POST["submitCheckout"]) && $data >= 1) {
+                echo"RADI";
                 header("Location: checkoutAddress.php");
             }
         }
@@ -173,18 +174,23 @@ class User {
             $stmt->execute();
 
             $productInfo = $this->findTableAndQuantityOfProduct($productID);
+            $productTable = $productInfo["table"];
             $newQuantity = $productInfo["quantity"] - $productQuantities[$key];
-            $sql = "UPDATE ". $productInfo["table"] ." SET quantity = ? WHERE id=?";
+            $sql = "UPDATE ". $productTable ." SET quantity = ? WHERE id=?";
             $stmt = $this->conn->prepare($sql);
             $stmt->bind_param("ss", $newQuantity, $productID);
             $stmt->execute(); 
+
+            $productTable = $productTable === "classicfilters" ? "classicFilters" : $productTable; 
             
         }
         
         $sql = "DELETE FROM cart WHERE user_id = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $_SESSION["user_id"]);
-        $stmt->execute();  
+        $stmt->execute(); 
+        
+        unset($_SESSION["cuponName"]);
     }
 
     // registracija

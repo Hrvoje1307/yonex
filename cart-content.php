@@ -17,6 +17,9 @@
           <?php 
           if(isset($_SESSION["cuponName"])) echo $user->printCuponCard($_SESSION["cuponName"]);
 ?>
+    </form>
+  <form method="post">
+
       </div>
       <div class="d-flex flex-column align-items-end">
         <div class="line__cart bg-secondary"></div>
