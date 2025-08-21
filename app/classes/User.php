@@ -182,7 +182,9 @@ class User {
             $stmt->execute(); 
 
             $productTable = $productTable === "classicfilters" ? "classicFilters" : $productTable; 
-            
+            $this->changeJsonQuantity( __DIR__. "/../config/prijevod.json",$productTable,$productID,$newQuantity);
+            $this->changeJsonQuantity( __DIR__. "/../config/productsMy.json",$productTable,$productID,$newQuantity);
+            $this->changeXmlQuantity( __DIR__. "/../config/products.xml",$productID,$newQuantity);
         }
         
         $sql = "DELETE FROM cart WHERE user_id = ?";
@@ -191,6 +193,43 @@ class User {
         $stmt->execute(); 
         
         unset($_SESSION["cuponName"]);
+        unset($_SESSION["discount"]);
+    }
+
+    public function changeJsonQuantity($url, $productTable,$productId, $newQuantity) {
+        $data = json_decode(file_get_contents($url), true);
+        if(!$data) return;
+        foreach ($data[$productTable] as $key => &$product) {
+            if((string)$product["ID"] === (string)$productId) {
+                $product["quantity"] = (string)$newQuantity;
+            }
+        }
+
+        // var_dump($data[$productTable]);
+
+        file_put_contents($url,json_encode($data,JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+        return true;
+    }
+
+    public function changeXmlQuantity($url, $productId, $newQuantity) {
+        $xml = simplexml_load_file($url);
+
+        if(!$xml) return;
+
+        foreach ($xml->izdelki->izdelek as $key => $product) {
+            if((string)$product->izdelekID === (string)$productId) {
+                $product->tocnaZaloga = $newQuantity;
+
+                if (isset($product->dodatniAtributi->xml_zaloga)) {
+                    $product->dodatniAtributi->xml_zaloga = $newQuantity;
+                }
+            }
+        }
+
+        $xml->asXML($url);
+
+        return true;
     }
 
     // registracija

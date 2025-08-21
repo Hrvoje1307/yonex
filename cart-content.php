@@ -1,5 +1,5 @@
 <div class="container my-5 height__container">
-  <?php $user->selectProductsFromCart(); ?>
+  <?php $user->selectProductsFromCart();?>
   <form method="post">
       <div class="d-flex justify-content-between align-items-center">
         <h1 class="fs-1 fw-bold text-dark">Košarica</h1>
