@@ -59,12 +59,20 @@ class User {
     
     public function checkout() {
         \Stripe\Stripe::setApiKey($_ENV["STRIPE_KEY"]);
+
+        // Detect if running locally or on production
+        $domain = ($_SERVER['HTTP_HOST'] === 'localhost') 
+            ? "http://localhost/yonex" 
+            : "https://hdmshop.eu";
+
         $checkout_session = \Stripe\Checkout\Session::create([
             "mode" => "payment",
-            "success_url" => "http://localhost/yonex/successPage.php",
+            "success_url" => $domain . "/successPage.php",
             "line_items" => $this->selectProductsFromCart()["cartArray"],
         ]);
-        header("Location:" . $checkout_session->url);
+
+        header("Location: " . $checkout_session->url);
+        exit;
     }
 
     public function selectProductsFromCart() {
