@@ -60,7 +60,13 @@ $user = new User();
                   <a class="nav-link " aria-current="page" href="userDisplay.php">Korisnici</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link " aria-current="page" href="dataSide.php">Izmjene</a>
+                  <a class="nav-link " aria-current="page" href="addXml.php">Dodaj xml</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link " aria-current="page" href="removeXml.php">Izbrisi xml</a>
+               </li>
+               <li class="nav-item">
+                  <a class="nav-link " aria-current="page" href="synchronizeXml.php">Izmijeni xml</a>
                </li>
                <li class="nav-item">
                   <a class="nav-link " aria-current="page" href="callFunction.php">Podatci</a>

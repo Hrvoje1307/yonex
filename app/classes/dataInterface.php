@@ -3,10 +3,13 @@
 
   use Orhanerday\OpenAi\OpenAi;
 
+  
+
   class Model {
     protected $conn;
     public $dotenv;
     protected $user;
+    public $temp_xml_url=__DIR__ . '/../config/productsTemporary.xml';
 
 
     public function __construct(User $user) {
@@ -1506,7 +1509,7 @@
 
     public function compareProducts() {
       $productsMain = $this->getProducts(__DIR__ . '/../config/products.xml')["all"];
-      $productsTemporary = $this->getProducts(__DIR__ . '/../config/productsTemporary.xml')["all"];
+      $productsTemporary = $this->getProducts($this->temp_xml_url)["all"];
 
       $arrayOfChange = array();
       

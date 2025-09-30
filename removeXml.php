@@ -12,28 +12,14 @@
   <div class="d-flex justify-content-between">
     <h1>Izmjene u XML</h1>
     <form method="post">
-      <button type="submit" name="submitXMLChanges" class="btn btn-primary">Promijeni</button>
+      <button type="submit" name="removeXMLChanges" class="btn btn-primary">Izbrisi</button>
     </form>
   </div>
-  <hr>
-
-  <h3>Treba dodati</h3>
-  <ul>
-    <?php  $data->printAddProducts(); ?>
-  </ul>
-
   <hr>
   
   <h3>Treba izbrisati</h3>
   <ul>
     <?php $data->printRemovedProducts();?>
-  </ul>
-  
-  <hr>
-  
-  <h3>Treba promijeniti</h3>
-  <ul>
-    <?php $data->printComparedProducts();?>
   </ul>
   
 </div>
