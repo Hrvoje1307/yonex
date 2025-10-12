@@ -38,10 +38,6 @@ $user->autoLogin();
 <div class="container-lg">
    <div class="row my-3">
       <div class="col-12 d-flex gap-2 justify-content-end">
-         <a href="tel:+385957056320" class="d-flex align-items-center gap-2 text-decoration-none text-secondary">
-            <i class="bi bi-telephone-fill text-secondary"></i>
-            <p class="my-0 d-none d-md-block">+385957056320</p>
-         </a>
          <div class="d-flex align-items-center gap-2">
             <div class="dropdown">
                <button class="btn p-0 dropdown-toggle d-flex gap-2 align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
