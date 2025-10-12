@@ -1099,7 +1099,7 @@ class Installer
     /**
      * Verifies the signature of the downloaded phar
      *
-     * @param string $version The composer versione
+     * @param string $version The composer version
      * @param string $signature The downloaded digital signature
      * @param string $file The temp phar file
      *
