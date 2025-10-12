@@ -220,7 +220,7 @@ function getOptValue($opt, $argv, $default)
 /**
  * Checks that user-supplied params are valid
  *
- * @param mixed $installDir The required istallation directory
+ * @param mixed $installDir The required installation directory
  * @param mixed $version The required composer version to install
  * @param mixed $cafile Certificate Authority file
  *
