@@ -240,7 +240,12 @@ class User {
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         $headers .= "From: cuckovichrvoje@hdmshop.eu" . "\r\n"; 
 
-        mail("cuckovichrvoje@gmail.com", "Nova narudzba", $mailCode, $headers);
+        $to = ["cuckovichrvoje@gmail.com", "drazencuckovic6@gmail.com"];
+
+        foreach ($to as $key => $user) {
+            mail($to, "Nova narudzba", $mailCode, $headers);
+        }
+
 
         unset($_SESSION["cuponName"]);
         unset($_SESSION["discount"]);
