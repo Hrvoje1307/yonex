@@ -18,12 +18,6 @@ class User {
         $this->dotenv->load();
     }
 
-    public function test() {
-        $result = mail("cuckovichrvoje@gmail.com", "Test", "test");
-
-        echo $result;
-    }
-
     public function findTableAndQuantityOfProduct($id) {
         $tables = ["bags","balls","classicfilters","clothing","cords","rackets","shoes"];
         
@@ -181,6 +175,26 @@ class User {
         $orderID = $result->fetch_assoc()['max_order_id']+1;
         $isSent = 0;
 
+        $mailCode = "";
+
+        $mailCode .= "<table class='table'>
+                <thead>
+                    <tr>
+                    <th scope='col'>#</th>
+                    <th scope='col'>Narudžba</th>
+                    <th scope='col'>Proizvod (id) - količina</th>
+                    <th scope='col'>Puno ime</th>
+                    <th scope='col'>Email</th>
+                    <th scope='col'>Mobitel</th>
+                    <th scope='col'>Adresa</th>
+                    <th scope='col'>Postcode</th>
+                    <th scope='col'>Grad</th>
+                    </tr>
+                </thead>
+                <tbody>";
+                   
+              
+
         foreach($productIDs as $key => $productID) {
             $sql = "INSERT INTO orders (order_id, product_id, user_id,quantity,fullName,email,phoneNumber,address,postcode,city, isSent) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
             $stmt = $this->conn->prepare($sql);
@@ -199,14 +213,31 @@ class User {
             $this->changeJsonQuantity( __DIR__. "/../config/prijevod.json",$productTable,$productID,$newQuantity);
             $this->changeJsonQuantity( __DIR__. "/../config/productsMy.json",$productTable,$productID,$newQuantity);
             $this->changeXmlQuantity( __DIR__. "/../config/products.xml",$productID,$newQuantity);
+            $mailCode .="
+                 <tr>
+                    <th scope='row'>$key</th>
+                    <td>$orderID</td>
+                    <td>$productID ($productQuantities[$key])</td>
+                    <td>$fullName</td>
+                    <td>$email</td>
+                    <td>$phoneNumber</td>
+                    <td>$address</td>
+                    <td>$postcode</td>
+                    <td>$town</td>
+                </tr>
+            ";
         }
+
+        $mailCode .= "  </tbody>
+            </table>";
         
         $sql = "DELETE FROM cart WHERE user_id = ?";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $_SESSION["user_id"]);
         $stmt->execute(); 
 
-        
+        mail("cuckovichrvoje@gmail.com", "Nova narudzba", $mailCode);
+
         unset($_SESSION["cuponName"]);
         unset($_SESSION["discount"]);
     }
