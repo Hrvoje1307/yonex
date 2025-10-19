@@ -1,6 +1,7 @@
 <?php require_once("./php/inc/header.php");
 require_once("app/classes/User.php");
 $user = new User();
+$user->test();
 if($_SESSION["name"]) {
     $user->changeData();
     $data = $user->fillData($_SESSION["user_id"]);

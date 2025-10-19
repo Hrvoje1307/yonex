@@ -18,6 +18,12 @@ class User {
         $this->dotenv->load();
     }
 
+    public function test() {
+        $result = mail("cuckovichrvoje@gmail.com", "Test", "test");
+
+        echo $result;
+    }
+
     public function findTableAndQuantityOfProduct($id) {
         $tables = ["bags","balls","classicfilters","clothing","cords","rackets","shoes"];
         
@@ -199,6 +205,7 @@ class User {
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("s", $_SESSION["user_id"]);
         $stmt->execute(); 
+
         
         unset($_SESSION["cuponName"]);
         unset($_SESSION["discount"]);
@@ -932,16 +939,17 @@ class User {
                         <p class='fw-semibold text-secondary'>Bez PDV-a <span>".htmlspecialchars($data['priceNOTAX'], ENT_QUOTES, 'UTF-8')."</span> €</p>
                         <hr>
                         <h4>Dostupne mogućnosti</h4>
-                        <p class='fw-semibold'>Količina</p>
-                        <input type='number' name='product_quantity' class='form-control' min='0' max='".htmlspecialchars($data['quantity'], ENT_QUOTES, 'UTF-8')."' value='1'>";
+                        <p class='fw-semibold'>Količina</p>";
         if($data["quantity"]>0) {
             $code.="
+                        <input type='number' name='product_quantity' class='form-control' min='0' max='".htmlspecialchars($data['quantity'], ENT_QUOTES, 'UTF-8')."' value='1'>
                         <button type='submit' name='add_to_cart' class='btn btn-dark d-flex gap-3 mt-3'>
                             <i class='text-light bi bi-cart-fill'></i>
                             <span class='text-light'>Dodaj u košaricu</span>
                         </button>";
         }else {
             $code.="
+                        <input type='number' name='product_quantity' class='form-control' min='0' max='".htmlspecialchars($data['quantity'], ENT_QUOTES, 'UTF-8')."' value='0' disabled>
                         <button class='btn btn-dark d-flex gap-3 mt-3 disabled'>
                             <i class='text-light bi bi-cart-fill'></i>
                             <span class='text-light'>Dodaj u košaricu</span>
