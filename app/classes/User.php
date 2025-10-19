@@ -236,7 +236,16 @@ class User {
         $stmt->bind_param("s", $_SESSION["user_id"]);
         $stmt->execute(); 
 
-        mail("cuckovichrvoje@gmail.com", "Nova narudzba", $mailCode);
+        $headers  = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+        $headers .= "From: cuckovichrvoje@hdmshop.eu" . "\r\n"; 
+
+        $to = ["cuckovichrvoje@gmail.com", "drazencuckovic6@gmail.com"];
+
+        foreach ($to as $key => $user) {
+            mail($user, "Nova narudzba", $mailCode, $headers);
+        }
+
 
         unset($_SESSION["cuponName"]);
         unset($_SESSION["discount"]);
