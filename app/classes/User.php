@@ -243,7 +243,7 @@ class User {
         $to = ["cuckovichrvoje@gmail.com", "drazencuckovic6@gmail.com"];
 
         foreach ($to as $key => $user) {
-            mail($to, "Nova narudzba", $mailCode, $headers);
+            mail($user, "Nova narudzba", $mailCode, $headers);
         }
 
 
