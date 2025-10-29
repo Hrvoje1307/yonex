@@ -5,7 +5,7 @@
   $data = new Model($user);
   $user->relocate();
 
-  $data->makeChangesXML();
+  $data->removeXMLData();
 ?>
 
 <div class="container my-5">
