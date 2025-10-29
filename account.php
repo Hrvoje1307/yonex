@@ -36,7 +36,7 @@ if($_SESSION["name"]) {
         </div>
         <div class="mb-3">
             <label for="exampleFormControlInput4" class="form-label">Broj telefona</label>
-            <input type="number" class="form-control" name="phone-number" id="exampleFormControlInput4" value="<?php echo $data["number"]; ?>">
+            <input type="text" class="form-control" name="phone-number" id="exampleFormControlInput4" value="<?php echo $data["number"]; ?>">
         </div>
         <div class="mb-3">
             <label for="exampleFormControlInput5" class="form-label">Stara lozinka <span class="text-danger">*</span></label>

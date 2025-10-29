@@ -1442,7 +1442,7 @@
         if(!in_array($product["id"], $productsToAdd)) continue;
         $i = null;
         array_push($productAdd, ["position" => null, "id" => $product["id"],"name" => null, "img" => null, "imgSmall" => null, 
-        "price" => null, "priceNOTAX" => null, "desciption" => null, "category" => null, "quanitity" => null, "EAN" => null, "mainCategory" => null, "gender" => null, "size" => null]);
+        "price" => null, "priceNOTAX" => null, "description" => null, "category" => null, "quantity" => null, "EAN" => null, "mainCategory" => null, "gender" => null, "size" => null]);
         foreach ($productAdd as $index => $value) {
           if($value["id"] === $product["id"]) $i = $index;
         }
@@ -1550,23 +1550,18 @@
         }
       }
 
-      return $arrayOfChange;
-
-      
-    }
-    
-    public function printComparedProducts() {
-      $arrayOfChange = $this->compareProducts();
       foreach ($arrayOfChange as $key => $change) {
         echo "<h5>".$change["nameOfProduct"]."</h5>";
         foreach ($change["keyOfProduct"] as $key => $value) {
           echo "<li>".$value." : ".$change["changeFrom"][$key]. " ➡ ".$change["changeTo"][$key]."</li>";
         }
       }
+
       
     }
 
-    public function makeChangesXML($url = __DIR__ . '/../config/products.xml') {
+
+    public function removeXMLData($url = __DIR__ . '/../config/products.xml') {
       $xmlPath = $url;
       $dom = new DOMDocument();
       $dom->load($xmlPath);
@@ -1577,15 +1572,18 @@
 
       $products = $dom->getElementsByTagName("izdelek");
       if($_SERVER["REQUEST_METHOD"] == "POST") {
-        if(isset($_POST["submitXMLChanges"])) {
+        if(isset($_POST["removeXMLChanges"])) {
           foreach ($products as $key => $product) {
-            //adding products
-            
-
             //removing products
             $productId = $product->getElementsByTagName("izdelekID")->item(0)->nodeValue;
             if(in_array($productId, $removeProducts)) $product->parentNode->removeChild($product);
-
+            $table = $this->user->findTableAndQuantityOfProduct($productId);
+            if($table) {
+              $sql = "DELETE from $table where id=?";
+              $stmt = $this->conn->prepare($sql);
+              $stmt->bind_param("s",$productId);
+              $stmt->execute();
+            }
           }
 
         }

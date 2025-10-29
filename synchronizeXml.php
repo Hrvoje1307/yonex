@@ -5,7 +5,6 @@
   $data = new Model($user);
   $user->relocate();
 
-  $data->makeChangesXML();
 ?>
 
 <div class="container my-5">
@@ -19,7 +18,7 @@
   
   <h3>Treba promijeniti</h3>
   <ul>
-    <?php $data->printComparedProducts();?>
+    <?php   $data->compareProducts();?>
   </ul>
   
 </div>

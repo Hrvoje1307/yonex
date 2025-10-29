@@ -4,8 +4,7 @@
 
   $data = new Model($user);
   $user->relocate();
-
-  $data->makeChangesXML();
+  var_dump($data->addProducts()[0]);
 ?>
 
 <div class="container my-5">
