@@ -5,6 +5,7 @@
   $data = new Model($user);
   $user->relocate();
 
+  $data->callTrainslationFunctions();
 ?>
 
 <div class="container my-5">

@@ -4,7 +4,7 @@
 
   $data = new Model($user);
   $user->relocate();
-  var_dump($data->addProducts()[0]);
+  $data->callTrainslationFunctions();
 ?>
 
 <div class="container my-5">

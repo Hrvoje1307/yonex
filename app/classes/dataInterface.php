@@ -743,6 +743,12 @@
           return $this->clothing();
         }else if(isset($_POST["clothingDataBase"])) {
           return $this->productTranslatedClothing();
+        }else if(isset($_POST["addXMLChanges"])) {
+          return $this->addXMLData();
+        }else if(isset($_POST["removeXMLChanges"])) {
+          return $this->removeXMLData();
+        }else if(isset($_POST["submitXMLChanges"])) {
+          return $this->updateXMLData();
         }
       }
     }
@@ -1434,14 +1440,14 @@
       $productsIdsTemporary = $this->getProducts(__DIR__ . '/../config/productsTemporary.xml')["IDs"];
       $productsTemporary = $this->getProducts(__DIR__ . '/../config/productsTemporary.xml')["all"];
 
-      
+
       $productsToAdd = array_diff($productsIdsTemporary, $productsIdsMain);
 
       $productAdd = array();
       foreach ($productsTemporary as $key => $product) {
         if(!in_array($product["id"], $productsToAdd)) continue;
         $i = null;
-        array_push($productAdd, ["position" => null, "id" => $product["id"],"name" => null, "img" => null, "imgSmall" => null, 
+        array_push($productAdd, ["position" => null, "id" => $product["id"],"name" => null, "img" => null, "imgSmall" => null,
         "price" => null, "priceNOTAX" => null, "description" => null, "category" => null, "quantity" => null, "EAN" => null, "mainCategory" => null, "gender" => null, "size" => null]);
         foreach ($productAdd as $index => $value) {
           if($value["id"] === $product["id"]) $i = $index;
@@ -1512,13 +1518,14 @@
       $productsTemporary = $this->getProducts($this->temp_xml_url)["all"];
 
       $arrayOfChange = array();
-      
+
       foreach ($productsMain as $key => $productMain) {
         foreach ($productsTemporary as $key => $productTemporary) {
           if($productMain["id"] === $productTemporary["id"]) {
 
-            foreach ($productMain as $name => $value) {
-              if($productMain[$name] !== $productTemporary[$name]) {
+            $fieldsToCheck = ["quantity", "price"];
+            foreach ($fieldsToCheck as $name) {
+              if(isset($productMain[$name]) && isset($productTemporary[$name]) && $productMain[$name] !== $productTemporary[$name]) {
                 $exist = false;
                 $index = null;
 
@@ -1534,7 +1541,7 @@
                   $arrayOfChange[$index]["keyOfProduct"][] = $name;
                   $arrayOfChange[$index]["changeFrom"][] = $productMain[$name];
                   $arrayOfChange[$index]["changeTo"][] = $productTemporary[$name];
-                  
+
                 }else {
                   array_push($arrayOfChange,[
                     "nameOfProduct" => $productMain["name"],
@@ -1557,9 +1564,136 @@
         }
       }
 
-      
+
     }
 
+
+    public function addXMLData($url = __DIR__ . '/../config/products.xml') {
+      $xmlPath = $url;
+      $dom = new DOMDocument();
+      $dom->load($xmlPath);
+
+      $addProducts = $this->addProducts();
+
+      if($_SERVER["REQUEST_METHOD"] == "POST") {
+        if(isset($_POST["addXMLChanges"])) {
+          foreach ($addProducts as $key => $product) {
+            $izdelek = $dom->createElement("izdelek");
+
+            $izdelekID = $dom->createElement("izdelekID", $product["id"] ?? "");
+            $izdelekIme = $dom->createElement("izdelekIme", $product["name"] ?? "");
+            $slikaVelika = $dom->createElement("slikaVelika", $product["img"] ?? "");
+            $slikaMala = $dom->createElement("slikaMala", $product["imgSmall"] ?? "");
+            $PPC = $dom->createElement("PPC", $product["price"] ?? "");
+            $nabavnaCena = $dom->createElement("nabavnaCena", $product["priceNOTAX"] ?? "");
+            $opis = $dom->createElement("opis", $product["description"] ?? "");
+            $podkategorija = $dom->createElement("podkategorija", $product["category"] ?? "");
+            $tocnaZaloga = $dom->createElement("tocnaZaloga", $product["quantity"] ?? "");
+            $EAN = $dom->createElement("EAN", $product["EAN"] ?? "");
+            $kategorija = $dom->createElement("kategorija", $product["mainCategory"] ?? "");
+
+            $izdelek->appendChild($izdelekID);
+            $izdelek->appendChild($izdelekIme);
+            $izdelek->appendChild($slikaVelika);
+            $izdelek->appendChild($slikaMala);
+            $izdelek->appendChild($PPC);
+            $izdelek->appendChild($nabavnaCena);
+            $izdelek->appendChild($opis);
+            $izdelek->appendChild($podkategorija);
+            $izdelek->appendChild($tocnaZaloga);
+            $izdelek->appendChild($EAN);
+            $izdelek->appendChild($kategorija);
+
+            // Add specifications if they exist
+            if (isset($product["racketType"]) || isset($product["handlerSize"]) || isset($product["racketWeight"]) ||
+                isset($product["bagType"]) || isset($product["bagSize"]) ||
+                isset($product["ballType"]) || isset($product["bagSpeed"]) ||
+                isset($product["gender"]) || isset($product["size"]) ||
+                isset($product["length"])) {
+              $specifikacije = $dom->createElement("specifikacije");
+
+              if (isset($product["racketType"]) && $product["racketType"] !== null) {
+                $vrednost1 = $dom->createElement("vrednost", $product["racketType"]);
+                $specifikacije->appendChild($vrednost1);
+              }
+              if (isset($product["handlerSize"]) && $product["handlerSize"] !== null) {
+                $vrednost2 = $dom->createElement("vrednost", $product["handlerSize"]);
+                $specifikacije->appendChild($vrednost2);
+              }
+              if (isset($product["racketWeight"]) && $product["racketWeight"] !== null) {
+                $vrednost3 = $dom->createElement("vrednost", $product["racketWeight"]);
+                $specifikacije->appendChild($vrednost3);
+              }
+              if (isset($product["bagType"]) && $product["bagType"] !== null) {
+                $vrednost1 = $dom->createElement("vrednost", $product["bagType"]);
+                $specifikacije->appendChild($vrednost1);
+              }
+              if (isset($product["bagSize"]) && $product["bagSize"] !== null) {
+                $vrednost2 = $dom->createElement("vrednost", $product["bagSize"]);
+                $specifikacije->appendChild($vrednost2);
+              }
+              if (isset($product["ballType"]) && $product["ballType"] !== null) {
+                $vrednost1 = $dom->createElement("vrednost", $product["ballType"]);
+                $specifikacije->appendChild($vrednost1);
+              }
+              if (isset($product["bagSpeed"]) && $product["bagSpeed"] !== null) {
+                $vrednost2 = $dom->createElement("vrednost", $product["bagSpeed"]);
+                $specifikacije->appendChild($vrednost2);
+              }
+              if (isset($product["gender"]) && $product["gender"] !== null) {
+                $vrednost1 = $dom->createElement("vrednost", $product["gender"]);
+                $specifikacije->appendChild($vrednost1);
+              }
+              if (isset($product["size"]) && $product["size"] !== null) {
+                $vrednost2 = $dom->createElement("vrednost", $product["size"]);
+                $specifikacije->appendChild($vrednost2);
+              }
+              if (isset($product["length"]) && $product["length"] !== null) {
+                $vrednost1 = $dom->createElement("vrednost", $product["length"]);
+                $specifikacije->appendChild($vrednost1);
+              }
+
+              $izdelek->appendChild($specifikacije);
+            }
+
+            $dom->documentElement->appendChild($izdelek);
+          }
+        }
+      }
+      $dom->save($xmlPath);
+    }
+
+    public function updateXMLData($url = __DIR__ . '/../config/products.xml') {
+      $xmlPath = $url;
+      $dom = new DOMDocument();
+      $dom->load($xmlPath);
+
+      $productsMain = $this->getProducts(__DIR__ . '/../config/products.xml')["all"];
+      $productsTemporary = $this->getProducts($this->temp_xml_url)["all"];
+
+      $products = $dom->getElementsByTagName("izdelek");
+      if($_SERVER["REQUEST_METHOD"] == "POST") {
+        if(isset($_POST["submitXMLChanges"])) {
+          foreach ($products as $key => $product) {
+            $productId = $product->getElementsByTagName("izdelekID")->item(0)->nodeValue;
+            foreach ($productsTemporary as $tempProduct) {
+              if($productId === $tempProduct["id"]) {
+                // Update quantity if different
+                if($product->getElementsByTagName("tocnaZaloga")->item(0)->nodeValue !== $tempProduct["quantity"]) {
+                  $product->getElementsByTagName("tocnaZaloga")->item(0)->nodeValue = $tempProduct["quantity"];
+                }
+                // Update price if different
+                if($product->getElementsByTagName("PPC")->item(0)->nodeValue !== $tempProduct["price"]) {
+                  $product->getElementsByTagName("PPC")->item(0)->nodeValue = $tempProduct["price"];
+                }
+                break;
+              }
+            }
+          }
+        }
+      }
+      $dom->save($xmlPath);
+    }
 
     public function removeXMLData($url = __DIR__ . '/../config/products.xml') {
       $xmlPath = $url;
@@ -1576,13 +1710,16 @@
           foreach ($products as $key => $product) {
             //removing products
             $productId = $product->getElementsByTagName("izdelekID")->item(0)->nodeValue;
-            if(in_array($productId, $removeProducts)) $product->parentNode->removeChild($product);
-            $table = $this->user->findTableAndQuantityOfProduct($productId);
-            if($table) {
-              $sql = "DELETE from $table where id=?";
-              $stmt = $this->conn->prepare($sql);
-              $stmt->bind_param("s",$productId);
-              $stmt->execute();
+            if(in_array($productId, $removeProducts)) {
+              $product->parentNode->removeChild($product);
+              $table = $this->user->findTableAndQuantityOfProduct($productId);
+              $table = $table["table"];
+              if($table) {
+                $sql = "DELETE from $table where id=?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("s",$productId);
+                $stmt->execute();
+              }
             }
           }
 
