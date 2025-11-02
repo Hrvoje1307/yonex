@@ -104,58 +104,7 @@
 <![CDATA[ ]]>
 </servis>
 </izdelek>
-<izdelek st="3">
-<izdelekID>
-<![CDATA[ 106008 ]]>
-</izdelekID>
-<pn>
-<![CDATA[ AS-10 ]]>
-</pn>
-<EAN>
-<![CDATA[ 4930379413438 ]]>
-</EAN>
-<EAN2>
-<![CDATA[ ]]>
-</EAN2>
-<izdelekIme>
-<![CDATA[ Badminton perjanice AS-10, hitrost 3, ]]>
-</izdelekIme>
-<slikaVelika>
-<![CDATA[ https://xml.panteh.eu/download_bekenda/images/6bae771f82b99e0b596b6be932d35643.jpg ]]>
-</slikaVelika>
-<slikaMala>
-<![CDATA[ https://xml.panteh.eu/download_bekenda/images_small/6bae771f82b99e0b596b6be932d35643.jpg ]]>
-</slikaMala>
-<PPC>26.97</PPC>
-<nabavnaCena>22.95</nabavnaCena>
-<davcnaStopnja>22.00</davcnaStopnja>
-<blagovnaZnamka id="1">
-<![CDATA[ Yonex ]]>
-</blagovnaZnamka>
-<kategorija id="4">
-<![CDATA[ Žogice ]]>
-</kategorija>
-<opis>
-<![CDATA[ AS-10Tehniene lastnosti: Badbinton žogica AS-10 ]]>
-</opis>
-<brutoTeza>300</brutoTeza>
-<netoTeza>300</netoTeza>
-<volumen/>
-<brutoDolzina>400</brutoDolzina>
-<brutoSirina>70</brutoSirina>
-<brutoVisina>70</brutoVisina>
-<tocnaZaloga>0</tocnaZaloga>
-<dobava id="1">ni na zalogi</dobava>
-<carinskaTarifa>
-<![CDATA[ 85256000 ]]>
-</carinskaTarifa>
-<garancija>
-<![CDATA[ 1 ]]>
-</garancija>
-<servis>
-<![CDATA[ ]]>
-</servis>
-</izdelek>
+
 <izdelek st="4">
 <izdelekID>
 <![CDATA[ 106012 ]]>

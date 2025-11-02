@@ -5,7 +5,7 @@
   $data = new Model($user);
   $user->relocate();
 
-  $data->removeXMLData();
+  $data->callTrainslationFunctions();
 ?>
 
 <div class="container my-5">
