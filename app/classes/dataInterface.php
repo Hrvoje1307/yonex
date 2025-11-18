@@ -126,113 +126,113 @@
       $json = ["classicFilters"=> array(), "rackets"=>array(), "bags"=>array(), "balls"=>array(), "cords"=>array(), "shoes"=>array(), "clothing"=>array()];
       $products = $this->getProducts(__DIR__ . '/../config/products.xml')["all"];
       foreach ($products as $key => $product) {
-        if(in_array($product["category"], $rackets)) { 
+        if(in_array(trim($product["mainCategory"]), $rackets)) { 
           array_push($json["rackets"], [
-            "ID" => $product['id'],
-            "name" => $product['name'],
-            "img_url" => $product["img"],
-            "img_small" => $product["imgSmall"],
-            "price" => $product["price"],
-            "priceNOTAX" => $product["priceNOTAX"],
-            "description" => $product["description"],
-            "category" => $product["category"],
-            "quantity" => $product["quantity"],
-            "EAN" => $product["EAN"],
-            "racketType" => $product["racketType"],
-            "handlerSize" => $product["handlerSize"],
-            "racketWeight" => $product["racketWeight"]
+            "ID" => $product['id'] ?? null, 
+            "name" => $product['name'] ?? null, 
+            "img_url" => $product["img"] ?? null, 
+            "img_small" => $product["imgSmall"] ?? null, 
+            "price" => $product["price"] ?? null, 
+            "priceNOTAX" => $product["priceNOTAX"] ?? null, 
+            "description" => $product["description"] ?? null, 
+            "category" => trim($product["mainCategory"]) ?? null, 
+            "quantity" => $product["quantity"] ?? null, 
+            "EAN" => $product["EAN"] ?? null, 
+            "racketType" => $product["racketType"] ?? null, 
+            "handlerSize" => $product["handlerSize"] ?? null, 
+            "racketWeight" => $product["racketWeight"] ?? null, 
           ]);
-        }else if(in_array($product["category"], $classicFilters) && $product["mainCategory"] !== "Oblačila") {
+        }else if(in_array(trim($product["mainCategory"]), $classicFilters) && $product["mainCategory"] !== "Oblačila") {
           array_push($json["classicFilters"], [
-            "ID" => $product['id'],
-            "name" => $product['name'],
-            "img_url" => $product["img"],
-            "img_small" => $product["imgSmall"],
-            "price" => $product["price"],
-            "priceNOTAX" => $product["priceNOTAX"],
-            "description" => $product["description"],
-            "category" => $product["category"],
-            "quantity" => $product["quantity"],
-            "EAN" => $product["EAN"]
+            "ID" => $product['id'] ?? null, 
+            "name" => $product['name'] ?? null, 
+            "img_url" => $product["img"] ?? null, 
+            "img_small" => $product["imgSmall"] ?? null, 
+            "price" => $product["price"] ?? null, 
+            "priceNOTAX" => $product["priceNOTAX"] ?? null, 
+            "description" => $product["description"] ?? null, 
+            "category" => trim($product["mainCategory"]) ?? null, 
+            "quantity" => $product["quantity"] ?? null, 
+            "EAN" => $product["EAN"] ?? null, 
           ]);
-        }else if(in_array($product["category"], $bags)) {
+        }else if(in_array(trim($product["mainCategory"]), $bags)) {
           array_push($json["bags"], [
-            "ID" => $product['id'],
-            "name" => $product['name'],
-            "img_url" => $product["img"],
-            "img_small" => $product["imgSmall"],
-            "price" => $product["price"],
-            "priceNOTAX" => $product["priceNOTAX"],
-            "description" => $product["description"],
-            "category" => $product["category"],
-            "quantity" => $product["quantity"],
-            "EAN" => $product["EAN"],
-            "bagType" => $product["bagType"],
-            "bagSize" => $product["bagSize"]
+            "ID" => $product['id'] ?? null, 
+            "name" => $product['name'] ?? null, 
+            "img_url" => $product["img"] ?? null, 
+            "img_small" => $product["imgSmall"] ?? null, 
+            "price" => $product["price"] ?? null, 
+            "priceNOTAX" => $product["priceNOTAX"] ?? null, 
+            "description" => $product["description"] ?? null, 
+            "category" => trim($product["mainCategory"]) ?? null, 
+            "quantity" => $product["quantity"] ?? null, 
+            "EAN" => $product["EAN"] ?? null, 
+            "bagType" => $product["bagType"] ?? null, 
+            "bagSize" => $product["bagSize"] ?? null, 
           ]);
-        }else if(in_array($product["category"], $balls)) {
+        }else if(in_array(trim($product["mainCategory"]), $balls)) {
           array_push($json["balls"], [
-            "ID" => $product['id'],
-            "name" => $product['name'],
-            "img_url" => $product["img"],
-            "img_small" => $product["imgSmall"],
-            "price" => $product["price"],
-            "priceNOTAX" => $product["priceNOTAX"],
-            "description" => $product["description"],
-            "category" => $product["category"],
-            "quantity" => $product["quantity"],
-            "EAN" => $product["EAN"],
-            "ballType" => $product["ballType"],
-            "bagSpeed" => $product["bagSpeed"]
+            "ID" => $product['id'] ?? null, 
+            "name" => $product['name'] ?? null, 
+            "img_url" => $product["img"] ?? null, 
+            "img_small" => $product["imgSmall"] ?? null, 
+            "price" => $product["price"] ?? null, 
+            "priceNOTAX" => $product["priceNOTAX"] ?? null, 
+            "description" => $product["description"] ?? null, 
+            "category" => trim($product["mainCategory"]) ?? null, 
+            "quantity" => $product["quantity"] ?? null, 
+            "EAN" => $product["EAN"] ?? null, 
+            "ballType" => $product["ballType"] ?? null, 
+            "bagSpeed" => $product["bagSpeed"] ?? null, 
           ]);
-        }else if(in_array($product["category"], $cords)) {
+        }else if(in_array(trim($product["mainCategory"]), $cords)) {
           array_push($json["cords"], [
-            "ID" => $product['id'],
-            "name" => $product['name'],
-            "img_url" => $product["img"],
-            "img_small" => $product["imgSmall"],
-            "price" => $product["price"],
-            "priceNOTAX" => $product["priceNOTAX"],
-            "description" => $product["description"],
-            "category" => $product["category"],
-            "quantity" => $product["quantity"],
-            "EAN" => $product["EAN"],
-            "length" => $product["length"]
+            "ID" => $product['id'] ?? null, 
+            "name" => $product['name'] ?? null, 
+            "img_url" => $product["img"] ?? null, 
+            "img_small" => $product["imgSmall"] ?? null, 
+            "price" => $product["price"] ?? null, 
+            "priceNOTAX" => $product["priceNOTAX"] ?? null, 
+            "description" => $product["description"] ?? null, 
+            "category" => trim($product["mainCategory"]) ?? null, 
+            "quantity" => $product["quantity"] ?? null, 
+            "EAN" => $product["EAN"] ?? null, 
+            "length" => $product["length"] ?? null, 
           ]);
-        }else if(in_array($product["category"], $shoes)) {
+        }else if(in_array(trim($product["mainCategory"]), $shoes)) {
           array_push($json["shoes"], [
-            "ID" => $product['id'],
-            "name" => $product['name'],
-            "img_url" => $product["img"],
-            "img_small" => $product["imgSmall"],
-            "price" => $product["price"],
-            "priceNOTAX" => $product["priceNOTAX"],
-            "description" => $product["description"],
-            "category" => $product["category"],
-            "quantity" => $product["quantity"],
-            "EAN" => $product["EAN"],
-            "gender" => $product["gender"],
-            "size" => $product["size"]
+            "ID" => $product['id'] ?? null, 
+            "name" => $product['name'] ?? null, 
+            "img_url" => $product["img"] ?? null, 
+            "img_small" => $product["imgSmall"] ?? null, 
+            "price" => $product["price"] ?? null, 
+            "priceNOTAX" => $product["priceNOTAX"] ?? null, 
+            "description" => $product["description"] ?? null, 
+            "category" => trim($product["mainCategory"]) ?? null, 
+            "quantity" => $product["quantity"] ?? null, 
+            "EAN" => $product["EAN"] ?? null, 
+            "gender" => $product["gender"] ?? null, 
+            "size" => $product["size"] ?? null, 
           ]);
-        }else if(in_array($product["category"], $clothing) && $product["mainCategory"] === "Oblačila") {
+        }else if(in_array(trim($product["mainCategory"]), $clothing)) {
           array_push($json["clothing"], [
-            "ID" => $product['id'],
-            "name" => $product['name'],
-            "img_url" => $product["img"],
-            "img_small" => $product["imgSmall"],
-            "price" => $product["price"],
-            "priceNOTAX" => $product["priceNOTAX"],
-            "description" => $product["description"],
-            "category" => $product["category"],
-            "quantity" => $product["quantity"],
-            "EAN" => $product["EAN"],
-            "gender" => $product["gender"],
-            "size" => $product["size"]
+            "ID" => $product['id'] ?? null, 
+            "name" => $product['name'] ?? null, 
+            "img_url" => $product["img"] ?? null, 
+            "img_small" => $product["imgSmall"] ?? null, 
+            "price" => $product["price"] ?? null, 
+            "priceNOTAX" => $product["priceNOTAX"] ?? null, 
+            "description" => $product["description"] ?? null, 
+            "category" => trim($product["mainCategory"]) ?? null, 
+            "quantity" => $product["quantity"] ?? null, 
+            "EAN" => $product["EAN"] ?? null, 
+            "gender" => $product["gender"] ?? null, 
+            "size" => $product["size"] ?? null, 
           ]);
         }
       }
 
-      file_put_contents("./app/config/productsMy.json", json_encode($json, JSON_PRETTY_PRINT));
+      file_put_contents(__DIR__ . '/../config/productsMy.json', json_encode($json, JSON_PRETTY_PRINT));
     }
     
     public function getDataFunctions() {
@@ -268,7 +268,7 @@
     public function classicFilters() {
       $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
       $counter = (int)$counterJson["classicFilters"];
-      $batchSize = 10;
+      $batchSize = 3;
       $start = $counter;
       $end = $counter + $batchSize;
       $dataCroatian = $this->getJson("./app/config/prijevod.json");
@@ -319,7 +319,7 @@
     public function rackets() {
       $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
       $counter = (int)$counterJson["rackets"];
-      $batchSize = 5;
+      $batchSize = 3;
       $start = $counter;
       $end = $counter + $batchSize;
       $dataCroatian = $this->getJson("./app/config/prijevod.json");
@@ -393,7 +393,7 @@
     public function bags() {
       $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
       $counter = (int)$counterJson["bags"];
-      $batchSize = 5;
+      $batchSize = 3;
       $start = $counter;
       $end = $counter + $batchSize;
       $dataCroatian = $this->getJson("./app/config/prijevod.json");
@@ -461,7 +461,7 @@
     public function balls() {
       $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
       $counter = (int)$counterJson["balls"];
-      $batchSize = 10;
+      $batchSize = 3;
       $start = $counter;
       $end = $counter + $batchSize;
       $dataCroatian = $this->getJson("./app/config/prijevod.json");
@@ -529,7 +529,7 @@
     public function cords() {
       $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
       $counter = (int)$counterJson["cords"];
-      $batchSize = 10;
+      $batchSize = 3;
       $start = $counter;
       $end = $counter + $batchSize;
       $dataCroatian = $this->getJson("./app/config/prijevod.json");
@@ -597,7 +597,7 @@
     public function shoes() {
       $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
       $counter = (int)$counterJson["shoes"];
-      $batchSize = 10;
+      $batchSize = 3;
       $start = $counter;
       $end = $counter + $batchSize;
       $dataCroatian = $this->getJson("./app/config/prijevod.json");
@@ -656,7 +656,7 @@
     public function clothing() {
       $counterJson = json_decode(file_get_contents("./app/config/counter.json"),true);
       $counter = (int)$counterJson["clothing"];
-      $batchSize = 10;
+      $batchSize = 3;
       $start = $counter;
       $end = $counter + $batchSize;
       $dataCroatian = $this->getJson("./app/config/prijevod.json");
