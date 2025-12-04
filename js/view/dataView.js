@@ -53,7 +53,7 @@ class Data {
         if (key >= min && key <= max) {
           // prettier-ignore
           table.innerHTML += `
-            <tr onclick="window.location.href='productSingle.php?id=${product.ID.trim()}'">
+            <tr onclick="window.location.href='./productSingle.php?id=${product.ID.trim()}'">
               <th scope="row">${key + 1}</th>
               <td>${product["ID"]}</td>
               <td>${product["name"]}</td>
@@ -69,7 +69,7 @@ class Data {
       });
     } catch (error) {
       if (error) {
-        console.log(error.message);
+        console.error(error.message);
       }
     }
   }
@@ -78,7 +78,6 @@ class Data {
     if (!this.#tableBodyClassicFilters) return;
     const json = await this.getJson("app/config/prijevod.json");
     const products = json["classicFilters"];
-    console.log(products);
     await this.printCrotian("classicFilters", this.#tableBodyClassicFilters);
     const totalProducts = this.#totalProducts;
     this.printBtnsPages(totalProducts);
