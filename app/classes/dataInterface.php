@@ -1672,19 +1672,31 @@
       $productsTemporary = $this->getProducts($this->temp_xml_url)["all"];
 
       $products = $dom->getElementsByTagName("izdelek");
+      $updatedProducts = [];
       if($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST["submitXMLChanges"])) {
           foreach ($products as $key => $product) {
             $productId = $product->getElementsByTagName("izdelekID")->item(0)->nodeValue;
             foreach ($productsTemporary as $tempProduct) {
               if($productId === $tempProduct["id"]) {
+                $updated = false;
                 // Update quantity if different
                 if($product->getElementsByTagName("tocnaZaloga")->item(0)->nodeValue !== $tempProduct["quantity"]) {
                   $product->getElementsByTagName("tocnaZaloga")->item(0)->nodeValue = $tempProduct["quantity"];
+                  $updated = true;
                 }
                 // Update price if different
                 if($product->getElementsByTagName("PPC")->item(0)->nodeValue !== $tempProduct["price"]) {
                   $product->getElementsByTagName("PPC")->item(0)->nodeValue = $tempProduct["price"];
+                  $updated = true;
+                }
+                // Update priceNOTAX if different
+                if($product->getElementsByTagName("nabavnaCena")->item(0)->nodeValue !== $tempProduct["priceNOTAX"]) {
+                  $product->getElementsByTagName("nabavnaCena")->item(0)->nodeValue = $tempProduct["priceNOTAX"];
+                  $updated = true;
+                }
+                if($updated) {
+                  $updatedProducts[] = $tempProduct;
                 }
                 break;
               }
@@ -1693,6 +1705,33 @@
         }
       }
       $dom->save($xmlPath);
+
+      // Update database and JSON
+      if(!empty($updatedProducts)) {
+        $jsonData = $this->getJson("./app/config/prijevod.json");
+        foreach ($updatedProducts as $product) {
+          $table = $this->getProductTable($product["id"]);
+          if($table) {
+            $sql = "UPDATE $table SET quantity = ?, price = ?, priceNOTAX = ? WHERE id = ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ssss", $product["quantity"], $product["price"], $product["priceNOTAX"], $product["id"]);
+            $stmt->execute();
+          }
+
+          // Update JSON
+          foreach ($jsonData as $category => &$productsArray) {
+            foreach ($productsArray as &$jsonProduct) {
+              if($jsonProduct["ID"] == $product["id"]) {
+                $jsonProduct["quantity"] = $product["quantity"];
+                $jsonProduct["price"] = $product["price"];
+                $jsonProduct["priceNOTAX"] = $product["priceNOTAX"];
+                break 2;
+              }
+            }
+          }
+        }
+        file_put_contents("./app/config/prijevod.json", json_encode($jsonData, JSON_PRETTY_PRINT));
+      }
     }
 
     public function removeXMLData($url = __DIR__ . '/../config/products.xml') {
