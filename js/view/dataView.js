@@ -53,7 +53,7 @@ class Data {
         if (key >= min && key <= max) {
           // prettier-ignore
           table.innerHTML += `
-            <tr onclick="window.location.href='./productSingle.php?id=${product.ID.trim()}'">
+            <tr onclick="alert('Hello world')">
               <th scope="row">${key + 1}</th>
               <td>${product["ID"]}</td>
               <td>${product["name"]}</td>
