@@ -825,7 +825,6 @@ class User {
                                     <h5 class='card-title fw-bold'>".$product['name']."</h5>
                                     <p class='card-text'>".$this->truncString($product['description'])." </p>
                                     <p class='fs-3 m-0'><span>".$product['price']."</span>€</p>
-                                    <p class='fs-5 m-0 mb-3'><span>".$product['priceNOTAX']."</span>€</p>
                                     ";
                 if($product["quantity"]>0) {
                         $code.="
@@ -892,7 +891,6 @@ class User {
                                     <h5 class='card-title fw-bold'>".$product['name']."</h5>
                                     <p class='card-text'>".$this->truncString($product['description'])." </p>
                                     <p class='fs-3 m-0'><span>".$product['price']."</span>€</p>
-                                    <p class='fs-5 m-0 mb-3'><span>".$product['priceNOTAX']."</span>€</p>
                                     ";
                 if($product["quantity"]>0) {
                         $code.="
@@ -976,7 +974,6 @@ class User {
         }
         $code.="
                         <h2><span>".htmlspecialchars($data['price'], ENT_QUOTES, 'UTF-8')."</span> €</h2>
-                        <p class='fw-semibold text-secondary'>Bez PDV-a <span>".htmlspecialchars($data['priceNOTAX'], ENT_QUOTES, 'UTF-8')."</span> €</p>
                         <hr>
                         <h4>Dostupne mogućnosti</h4>
                         <p class='fw-semibold'>Količina</p>";
@@ -1037,7 +1034,6 @@ class User {
                                     <div class='row'>
                                         <div class='col-6 d-flex align-items-center gap-3'>
                                             <p class='fs-3 fw-semibold m-0'><span>".$data['price']."</span>€</p>
-                                            <p class='fs-5 m-0'><span>".$data['priceNOTAX']."</span>€</p>
                                         </div>
         ";
         if($data["quantity"] > 0) {
@@ -1095,7 +1091,6 @@ class User {
         if(!$isCheaper){
             $code .= "
                             <p class=' fs-3 fw-semibold m-0'><span class='real__price'>".$data["price"]."</span>€</p>
-                            <p class='fs-5 m-0'><span>".$data["priceNOTAX"]."</span>€</p>
             ";
         }else {
             $code .= "
